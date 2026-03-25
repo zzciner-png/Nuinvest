@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NuInvest – Capital Empresarial</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--blue:#1A56DB;--blue-dark:#1240A8;--blue-light:#E8F0FE;--blue-pale:#F0F5FF;--orange:#E07B39;--orange-light:#FFF4EC;--white:#FFFFFF;--bg:#F5F8FF;--text:#0D1F3C;--muted:#6B7FA3;--border:#D6E4FF;--success:#16A34A;--error:#DC2626}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);min-height:100vh;padding-bottom:40px;color:var(--text)}
+.header{background:var(--white);padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(26,86,219,.06)}
+.back-btn{width:36px;height:36px;border-radius:10px;background:var(--blue-light);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.back-btn svg{width:18px;height:18px;stroke:var(--blue);fill:none;stroke-width:2.5}
+.header-title{font-family:'Sora',sans-serif;font-size:17px;font-weight:700}
+.main{padding:20px}
+
+.company-hero{background:linear-gradient(135deg,var(--blue),var(--blue-dark));border-radius:20px;padding:24px;margin-bottom:24px;text-align:center}
+.company-logo{width:70px;height:70px;background:rgba(255,255,255,.15);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 12px}
+.company-logo svg{width:32px;height:32px;fill:white}
+.company-name{font-family:'Sora',sans-serif;font-size:22px;font-weight:800;color:white}
+.company-sub{font-size:12px;color:rgba(255,255,255,.7);margin-top:4px}
+
+.big-stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+.big-stat{background:var(--white);border-radius:20px;border:1.5px solid var(--border);padding:20px;text-align:center}
+.big-stat .icon{width:44px;height:44px;border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 10px}
+.big-stat .icon.blue{background:var(--blue-light)}.big-stat .icon.orange{background:var(--orange-light)}.big-stat .icon.green{background:#DCFCE7}.big-stat .icon.purple{background:#F3E8FF}
+.big-stat .icon svg{width:22px;height:22px;fill:none;stroke-width:2}
+.big-stat .icon.blue svg{stroke:var(--blue)}.big-stat .icon.orange svg{stroke:var(--orange)}.big-stat .icon.green svg{stroke:var(--success)}.big-stat .icon.purple svg{stroke:#9333EA}
+.big-stat .lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px}
+.big-stat .val{font-family:'Sora',sans-serif;font-size:18px;font-weight:800;word-break:break-word}
+.val.blue{color:var(--blue)}.val.orange{color:var(--orange)}.val.green{color:var(--success)}.val.purple{color:#9333EA}
+
+.section-card{background:var(--white);border-radius:20px;border:1.5px solid var(--border);padding:20px;margin-bottom:16px}
+.section-title{font-family:'Sora',sans-serif;font-size:15px;font-weight:700;margin-bottom:14px}
+.metric-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)}
+.metric-row:last-child{border-bottom:none}
+.metric-row .lbl{font-size:13px;color:var(--muted);display:flex;align-items:center;gap:8px}
+.metric-row .lbl::before{content:attr(data-dot);width:8px;height:8px;border-radius:50%;display:inline-block;background:currentColor;flex-shrink:0}
+.metric-row .val{font-family:'Sora',sans-serif;font-size:15px;font-weight:700}
+
+/* Chart */
+.chart-wrap{height:160px;position:relative}
+canvas{width:100%!important}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</style>
+</head>
+<body>
+<div class="header">
+  <button class="back-btn" onclick="history.back()"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
+  <div class="header-title">Capital Empresarial</div>
+</div>
+<div class="main">
+  <div class="company-hero">
+    <div class="company-logo"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
+    <div class="company-name">NuInvest</div>
+    <div class="company-sub">Capital & Métricas Empresariais</div>
+  </div>
+
+  <div class="big-stats">
+    <div class="big-stat">
+      <div class="icon blue"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+      <div class="lbl">Capital Total</div>
+      <div class="val blue" id="totalCapital">— MT</div>
+    </div>
+    <div class="big-stat">
+      <div class="icon orange"><svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+      <div class="lbl">Total Pago</div>
+      <div class="val orange" id="totalPaid">— MT</div>
+    </div>
+    <div class="big-stat">
+      <div class="icon green"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+      <div class="lbl">Investimentos</div>
+      <div class="val green" id="totalInv">—</div>
+    </div>
+    <div class="big-stat">
+      <div class="icon purple"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+      <div class="lbl">Utilizadores</div>
+      <div class="val purple" id="totalUsers">—</div>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-title"> Distribuição de Capital</div>
+    <div class="chart-wrap"><canvas id="pieChart"></canvas></div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-title">💹 Detalhes Financeiros</div>
+    <div class="metric-row">
+      <span class="lbl" data-dot="🔵" style="color:var(--blue)">Total Depositado</span>
+      <span class="val blue" id="mDeposit">— MT</span>
+    </div>
+    <div class="metric-row">
+      <span class="lbl" data-dot="🟠" style="color:var(--orange)">Total Levantado</span>
+      <span class="val orange" id="mWithdrawn">— MT</span>
+    </div>
+    <div class="metric-row">
+      <span class="lbl" data-dot="🟢" style="color:var(--success)">Total em Investimentos</span>
+      <span class="val green" id="mInvested">— MT</span>
+    </div>
+    <div class="metric-row">
+      <span class="lbl" data-dot="🟣" style="color:#9333EA">Comissões Pagas</span>
+      <span class="val purple" id="mComm">— MT</span>
+    </div>
+    <div class="metric-row">
+      <span class="lbl" data-dot="🔴" style="color:var(--error)">Bónus de Registo</span>
+      <span class="val" style="color:var(--error)" id="mBonus">— MT</span>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, getDocs, collection } 
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBJIlD1EdStGXn2_T6J-BwfB9JzveqcDfk",
+  authDomain: "nuinvest2-b01f6.firebaseapp.com",
+  projectId: "nuinvest2-b01f6",
+  storageBucket: "nuinvest2-b01f6.firebasestorage.app",
+  messagingSenderId: "150015584232",
+  appId: "1:150015584232:web:4e33b875d849faaf6fe65d"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db   = getFirestore(app);
+
+// ✅ TAXA DE CONVERSÃO: 1 MT = 14.2887 KZ
+const TAXA_CAMBIO_KZ_PARA_MT = 14.2887;
+
+// ✅ Converter KZ para MT
+function converterKzParaMt(valorKz) {
+  return Number(valorKz) / TAXA_CAMBIO_KZ_PARA_MT;
+}
+
+function fmt(n){return Number(n||0).toLocaleString('pt-AO')}
+
+onAuthStateChanged(auth,async user=>{
+  if(!user){location.href='auth.html';return}
+  
+  // Aggregate all users
+  const usersSnap=await getDocs(collection(db,'users'));
+  let totalDeposited=0,totalWithdrawn=0,totalBonus=0;
+  let userCount=0;
+  usersSnap.forEach(d=>{
+    const u=d.data();
+    totalDeposited+=u.totalDeposited||0;
+    totalWithdrawn+=u.totalWithdrawn||0;
+    totalBonus+=u.bonus||0;
+    userCount++;
+  });
+
+  // Investments
+  const invSnap=await getDocs(collection(db,'investments'));
+  let invCount=0,invTotal=0,invHarvested=0;
+  invSnap.forEach(d=>{
+    const inv=d.data();
+    invCount++;
+    invTotal+=inv.invested||0;
+    invHarvested+=inv.totalHarvested||0;
+  });
+
+  // Withdrawals
+  const wSnap=await getDocs(collection(db,'withdrawals'));
+  let totalFees=0;
+  wSnap.forEach(d=>{totalFees+=d.data().fee||0});
+
+  // ✅ Calcular capital e converter para MT
+  const capital=totalDeposited-totalWithdrawn+totalFees;
+  const capitalMt = converterKzParaMt(capital);
+  const totalWithdrawnMt = converterKzParaMt(totalWithdrawn);
+  const totalDepositedMt = converterKzParaMt(totalDeposited);
+  const invTotalMt = converterKzParaMt(invTotal);
+  const totalFeesMt = converterKzParaMt(totalFees);
+  const totalBonusMt = converterKzParaMt(totalBonus);
+
+  // ✅ Exibir valores em MT
+  document.getElementById('totalCapital').textContent=fmt(capitalMt)+' MT';
+  document.getElementById('totalPaid').textContent=fmt(totalWithdrawnMt)+' MT';
+  document.getElementById('totalInv').textContent=invCount;
+  document.getElementById('totalUsers').textContent=userCount;
+  document.getElementById('mDeposit').textContent=fmt(totalDepositedMt)+' MT';
+  document.getElementById('mWithdrawn').textContent=fmt(totalWithdrawnMt)+' MT';
+  document.getElementById('mInvested').textContent=fmt(invTotalMt)+' MT';
+  document.getElementById('mComm').textContent=fmt(totalFeesMt)+' MT';
+  document.getElementById('mBonus').textContent=fmt(totalBonusMt)+' MT';
+
+  // ✅ Chart com valores em MT
+  new Chart(document.getElementById('pieChart'),{
+    type:'doughnut',
+    data:{
+      labels:['Depositado','Levantado','Em Invest.','Bónus'],
+      datasets:[{
+        data:[totalDepositedMt,totalWithdrawnMt,invTotalMt,totalBonusMt],
+        backgroundColor:['#1A56DB','#E07B39','#16A34A','#9333EA'],
+        borderWidth:0,
+        hoverOffset:6
+      }]
+    },
+    options:{
+      responsive:true,
+      maintainAspectRatio:false,
+      plugins:{
+        legend:{
+          position:'bottom',
+          labels:{
+            font:{size:11},
+            padding:12
+          }
+        }
+      }
+    }
+  });
+});
+</script>
+</body>
+</html>
