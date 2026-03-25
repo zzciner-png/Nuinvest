@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NuInvest – Depositar</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--blue:#1A56DB;--blue-dark:#1240A8;--blue-light:#E8F0FE;--blue-pale:#F0F5FF;--orange:#E07B39;--orange-light:#FFF4EC;--white:#fff;--bg:#F5F8FF;--text:#0D1F3C;--muted:#6B7FA3;--border:#D6E4FF;--success:#16A34A;--error:#DC2626}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);min-height:100vh;padding-bottom:40px;color:var(--text)}
+
+/* HEADER */
+.hdr{background:var(--white);padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(26,86,219,.06)}
+.back-btn{width:36px;height:36px;border-radius:10px;background:var(--blue-light);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.back-btn svg{width:18px;height:18px;stroke:var(--blue);fill:none;stroke-width:2.5}
+.hdr-title{font-family:'Sora',sans-serif;font-size:17px;font-weight:700;flex:1}
+
+/* STEP INDICATOR */
+.step-bar{display:flex;align-items:center;padding:18px 20px 0;gap:0}
+.step-item{display:flex;flex-direction:column;align-items:center;flex:1;position:relative}
+.step-item:not(:last-child)::after{content:'';position:absolute;top:14px;left:50%;width:100%;height:2px;background:var(--border);z-index:0;transition:.3s}
+.step-item.done:not(:last-child)::after,.step-item.active:not(:last-child)::after{background:var(--blue)}
+.step-circle{width:28px;height:28px;border-radius:50%;background:var(--border);color:var(--muted);font-family:'Sora',sans-serif;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;position:relative;z-index:1;transition:.3s;flex-shrink:0}
+.step-item.active .step-circle{background:var(--blue);color:white;box-shadow:0 0 0 4px rgba(26,86,219,.15)}
+.step-item.done .step-circle{background:var(--success);color:white}
+.step-label{font-size:10px;font-weight:600;color:var(--muted);margin-top:5px;white-space:nowrap;transition:.3s}
+.step-item.active .step-label{color:var(--blue);font-weight:700}
+.step-item.done .step-label{color:var(--success)}
+
+/* STEPS CONTENT */
+.step-content{display:none;padding:20px}
+.step-content.show{display:block}
+
+/* Balance pill */
+.bal-pill{background:linear-gradient(135deg,var(--blue),var(--blue-dark));border-radius:16px;padding:16px 20px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between}
+.bal-pill-lbl{font-size:11px;color:rgba(255,255,255,.65);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px}
+.bal-pill-val{font-family:'Sora',sans-serif;font-size:22px;font-weight:800;color:#FFAA60}
+.bal-pill-sub{font-size:11px;color:rgba(255,255,255,.6)}
+
+/* Amount grid */
+.amt-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.amt-btn{padding:12px 6px;background:var(--white);border:1.5px solid var(--border);border-radius:12px;font-family:'Sora',sans-serif;font-size:13px;font-weight:700;color:var(--text);cursor:pointer;transition:.15s;text-align:center}
+.amt-btn:hover,.amt-btn.sel{background:var(--blue-light);border-color:var(--blue);color:var(--blue)}
+
+.field-group{margin-bottom:16px}
+.field-label{display:block;font-size:11px;font-weight:700;color:var(--text);margin-bottom:6px;letter-spacing:.5px;text-transform:uppercase}
+.field-wrap{position:relative}
+.field-icon{position:absolute;left:13px;top:50%;transform:translateY(-50%);width:17px;height:17px;fill:none;stroke:var(--muted);stroke-width:2;pointer-events:none}
+.field-input{width:100%;padding:13px 14px 13px 42px;border:1.5px solid var(--border);border-radius:12px;font-family:'DM Sans',sans-serif;font-size:15px;color:var(--text);background:var(--bg);outline:none;transition:.2s}
+.field-input:focus{border-color:var(--blue);background:var(--white);box-shadow:0 0 0 3px rgba(26,86,219,.10)}
+.field-input::placeholder{color:var(--muted)}
+
+/* Min deposit notice */
+.min-note{background:var(--blue-pale);border:1px solid rgba(26,86,219,.12);border-radius:10px;padding:10px 14px;font-size:12px;color:var(--blue);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.min-note svg{width:14px;height:14px;fill:none;stroke:var(--blue);stroke-width:2;flex-shrink:0}
+
+/* Bank cards */
+.bank-list{display:flex;flex-direction:column;gap:10px;margin-bottom:4px}
+.bank-card{display:flex;align-items:center;gap:14px;padding:16px;background:var(--white);border:2px solid var(--border);border-radius:16px;cursor:pointer;transition:.2s}
+.bank-card:hover,.bank-card.sel{border-color:var(--blue);background:var(--blue-pale)}
+.bank-logo{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-family:'Sora',sans-serif;font-size:12px;font-weight:800;color:white;flex-shrink:0}
+.bai-logo{background:linear-gradient(135deg,#003DA5,#0052CC)}
+.bfa-logo{background:linear-gradient(135deg,#C8102E,#E31837)}
+.exp-logo{background:linear-gradient(135deg,#F97316,#EA580C)}
+.bank-info{flex:1}
+.bank-info .bname{font-size:14px;font-weight:700;color:var(--text);margin-bottom:2px}
+.bank-info .biban{font-size:12px;color:var(--muted);font-family:monospace;margin-bottom:2px}
+.bank-info .bholder{font-size:11px;color:var(--blue);font-weight:600}
+.bank-check{width:22px;height:22px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:.2s}
+.bank-card.sel .bank-check{background:var(--blue);border-color:var(--blue)}
+.bank-check svg{width:12px;height:12px;fill:none;stroke:transparent;stroke-width:3}
+.bank-card.sel .bank-check svg{stroke:white}
+
+/* Summary box (step 2 review) */
+.summary-box{background:var(--blue-pale);border:1.5px solid rgba(26,86,219,.12);border-radius:16px;padding:16px;margin-bottom:16px}
+.sum-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(26,86,219,.1);font-size:13px}
+.sum-row:last-child{border-bottom:none;font-family:'Sora',sans-serif;font-weight:700;font-size:14px}
+.sum-key{color:var(--muted)}.sum-val{font-weight:600;color:var(--text)}
+.sum-val.orange{color:var(--orange);font-size:16px;font-weight:800}
+
+/* Upload zone */
+.upload-zone{border:2.5px dashed var(--border);border-radius:18px;padding:28px 20px;text-align:center;cursor:pointer;transition:.25s;background:var(--white)}
+.upload-zone:hover{border-color:var(--blue);background:var(--blue-pale)}
+.upload-zone.has-file{border-color:var(--success);background:#F0FDF4;border-style:solid}
+.upload-zone svg{width:38px;height:38px;stroke:var(--blue);fill:none;stroke-width:1.5;margin:0 auto 10px;display:block}
+.upload-zone.has-file svg{stroke:var(--success)}
+.uz-title{font-size:14px;font-weight:700;color:var(--text)}
+.uz-sub{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.5}
+.uz-filename{font-size:13px;color:var(--success);font-weight:600;margin-top:6px}
+#fileInput{display:none}
+
+/* Proof info box */
+.proof-info{background:var(--orange-light);border:1px solid rgba(224,123,57,.2);border-radius:12px;padding:12px 14px;margin-bottom:16px;font-size:12px;color:var(--text);display:flex;align-items:flex-start;gap:8px;line-height:1.6}
+.proof-info svg{width:14px;height:14px;fill:none;stroke:var(--orange);stroke-width:2;flex-shrink:0;margin-top:2px}
+
+/* Buttons */
+.btn-next{width:100%;padding:14px;background:var(--blue);color:white;border:none;border-radius:13px;font-family:'Sora',sans-serif;font-size:15px;font-weight:700;cursor:pointer;margin-top:8px;transition:.2s;box-shadow:0 6px 20px rgba(26,86,219,.25);display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-next:hover{background:var(--blue-dark);transform:translateY(-1px)}
+.btn-next:disabled{opacity:.55;cursor:not-allowed;transform:none}
+.btn-back-step{width:100%;padding:12px;background:var(--bg);border:1.5px solid var(--border);border-radius:13px;font-family:'Sora',sans-serif;font-size:14px;font-weight:600;cursor:pointer;margin-top:8px;color:var(--muted)}
+
+/* SUCCESS */
+.success-screen{display:none;padding:20px;text-align:center}
+.success-screen.show{display:block}
+.suc-anim{width:90px;height:90px;background:linear-gradient(135deg,#DCFCE7,#BBF7D0);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:20px auto 20px;animation:pop .5s cubic-bezier(.34,1.56,.64,1)}
+@keyframes pop{from{transform:scale(0)}to{transform:scale(1)}}
+.suc-anim svg{width:40px;height:40px;stroke:var(--success);fill:none;stroke-width:2.5}
+.suc-title{font-family:'Sora',sans-serif;font-size:22px;font-weight:800;margin-bottom:8px}
+.suc-msg{font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:24px}
+.suc-detail{background:var(--blue-pale);border-radius:16px;padding:16px;margin-bottom:24px;text-align:left}
+.suc-row{display:flex;justify-content:space-between;font-size:13px;padding:6px 0;border-bottom:1px solid rgba(26,86,219,.08)}
+.suc-row:last-child{border-bottom:none;font-weight:700}
+.btn-home{width:100%;padding:14px;background:var(--blue);color:white;border:none;border-radius:13px;font-family:'Sora',sans-serif;font-size:15px;font-weight:700;cursor:pointer;box-shadow:0 6px 20px rgba(26,86,219,.25)}
+
+/* HISTORY */
+.hist-section{padding:0 20px 20px}
+.sec-label{font-family:'Sora',sans-serif;font-size:15px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.sec-label::after{content:'';flex:1;height:1px;background:var(--border)}
+.hist-card{background:var(--white);border-radius:20px;border:1.5px solid var(--border);overflow:hidden}
+.hist-item{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid var(--border);transition:.15s}
+.hist-item:last-child{border-bottom:none}
+.hist-item:hover{background:var(--bg)}
+.hist-ico{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.hist-ico.pending{background:#FEF3C7}
+.hist-ico.approved{background:#DCFCE7}
+.hist-ico.rejected{background:#FEE2E2}
+.hist-ico svg{width:18px;height:18px;fill:none;stroke-width:2}
+.hist-ico.pending svg{stroke:#F59E0B}
+.hist-ico.approved svg{stroke:var(--success)}
+.hist-ico.rejected svg{stroke:var(--error)}
+.hist-info{flex:1;min-width:0}
+.hist-name{font-size:14px;font-weight:600;color:var(--text)}
+.hist-date{font-size:11px;color:var(--muted);margin-top:2px}
+.hist-right{text-align:right;flex-shrink:0}
+.hist-amt{font-family:'Sora',sans-serif;font-size:15px;font-weight:800}
+.hist-amt.pending{color:#F59E0B}
+.hist-amt.approved{color:var(--success)}
+.hist-amt.rejected{color:var(--error)}
+.hist-chip{font-size:10px;padding:3px 8px;border-radius:20px;font-weight:700;margin-top:3px;display:inline-block}
+.hist-chip.pending{background:#FEF3C7;color:#92400E}
+.hist-chip.approved{background:#DCFCE7;color:var(--success)}
+.hist-chip.rejected{background:#FEE2E2;color:var(--error)}
+.empty-hist{text-align:center;padding:32px;color:var(--muted);font-size:13px}
+.empty-hist svg{width:32px;height:32px;stroke:var(--muted);fill:none;stroke-width:1.5;margin:0 auto 8px;display:block}
+
+.toast{position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(-100px);background:var(--white);border-radius:14px;padding:13px 20px;display:flex;align-items:center;gap:10px;box-shadow:0 8px 32px rgba(0,0,0,.15);border-left:4px solid var(--success);z-index:9999;font-size:14px;color:var(--text);font-weight:500;min-width:260px;transition:.4s cubic-bezier(.34,1.56,.64,1);pointer-events:none}
+.toast.show{transform:translateX(-50%) translateY(0)}.toast.error{border-left-color:var(--error)}.toast.info{border-left-color:var(--blue)}
+
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <button class="back-btn" onclick="history.back()"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
+  <div class="hdr-title"> Depositar Fundos</div>
+</div>
+
+<!-- STEP INDICATOR -->
+<div class="step-bar" id="stepBar">
+  <div class="step-item active" id="si1">
+    <div class="step-circle">1</div>
+    <div class="step-label">Valor</div>
+  </div>
+  <div class="step-item" id="si2">
+    <div class="step-circle">2</div>
+    <div class="step-label">Conta</div>
+  </div>
+  <div class="step-item" id="si3">
+    <div class="step-circle">3</div>
+    <div class="step-label">Comprovativo</div>
+  </div>
+</div>
+
+<!-- ═══ STEP 1: AMOUNT ═══ -->
+<div class="step-content show" id="step1">
+  <div class="bal-pill">
+    <div>
+      <div class="bal-pill-lbl">Saldo Actual</div>
+      <div class="bal-pill-val"><span style="font-size:13px;font-weight:500;opacity:.7">MT </span><span id="balDisplay">—</span></div>
+    </div>
+    <div style="text-align:right">
+      <div class="bal-pill-sub">Depósito mínimo</div>
+      <div style="font-family:Sora,sans-serif;font-size:16px;font-weight:700;color:white">35,00 MT</div>
+    </div>
+  </div>
+
+  <div class="min-note">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    Valor mínimo de depósito: <b>35,00 MT</b> (500 Kz). Após transferência, envie o comprovativo para aprovação.
+  </div>
+
+  <div class="amt-grid">
+    <button class="amt-btn" onclick="pickAmt(3000,this)">210,04 MT</button>
+    <button class="amt-btn" onclick="pickAmt(6000,this)">420,07 MT</button>
+    <button class="amt-btn" onclick="pickAmt(10000,this)">700,11 MT</button>
+    <button class="amt-btn" onclick="pickAmt(15000,this)">1.050,16 MT</button>
+    <button class="amt-btn" onclick="pickAmt(20000,this)">1.400,21 MT</button>
+    <button class="amt-btn" onclick="pickAmt(30000,this)">2.100,32 MT</button>
+  </div>
+
+  <div class="field-group">
+    <label class="field-label">Ou insira o valor</label>
+    <div class="field-wrap">
+      <svg class="field-icon" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      <input class="field-input" type="number" id="amtInput" placeholder="Ex: 350,00" step="0.01" oninput="onAmtInput(this.value)">
+    </div>
+  </div>
+
+  <button class="btn-next" onclick="goStep2()">
+    Continuar <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+  </button>
+</div>
+
+<!-- ═══ STEP 2: BANK ═══ -->
+<div class="step-content" id="step2">
+
+  <div class="summary-box">
+    <div class="sum-row"><span class="sum-key">Valor a depositar</span><span class="sum-val orange" id="s2Amt">— MT</span></div>
+  </div>
+
+  <div style="font-family:Sora,sans-serif;font-size:14px;font-weight:700;margin-bottom:12px;color:var(--text)">Seleccione a conta de destino</div>
+
+  <div class="bank-list">
+    <div class="bank-card" id="bc-bai" onclick="pickBank('bai','BAI – Banco Angolano de Investimentos','0040.0000.5823.3661.1013.5')">
+      <div class="bank-logo bai-logo">EMOLA</div>
+      <div class="bank-info">
+        <div class="bname">EMOLA</div>
+        <div class="biban">873.689.278</div> 
+        <div class="bholder">Carlos Valdimiro Bento</div>
+      </div>
+      <div class="bank-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+    </div>
+    <div class="bank-card" id="bc-bfa" onclick="pickBank('bfa','BFA – Banco de Fomento Angola','0006.0000.9095.7416.3015.7')">
+      <div class="bank-logo bfa-logo">MPESA</div>
+      <div class="bank-info">
+        <div class="bname">MPESA</div>
+        <div class="biban">857.100.425</div>
+        <div class="bholder">Carlos Valdimiro Bento</div>
+      </div>
+      <div class="bank-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+    </div>
+    <div class="bank-card" id="bc-exp" onclick="pickBank('exp','Express – Multicaixa Express','937 359 561')">
+      <div class="bank-logo exp-logo">USDT</div>
+      <div class="bank-info">
+        <div class="bname">Pagamento com USDT</div>
+        <div class="biban">TV4JWMtudWnKyffe8DLGVGA83Eo2sotNEH</div>
+        <div class="bholder">Rede (TRC20)</div>
+      </div>
+      <div class="bank-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+    </div>
+  </div>
+
+  <button class="btn-next" onclick="goStep3()">
+    Continuar <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+  </button>
+  <button class="btn-back-step" onclick="goStep(1)">← Voltar</button>
+</div>
+
+<!-- ═══ STEP 3: PROOF ═══ -->
+<div class="step-content" id="step3">
+
+  <div class="summary-box">
+    <div class="sum-row"><span class="sum-key">Valor</span><span class="sum-val orange" id="s3Amt">— MT</span></div>
+    <div class="sum-row"><span class="sum-key">Conta destino</span><span class="sum-val" id="s3Bank">—</span></div>
+    <div class="sum-row"><span class="sum-key">Titular</span><span class="sum-val" style="font-size:11px">JONATA TCHIGICA DOMINGOS DUMBA</span></div>
+  </div>
+
+  <div class="proof-info">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    <span>Faça a transferência bancária para a conta acima e depois envie aqui o comprovativo. O seu depósito será aprovado em até 2 horas.</span>
+  </div>
+
+  <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
+    <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+    <div class="uz-title" id="uzTitle">Toque para enviar comprovativo</div>
+    <div class="uz-sub">Aceita imagem (JPG, PNG) ou PDF</div>
+    <div class="uz-filename" id="uzFilename" style="display:none"></div>
+  </div>
+  <input type="file" id="fileInput" accept="image/*,.pdf" onchange="onFileSelect(this)">
+
+  <button class="btn-next" onclick="submitDeposit()">
+     Confirmar e Enviar Pedido
+  </button>
+  <button class="btn-back-step" onclick="goStep(2)">← Voltar</button>
+</div>
+
+<!-- ═══ SUCCESS ═══ -->
+<div class="success-screen" id="successScreen">
+  <div class="suc-anim"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+  <div class="suc-title">Pedido Enviado! 🎉</div>
+  <div class="suc-msg">O seu pedido de depósito foi submetido com sucesso.<br>Será aprovado em até <b>2 horas</b> após verificação do comprovativo.</div>
+  <div class="suc-detail" id="sucDetail"></div>
+  <button class="btn-home" onclick="location.href='index.html'">← Voltar ao Início</button>
+</div>
+
+<!-- HISTORY -->
+<div class="hist-section" id="histSection">
+  <div class="sec-label"> Histórico de Depósitos</div>
+  <div class="hist-card">
+    <div id="histList"><div class="empty-hist"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/></svg>Carregando...</div></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><span id="toastMsg"></span></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script>
+firebase.initializeApp({
+  apiKey: "AIzaSyBJIlD1EdStGXn2_T6J-BwfB9JzveqcDfk",
+  authDomain: "nuinvest2-b01f6.firebaseapp.com",
+  projectId: "nuinvest2-b01f6",
+  storageBucket: "nuinvest2-b01f6.firebasestorage.app",
+  messagingSenderId: "150015584232",
+  appId: "1:150015584232:web:4e33b875d849faaf6fe65d"
+});
+
+var auth = firebase.auth();
+var db   = firebase.firestore();
+
+// ✅ TAXA DE CONVERSÃO: 1 MT = 14,2887 Kz
+const TAXA_CAMBIO_KZ_PARA_MT = 14.2887;
+
+// ✅ Função para converter Kz para MT
+function converterKzParaMt(valorKz) {
+  return Number(valorKz) / TAXA_CAMBIO_KZ_PARA_MT;
+}
+
+var currentUser = null;
+var selAmt = 0;
+var selAmt_KZ = 0; // Guardar o valor original em Kz
+var selBankId = '';
+var selBankName = '';
+var selBankIban = '';
+var hasFile = false;
+
+// ✅ Formatar moeda (COM CONVERSÃO)
+function fmt(valorKz){
+  const valorMt = converterKzParaMt(valorKz);
+  return valorMt.toFixed(2).replace(/\./g, ',').replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}
+
+function fmtDate(d){
+  var dt = new Date(d);
+  return dt.toLocaleDateString('pt-AO',{day:'2-digit',month:'short',year:'numeric'})
+       + ' ' + dt.toLocaleTimeString('pt-AO',{hour:'2-digit',minute:'2-digit'});
+}
+
+auth.onAuthStateChanged(function(user){
+  if(!user){location.href='auth.html';return}
+  currentUser = user;
+  db.collection('users').doc(user.uid).get().then(function(snap){
+    if(snap.exists){
+      const balanceKz = snap.data().balance||0;
+      document.getElementById('balDisplay').textContent = fmt(balanceKz);
+    }
+  });
+  loadHistory();
+});
+
+// ─── STEP NAVIGATION ───
+function goStep(n){
+  for(var i=1;i<=3;i++){
+    document.getElementById('step'+i).classList.toggle('show', i===n);
+    var si = document.getElementById('si'+i);
+    si.className = 'step-item' + (i<n?' done':i===n?' active':'');
+  }
+  document.getElementById('histSection').style.display = n===1 ? 'block' : 'none';
+  window.scrollTo(0,0);
+}
+
+function goStep2(){
+  if(!selAmt_KZ||selAmt_KZ<500){toast('Valor mínimo de depósito é 35,00 MT (500 Kz)','error');return}
+  document.getElementById('s2Amt').textContent = fmt(selAmt_KZ)+' MT';
+  goStep(2);
+}
+
+function goStep3(){
+  if(!selBankId){toast('Seleccione uma conta bancária','error');return}
+  document.getElementById('s3Amt').textContent = fmt(selAmt_KZ)+' MT';
+  document.getElementById('s3Bank').textContent = selBankName;
+  goStep(3);
+}
+
+// ─── AMOUNT ───
+function pickAmt(valKz, btn){
+  selAmt_KZ = valKz;
+  selAmt = fmt(valKz);
+  document.querySelectorAll('.amt-btn').forEach(function(b){b.classList.remove('sel')});
+  btn.classList.add('sel');
+  document.getElementById('amtInput').value = selAmt;
+}
+
+function onAmtInput(v){
+  // Converter o valor inserido de MT para Kz
+  const valMt = parseFloat(v.replace(/\,/g, '.')) || 0;
+  selAmt_KZ = valMt * TAXA_CAMBIO_KZ_PARA_MT;
+  selAmt = v;
+  document.querySelectorAll('.amt-btn').forEach(function(b){b.classList.remove('sel')});
+}
+
+// ─── BANK ───
+function pickBank(id, name, iban){
+  selBankId = id; selBankName = name; selBankIban = iban;
+  document.querySelectorAll('.bank-card').forEach(function(c){c.classList.remove('sel')});
+  document.getElementById('bc-'+id).classList.add('sel');
+}
+
+// ─── FILE ───
+function onFileSelect(input){
+  if(input.files&&input.files.length){
+    hasFile = true;
+    var fn = input.files[0].name;
+    document.getElementById('uzTitle').textContent = ' Comprovativo pronto';
+    document.getElementById('uzFilename').textContent = fn;
+    document.getElementById('uzFilename').style.display = 'block';
+    document.getElementById('uploadZone').classList.add('has-file');
+  }
+}
+
+// ─── SUBMIT ───
+function submitDeposit(){
+  if(!hasFile){toast('Envie o comprovativo da transferência','error');return}
+  var btn = document.querySelector('#step3 .btn-next');
+  btn.disabled = true;
+  btn.textContent = 'A enviar...';
+  db.collection('deposits').add({
+    uid: currentUser.uid,
+    amount: selAmt_KZ, // Guardar em Kz no Firebase
+    amountMt: converterKzParaMt(selAmt_KZ), // Guardar também em MT para referência
+    bank: selBankId,
+    bankName: selBankName,
+    bankIban: selBankIban,
+    status: 'pending',
+    date: new Date().toISOString()
+  }).then(function(){
+    document.getElementById('step3').classList.remove('show');
+    document.getElementById('histSection').style.display = 'none';
+    var suc = document.getElementById('successScreen');
+    suc.classList.add('show');
+    document.getElementById('sucDetail').innerHTML =
+      '<div class="suc-row"><span style="color:var(--muted)">Valor</span><span style="font-weight:800;color:var(--orange)">'+fmt(selAmt_KZ)+' MT</span></div>'+
+      '<div class="suc-row"><span style="color:var(--muted)">Conta</span><span>'+selBankName+'</span></div>'+
+      '<div class="suc-row"><span style="color:var(--muted)">Estado</span><span style="color:#F59E0B;font-weight:700"> Pendente</span></div>'+
+      '<div class="suc-row"><span style="color:var(--muted)">Data</span><span>'+fmtDate(new Date())+'</span></div>';
+    for(var i=1;i<=3;i++) document.getElementById('si'+i).className='step-item done';
+    loadHistory();
+    window.scrollTo(0,0);
+  }).catch(function(){
+    btn.disabled = false;
+    btn.innerHTML = ' Confirmar e Enviar Pedido';
+    toast('Erro ao enviar pedido. Tente novamente.','error');
+  });
+}
+
+// ─── HISTORY ───
+function loadHistory(){
+  if(!currentUser) return;
+  db.collection('deposits')
+    .where('uid','==',currentUser.uid)
+    .get()
+    .then(function(snap){
+      var items = [];
+      snap.forEach(function(d){items.push(d.data())});
+      items.sort(function(a,b){return new Date(b.date)-new Date(a.date)});
+      var el = document.getElementById('histList');
+      if(!items.length){
+        el.innerHTML = '<div class="empty-hist"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/></svg>Sem depósitos ainda.</div>';
+        return;
+      }
+      el.innerHTML = items.map(function(d){
+        var st = d.status||'pending';
+        var icon = st==='approved'
+          ? '<polyline points="20 6 9 17 4 12"/>'
+          : st==='rejected'
+          ? '<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>'
+          : '<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>';
+        var lbl = st==='approved'?'Aprovado':st==='rejected'?'Rejeitado':'Pendente';
+        return '<div class="hist-item">'
+          +'<div class="hist-ico '+st+'"><svg viewBox="0 0 24 24">'+icon+'</svg></div>'
+          +'<div class="hist-info">'
+          +'<div class="hist-name">'+(d.bankName||'—')+'</div>'
+          +'<div class="hist-date">'+fmtDate(d.date)+'</div>'
+          +'</div>'
+          +'<div class="hist-right">'
+          +'<div class="hist-amt '+st+'">+'+fmt(d.amount)+' MT</div>'
+          +'<div class="hist-chip '+st+'">'+lbl+'</div>'
+          +'</div>'
+          +'</div>';
+      }).join('');
+    });
+}
+
+function toast(msg, type){
+  var t = document.getElementById('toast');
+  t.className = 'toast'+(type==='error'?' error':type==='info'?' info':'');
+  document.getElementById('toastMsg').textContent = msg;
+  t.classList.add('show');
+  setTimeout(function(){t.classList.remove('show')},3500);
+}
+</script>
+</body>
+</html>
