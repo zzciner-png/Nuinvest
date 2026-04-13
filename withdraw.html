@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt">
 <head>
@@ -76,7 +75,6 @@ input::placeholder{color:var(--muted)}
 .toast{position:fixed;top:24px;left:50%;transform:translateX(-50%) translateY(-80px);background:var(--white);border-radius:14px;padding:14px 20px;display:flex;align-items:center;gap:12px;box-shadow:0 8px 32px rgba(0,0,0,.15);border-left:4px solid var(--success);z-index:9999;font-size:14px;color:var(--text);font-weight:500;min-width:280px;transition:.4s cubic-bezier(.34,1.56,.64,1);pointer-events:none}
 .toast.show{transform:translateX(-50%) translateY(0)}.toast.error{border-left-color:var(--error)}.toast.info{border-left-color:var(--blue)}
 </style>
-</style>
 </head>
 <body>
 <div class="header">
@@ -88,7 +86,7 @@ input::placeholder{color:var(--muted)}
   <div class="balance-card">
     <div class="lbl">Saldo Disponível</div>
     <div class="val">MT <span id="balDisplay">0</span></div>
-    <div class="sub">Mínimo de levantamento: 35,00 MT (500 Kz)</div>
+    <div class="sub">Mínimo de levantamento: 500 MT</div>
   </div>
 
   <!-- Faltas Banner (aparece se tiver faltas) -->
@@ -156,17 +154,17 @@ input::placeholder{color:var(--muted)}
     <div class="section-card">
       <div class="section-label"> Valor a Levantar</div>
       <div class="input-group">
-        <label>Valor (mín. 35,00 MT)</label>
+        <label>Valor (mín. 500 Kz)</label>
         <div class="input-wrap">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-          <input type="number" id="wAmount" placeholder="35,00" step="0.01" oninput="calcWithdraw()">
+          <input type="number" id="wAmount" placeholder="500" min="500" oninput="calcWithdraw()">
         </div>
       </div>
       <div class="calc-box" id="calcBox" style="display:none">
-        <div class="calc-row"><span class="calc-label">Valor solicitado</span><span id="cGross">0 MT</span></div>
-        <div class="calc-row"><span class="calc-label">Taxa base (15%)</span><span id="cFee" style="color:var(--error)">-0 MT</span></div>
-        <div class="calc-row discount" id="faltasDiscountRow" style="display:none"><span class="calc-label">Desconto por faltas (<span id="faltasPct">0</span>%)</span><span id="cFaltasDiscount">-0 MT</span></div>
-        <div class="calc-row total"><span>Valor Líquido a Receber</span><span id="cNet">0 MT</span></div>
+        <div class="calc-row"><span class="calc-label">Valor solicitado</span><span id="cGross">0 Kz</span></div>
+        <div class="calc-row"><span class="calc-label">Taxa base (15%)</span><span id="cFee" style="color:var(--error)">-0 Kz</span></div>
+        <div class="calc-row discount" id="faltasDiscountRow" style="display:none"><span class="calc-label">Desconto por faltas (<span id="faltasPct">0</span>%)</span><span id="cFaltasDiscount">-0 Kz</span></div>
+        <div class="calc-row total"><span>Valor Líquido a Receber</span><span id="cNet">0 Kz</span></div>
       </div>
       <div class="hint-box"><b>Nota:</b> Aplica-se uma taxa base de <b>15%</b> sobre o valor solicitado. Se tiver faltas não justificadas, será aplicado um desconto adicional de 5% por falta. O restante será creditado na sua conta bancária em 24–72 horas.</div>
       <button class="btn-primary" onclick="openConfirm()">Enviar Pedido de Levantamento</button>
@@ -213,18 +211,8 @@ const db = getFirestore(app);
 let currentUser = null;
 let userData = null;
 
-// ✅ TAXA DE CONVERSÃO: 1 MT = 14,2887 Kz
-const TAXA_CAMBIO_KZ_PARA_MT = 14.2887;
-
-// ✅ Função para converter Kz para MT
-function converterKzParaMt(valorKz) {
-  return Number(valorKz) / TAXA_CAMBIO_KZ_PARA_MT;
-}
-
-// ✅ Formatar moeda (COM CONVERSÃO)
-function fmt(valorKz) {
-  const valorMt = converterKzParaMt(valorKz);
-  return valorMt.toFixed(2).replace(/\./g, ',').replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+function fmt(n) {
+  return Number(n).toLocaleString('pt-AO');
 }
 
 // Função para obter o número de faltas de forma segura
@@ -250,8 +238,7 @@ function updateFaltasBanner() {
 function updateUserInterface() {
   if (!userData) return;
   
-  const balanceMt = fmt(userData.balance || 0);
-  document.getElementById('balDisplay').textContent = balanceMt;
+  document.getElementById('balDisplay').textContent = fmt(userData.balance || 0);
   updateFaltasBanner();
   
   // Verificar conta bancária
@@ -342,30 +329,29 @@ window.calcWithdraw = function() {
   // Verificar se userData existe
   if (!userData) return;
   
-  const vMt = Number(document.getElementById('wAmount').value) || 0;
-  const vKz = vMt * TAXA_CAMBIO_KZ_PARA_MT; // Converter MT para Kz para cálculos internos
+  const v = Number(document.getElementById('wAmount').value) || 0;
   const box = document.getElementById('calcBox');
   
-  if (vMt >= 35) {
+  if (v >= 500) {
     const faltas = getFaltasCount();
     const baseFeeRate = 0.15; // 15% taxa base
     const faltaRate = faltas * 0.05; // 5% por falta
     
-    const baseFeeKz = Math.round(vKz * baseFeeRate);
-    const faltaDiscountKz = Math.round(vKz * faltaRate);
-    const totalDiscountKz = baseFeeKz + faltaDiscountKz;
-    const netKz = vKz - totalDiscountKz;
+    const baseFee = Math.round(v * baseFeeRate);
+    const faltaDiscount = Math.round(v * faltaRate);
+    const totalDiscount = baseFee + faltaDiscount;
+    const net = v - totalDiscount;
     
-    document.getElementById('cGross').textContent = fmt(vKz) + ' MT';
-    document.getElementById('cFee').textContent = '-' + fmt(baseFeeKz) + ' MT';
-    document.getElementById('cNet').textContent = fmt(netKz) + ' MT';
+    document.getElementById('cGross').textContent = fmt(v) + ' Kz';
+    document.getElementById('cFee').textContent = '-' + fmt(baseFee) + ' Kz';
+    document.getElementById('cNet').textContent = fmt(net) + ' Kz';
     
     // Mostrar ou esconder linha de desconto por faltas
     const faltasRow = document.getElementById('faltasDiscountRow');
     if (faltas > 0) {
       faltasRow.style.display = 'flex';
       document.getElementById('faltasPct').textContent = faltas * 5;
-      document.getElementById('cFaltasDiscount').textContent = '-' + fmt(faltaDiscountKz) + ' MT';
+      document.getElementById('cFaltasDiscount').textContent = '-' + fmt(faltaDiscount) + ' Kz';
     } else {
       faltasRow.style.display = 'none';
     }
@@ -383,16 +369,15 @@ window.openConfirm = function() {
     return;
   }
   
-  const vMt = Number(document.getElementById('wAmount').value) || 0;
-  const vKz = vMt * TAXA_CAMBIO_KZ_PARA_MT;
+  const v = Number(document.getElementById('wAmount').value) || 0;
   
-  if (vMt < 35) {
-    showToast('Valor mínimo de 35,00 MT (500 Kz)', 'error');
+  if (v < 500) {
+    showToast('Valor mínimo de 500 Kz', 'error');
     return;
   }
   
-  const balKz = userData?.balance || 0;
-  if (vKz > balKz) {
+  const bal = userData?.balance || 0;
+  if (v > bal) {
     showToast('Saldo insuficiente', 'error');
     return;
   }
@@ -401,23 +386,23 @@ window.openConfirm = function() {
   const baseFeeRate = 0.15;
   const faltaRate = faltas * 0.05;
   
-  const baseFeeKz = Math.round(vKz * baseFeeRate);
-  const faltaDiscountKz = Math.round(vKz * faltaRate);
-  const totalDiscountKz = baseFeeKz + faltaDiscountKz;
-  const netKz = vKz - totalDiscountKz;
+  const baseFee = Math.round(v * baseFeeRate);
+  const faltaDiscount = Math.round(v * faltaRate);
+  const totalDiscount = baseFee + faltaDiscount;
+  const net = v - totalDiscount;
   
   let confirmHTML = `
-    <div class="confirm-row"><span>Valor Solicitado</span><span>${fmt(vKz)} MT</span></div>
-    <div class="confirm-row"><span>Taxa base (15%)</span><span style="color:var(--error)">-${fmt(baseFeeKz)} MT</span></div>
+    <div class="confirm-row"><span>Valor Solicitado</span><span>${fmt(v)} Kz</span></div>
+    <div class="confirm-row"><span>Taxa base (15%)</span><span style="color:var(--error)">-${fmt(baseFee)} Kz</span></div>
   `;
   
   if (faltas > 0) {
-    confirmHTML += `<div class="confirm-row"><span>Desconto por faltas (${faltas*5}%)</span><span style="color:var(--error)">-${fmt(faltaDiscountKz)} MT</span></div>`;
+    confirmHTML += `<div class="confirm-row"><span>Desconto por faltas (${faltas*5}%)</span><span style="color:var(--error)">-${fmt(faltaDiscount)} Kz</span></div>`;
   }
   
   confirmHTML += `
     <div class="confirm-row"><span>Conta Destino</span><span>${userData.bankAccount?.bank || '—'}</span></div>
-    <div class="confirm-row" style="border-bottom: none; font-weight: 700; color: var(--orange);"><span>Valor Líquido</span><span>${fmt(netKz)} MT</span></div>
+    <div class="confirm-row" style="border-bottom: none; font-weight: 700; color: var(--orange);"><span>Valor Líquido</span><span>${fmt(net)} Kz</span></div>
   `;
   
   document.getElementById('wConfirmBox').innerHTML = confirmHTML;
@@ -435,26 +420,24 @@ window.submitWithdraw = async function() {
     return;
   }
   
-  const vMt = Number(document.getElementById('wAmount').value) || 0;
-  const vKz = vMt * TAXA_CAMBIO_KZ_PARA_MT;
+  const v = Number(document.getElementById('wAmount').value) || 0;
   const faltas = getFaltasCount();
   const baseFeeRate = 0.15;
   const faltaRate = faltas * 0.05;
   
-  const baseFeeKz = Math.round(vKz * baseFeeRate);
-  const faltaDiscountKz = Math.round(vKz * faltaRate);
-  const netKz = vKz - baseFeeKz - faltaDiscountKz;
+  const baseFee = Math.round(v * baseFeeRate);
+  const faltaDiscount = Math.round(v * faltaRate);
+  const net = v - baseFee - faltaDiscount;
   
   try {
-    // Criar o pedido de levantamento (EM KZ)
+    // Criar o pedido de levantamento
     await addDoc(collection(db, 'withdrawals'), {
       uid: currentUser.uid,
-      gross: vKz, // Em Kz
-      grossMt: vMt, // Em MT (referência)
-      baseFee: baseFeeKz, // Em Kz
-      faltaDiscount: faltaDiscountKz, // Em Kz
-      totalDiscount: baseFeeKz + faltaDiscountKz, // Em Kz
-      net: netKz, // Em Kz
+      gross: v,
+      baseFee,
+      faltaDiscount,
+      totalDiscount: baseFee + faltaDiscount,
+      net,
       faltasAplicadas: faltas,
       bank: userData.bankAccount,
       status: 'pending',
@@ -462,16 +445,17 @@ window.submitWithdraw = async function() {
       userName: userData.name || userData.email || 'Usuário'
     });
     
-    // Atualizar saldo do usuário (EM KZ)
+    // Atualizar saldo do usuário
     await updateDoc(doc(db, 'users', currentUser.uid), {
-      balance: increment(-vKz), // Decrementar em Kz
-      totalWithdrawn: increment(netKz) // Incrementar com valor líquido em Kz
+      balance: increment(-v),
+      totalWithdrawn: increment(net)
+      // NOTA: As faltas NÃO são zeradas automaticamente
+      // Serão zeradas apenas quando o administrador processar o levantamento
     });
     
     // Atualizar o saldo na interface
-    userData.balance = (userData.balance || 0) - vKz;
-    const balanceMt = fmt(userData.balance);
-    document.getElementById('balDisplay').textContent = balanceMt;
+    userData.balance = (userData.balance || 0) - v;
+    document.getElementById('balDisplay').textContent = fmt(userData.balance);
     
     closeModal();
     showToast('Pedido enviado com sucesso! Processamento em 24–72h.', 'success');
@@ -498,4 +482,4 @@ window.showToast = function(msg, type = 'success') {
 }
 </script>
 </body>
-</html>
+  </html>

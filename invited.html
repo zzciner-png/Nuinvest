@@ -64,7 +64,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);min-height:100vh;padd
 .toast{position:fixed;top:24px;left:50%;transform:translateX(-50%) translateY(-80px);background:var(--white);border-radius:14px;padding:14px 20px;display:flex;align-items:center;gap:12px;box-shadow:0 8px 32px rgba(0,0,0,.15);border-left:4px solid var(--success);z-index:9999;font-size:14px;color:var(--text);font-weight:500;min-width:280px;transition:.4s cubic-bezier(.34,1.56,.64,1);pointer-events:none}
 .toast.show{transform:translateX(-50%) translateY(0)}.toast.error{border-left-color:var(--error)}.toast.info{border-left-color:var(--blue)}
 </style>
-
 </head>
 <body>
 <div class="header">
@@ -76,7 +75,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);min-height:100vh;padd
     <h2>🎁 Programa de Referência</h2>
     <p>Convide amigos e ganhe bónus automáticos quando se registam e investem!</p>
     <div class="bonus-row">
-      <div class="bonus-pill"><div class="lbl">Por Registo</div><div class="val">3,50 MT</div></div>
+      <div class="bonus-pill"><div class="lbl">Por Registo</div><div class="val">50 MT</div></div>
       <div class="bonus-pill"><div class="lbl">1º Invest.</div><div class="val">15%</div></div>
       <div class="bonus-pill"><div class="lbl">Convidados</div><div class="val" id="heroTotal">0</div></div>
     </div>
@@ -118,44 +117,23 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);min-height:100vh;padd
 <div class="toast" id="toast"><span id="toastMsg"></span></div>
 
 <!-- QR via API -->
-
-
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { 
-  getFirestore, doc, getDoc, collection, query, where, getDocs, 
-  updateDoc, increment, addDoc, setDoc 
-} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, doc, getDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-// Configuração do Firebase (nuinvest2-b01f6)
-const firebaseConfig = {
-  apiKey: "AIzaSyBJIlD1EdStGXn2_T6J-BwfB9JzveqcDfk",
+const app=initializeApp({apiKey: "AIzaSyBJIlD1EdStGXn2_T6J-BwfB9JzveqcDfk",
   authDomain: "nuinvest2-b01f6.firebaseapp.com",
   projectId: "nuinvest2-b01f6",
   storageBucket: "nuinvest2-b01f6.firebasestorage.app",
   messagingSenderId: "150015584232",
   appId: "1:150015584232:web:4e33b875d849faaf6fe65d"
-};
+});
 
-// Inicializar app com o novo banco
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-
-// ✅ TAXA DE CONVERSÃO: 1 MT = 14,2887 Kz
-const TAXA_CAMBIO_KZ_PARA_MT = 14.2887;
-
-// ✅ Função para converter Kz para MT
-function converterKzParaMt(valorKz) {
-  return Number(valorKz) / TAXA_CAMBIO_KZ_PARA_MT;
-}
-
+const auth=getAuth(app);const db=getFirestore(app);
 let allInvited=[],myCode='';
 
-function fmt(n){
-  return converterKzParaMt(n).toFixed(2).replace(/\./g, ',').replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-}
+function fmt(n){return Number(n||0).toLocaleString('pt-AO')}
 
 onAuthStateChanged(auth,async user=>{
   if(!user){location.href='auth.html';return}
@@ -189,42 +167,34 @@ onAuthStateChanged(auth,async user=>{
   const q=query(collection(db,'users'),where('invitedBy','==',myCode));
   const invSnap=await getDocs(q);
   allInvited=[];
-  let totalCommKz=0;
+  let totalComm=0;
   invSnap.forEach(d=>{
     const data=d.data();
     const isActive=(data.activeInvestments||0)>0;
-    const commKz=50+(isActive?Math.round((data.totalDeposited||0)*0.15):0);
-    totalCommKz+=commKz;
-    allInvited.push({...data,isActive,commKz});
+    const comm=50+(isActive?Math.round((data.totalDeposited||0)*0.15):0);
+    totalComm+=comm;
+    allInvited.push({...data,isActive,comm});
   });
-  
-  // ✅ Actualizar interface com conversão
   document.getElementById('heroTotal').textContent=allInvited.length;
   document.getElementById('sTotal').textContent=allInvited.length;
   document.getElementById('sActive').textContent=allInvited.filter(i=>i.isActive).length;
-  document.getElementById('sComm').textContent=fmt(totalCommKz)+' MT';
-  
+  document.getElementById('sComm').textContent=fmt(totalComm)+' MT';
   renderList(allInvited);
 });
 
 function renderList(list){
   const el=document.getElementById('invitedList');
   if(!list.length){el.innerHTML='<div class="empty-state">Ainda sem convidados. Partilhe o seu link!</div>';return}
-  
-  // ✅ Renderizar com conversão de Kz para MT
-  el.innerHTML=list.map(p=>{
-    const commMt = fmt(p.commKz);
-    return `
+  el.innerHTML=list.map(p=>`
     <div class="invited-item">
       <div class="inv-avatar">${(p.name||'?').charAt(0).toUpperCase()}</div>
       <div>
         <div class="inv-name">${p.name||'—'}</div>
         <div class="inv-date">ID: ${p.userId||'—'}</div>
-        <div class="inv-bonus">Comissão: ${commMt} MT</div>
+        <div class="inv-bonus">Comissão: ${fmt(p.comm)} MT</div>
       </div>
       <div class="inv-status ${p.isActive?'active':'inactive'}">${p.isActive?'Activo':'Inactivo'}</div>
-    </div>`;
-  }).join('');
+    </div>`).join('');
 }
 
 window.filterList=function(f,btn){
@@ -234,14 +204,12 @@ window.filterList=function(f,btn){
   else if(f==='active')renderList(allInvited.filter(i=>i.isActive));
   else renderList(allInvited.filter(i=>!i.isActive));
 }
-
 window.copyLink=function(){
   navigator.clipboard.writeText(window._refLink||'').then(()=>showToast('Link copiado!','success')).catch(()=>{
     const ta=document.createElement('textarea');ta.value=window._refLink||'';document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);
     showToast('Link copiado!','success');
   });
 }
-
 window.showToast=function(msg,type='success'){
   const t=document.getElementById('toast');t.className='toast '+type;
   document.getElementById('toastMsg').textContent=msg;t.classList.add('show');
