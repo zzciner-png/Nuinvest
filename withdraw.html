@@ -162,9 +162,9 @@ input::placeholder{color:var(--muted)}
       </div>
       <div class="calc-box" id="calcBox" style="display:none">
         <div class="calc-row"><span class="calc-label">Valor solicitado</span><span id="cGross">0 Kz</span></div>
-        <div class="calc-row"><span class="calc-label">Taxa base (15%)</span><span id="cFee" style="color:var(--error)">-0 Kz</span></div>
-        <div class="calc-row discount" id="faltasDiscountRow" style="display:none"><span class="calc-label">Desconto por faltas (<span id="faltasPct">0</span>%)</span><span id="cFaltasDiscount">-0 Kz</span></div>
-        <div class="calc-row total"><span>Valor Líquido a Receber</span><span id="cNet">0 Kz</span></div>
+        <div class="calc-row"><span class="calc-label">Taxa base (15%)</span><span id="cFee" style="color:var(--error)">-0 MT</span></div>
+        <div class="calc-row discount" id="faltasDiscountRow" style="display:none"><span class="calc-label">Desconto por faltas (<span id="faltasPct">0</span>%)</span><span id="cFaltasDiscount">-0 MT</span></div>
+        <div class="calc-row total"><span>Valor Líquido a Receber</span><span id="cNet">0 MT</span></div>
       </div>
       <div class="hint-box"><b>Nota:</b> Aplica-se uma taxa base de <b>15%</b> sobre o valor solicitado. Se tiver faltas não justificadas, será aplicado um desconto adicional de 5% por falta. O restante será creditado na sua conta bancária em 24–72 horas.</div>
       <button class="btn-primary" onclick="openConfirm()">Enviar Pedido de Levantamento</button>
@@ -372,7 +372,7 @@ window.openConfirm = function() {
   const v = Number(document.getElementById('wAmount').value) || 0;
   
   if (v < 500) {
-    showToast('Valor mínimo de 500 Kz', 'error');
+    showToast('Valor mínimo de 500 MT', 'error');
     return;
   }
   
@@ -392,17 +392,17 @@ window.openConfirm = function() {
   const net = v - totalDiscount;
   
   let confirmHTML = `
-    <div class="confirm-row"><span>Valor Solicitado</span><span>${fmt(v)} Kz</span></div>
-    <div class="confirm-row"><span>Taxa base (15%)</span><span style="color:var(--error)">-${fmt(baseFee)} Kz</span></div>
+    <div class="confirm-row"><span>Valor Solicitado</span><span>${fmt(v)} MT</span></div>
+    <div class="confirm-row"><span>Taxa base (15%)</span><span style="color:var(--error)">-${fmt(baseFee)} MT</span></div>
   `;
   
   if (faltas > 0) {
-    confirmHTML += `<div class="confirm-row"><span>Desconto por faltas (${faltas*5}%)</span><span style="color:var(--error)">-${fmt(faltaDiscount)} Kz</span></div>`;
+    confirmHTML += `<div class="confirm-row"><span>Desconto por faltas (${faltas*5}%)</span><span style="color:var(--error)">-${fmt(faltaDiscount)} MT</span></div>`;
   }
   
   confirmHTML += `
     <div class="confirm-row"><span>Conta Destino</span><span>${userData.bankAccount?.bank || '—'}</span></div>
-    <div class="confirm-row" style="border-bottom: none; font-weight: 700; color: var(--orange);"><span>Valor Líquido</span><span>${fmt(net)} Kz</span></div>
+    <div class="confirm-row" style="border-bottom: none; font-weight: 700; color: var(--orange);"><span>Valor Líquido</span><span>${fmt(net)} MT</span></div>
   `;
   
   document.getElementById('wConfirmBox').innerHTML = confirmHTML;
