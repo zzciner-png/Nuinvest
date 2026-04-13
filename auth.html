@@ -81,7 +81,7 @@ body::after{content:'';position:fixed;bottom:-100px;left:-100px;width:320px;heig
     <div class="ban-ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg></div>
     <div class="ban-title">Conta Suspensa 🚫</div>
     <div class="ban-msg">A sua conta foi suspensa e o acesso está bloqueado.<br>Se acha que é um erro, contacte o suporte.</div>
-    <div class="ban-contact">📞 Suporte: +244 925 312 057</div>
+    <div class="ban-contact">📞 Suporte: +244 921 539 495</div>
   </div>
 
   <div id="authWrap">
@@ -114,7 +114,7 @@ body::after{content:'';position:fixed;bottom:-100px;left:-100px;width:320px;heig
     <div class="sec" id="sCriar">
       <div class="bonus-strip">
         <div class="bonus-strip-icon"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
-        <div class="bonus-strip-text">Bónus de boas-vindas:<br><b>35,00 MT grátis</b> ao criar a sua conta!</div>
+        <div class="bonus-strip-text">Bónus de boas-vindas:<br><b>100 MT grátis</b> ao criar a sua conta!</div>
       </div>
       <div class="ref-banner" id="refBanner">
         <span style="font-size:22px">🎁</span>
@@ -147,10 +147,10 @@ body::after{content:'';position:fixed;bottom:-100px;left:-100px;width:320px;heig
           <svg class="ficon" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
           <input class="finput" type="text" id="rConvite" placeholder="Ex: 12345" maxlength="10">
         </div>
-        <p class="fhint">Código de quem te convidou — bónus de <b>3,50 MT</b> para o convidador!</p>
+        <p class="fhint">Código de quem te convidou — bónus de <b>50 MT</b> para o convidador!</p>
       </div>
       <button class="submit-btn" id="bCriar" onclick="registo()">
-        <span class="sbtn-label">Criar Conta e Ganhar 35,00 MT</span>
+        <span class="sbtn-label">Criar Conta e Ganhar 100 MT</span>
         <div class="sbtn-spin"></div>
       </button>
     </div>
@@ -177,14 +177,6 @@ firebase.initializeApp({
 
 var auth = firebase.auth();
 var db   = firebase.firestore();
-
-// ✅ TAXA DE CONVERSÃO: 1 MT = 14.2887 KZ
-const TAXA_CAMBIO_KZ_PARA_MT = 14.2887;
-
-// ✅ Converter KZ para MT
-function converterKzParaMt(valorKz) {
-  return Number(valorKz) / TAXA_CAMBIO_KZ_PARA_MT;
-}
 
 var _redirecting = false;
 var _registering = false;
@@ -266,7 +258,7 @@ function login(){
     });
 }
 
-// ─── REGISTRO COM SISTEMA DE CONVITE (✅ COM CONVERSÃO KZ → MT) ───
+// ─── REGISTRO COM SISTEMA DE CONVITE ───
 function registo(){
   var nome    = document.getElementById('rNome').value.trim();
   var email   = document.getElementById('rEmail').value.trim();
@@ -287,14 +279,14 @@ function registo(){
       var meuId = Math.floor(10000+Math.random()*90000).toString();
       
       return cred.user.updateProfile({displayName:nome}).then(function(){
-        // ═══ PASSO 1: CRIAR DOCUMENTO DO NOVO USUÁRIO (✅ com valores em KZ, convertendo para MT na UI) ═══
+        // ═══ PASSO 1: CRIAR DOCUMENTO DO NOVO USUÁRIO ═══
         return db.collection('users').doc(uid).set({
           uid: uid,
           name: nome,
           email: email,
           userId: meuId,
-          balance: 500,
-          bonus: 500,
+          balance: 100,
+          bonus: 100,
           level: 'Iniciante',
           inviteCode: meuId,
           invitedBy: convite || null,
@@ -325,7 +317,7 @@ function registo(){
             var convDoc = snap.docs[0];
             var convidadorUid = convDoc.id;
             
-            // ✅ Atualizar convidador: +50 Kz (3,50 MT) e +50 bónus (3,50 MT)
+            // Atualizar convidador: +50 Kz e +50 bónus
             return Promise.all([
               convDoc.ref.update({
                 balance: firebase.firestore.FieldValue.increment(50),
@@ -352,7 +344,7 @@ function registo(){
     })
     .then(function(){
       _registering = false;
-      toast('🎉 Conta criada! 35,00 MT de bónus adicionados!','ok');
+      toast('🎉 Conta criada! 100 MT de bónus adicionados!','ok');
       setTimeout(function(){window.location.href='index.html';}, 1600);
     })
     .catch(function(e){

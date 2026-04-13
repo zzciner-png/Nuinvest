@@ -1,3 +1,6 @@
+
+
+
 <!DOCTYPE html>
 <html lang="pt">
 <head>
@@ -143,12 +146,13 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);min-height:100vh;padd
 /* TOAST */
 .toast{position:fixed;top:24px;left:50%;transform:translateX(-50%) translateY(-100px);background:var(--white);border-radius:16px;padding:14px 20px;display:flex;align-items:center;gap:12px;box-shadow:0 8px 32px rgba(0,0,0,.15);border-left:4px solid var(--success);z-index:9999;font-size:14px;color:var(--text);font-weight:500;min-width:280px;transition:.4s cubic-bezier(.34,1.56,.64,1);pointer-events:none}
 .toast.show{transform:translateX(-50%) translateY(0)}.toast.error{border-left-color:var(--error)}.toast.info{border-left-color:var(--blue)}
-
-
-
-
-
 </style>
+
+
+
+
+
+
 </head>
 <body>
 
@@ -186,13 +190,13 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);min-height:100vh;padd
   <div class="plan-section active" id="sec-short">
     <div class="plan-card short">
       <div class="popular-tag"> POPULAR</div>
-      <div class="plan-top"><div><div class="plan-badge short">Curto Prazo</div><div class="plan-name"><svg viewBox="0 0 48 48" width="20" height="20" style="vertical-align:middle;margin-right:6px"><path fill="#4285F4" d="M44.5 20H24v8.5h11.7C34.2 33.3 29.7 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3 0 5.7 1.1 7.8 2.9l6-6C34.4 6.1 29.5 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20c11 0 19.7-8 19.7-20 0-1.3-.1-2.7-.2-4z"/><path fill="#34A853" d="M6.3 14.7l7 5.1C15.1 16 19.2 13 24 13c3 0 5.7 1.1 7.8 2.9l6-6C34.4 6.1 29.5 4 24 4 16.3 4 9.6 8.3 6.3 14.7z"/><path fill="#FBBC05" d="M24 44c5.4 0 10.3-1.9 14-5l-6.5-5.5C29.6 35.1 27 36 24 36c-5.7 0-10.5-3.8-12.1-9L4.7 32.6C8 39 15.5 44 24 44z"/><path fill="#EA4335" d="M44.5 20H24v8.5h11.7c-.8 2.4-2.4 4.4-4.5 5.8l6.5 5.5C41.6 36.4 44.5 30.7 44.5 24c0-1.3-.1-2.7-.2-4z"/></svg>Google Básico</div><div class="plan-invest-line">Parceiro Google · Investimento: <b id="s1_invest">210,04 MT</b></div></div></div>
+      <div class="plan-top"><div><div class="plan-badge short">Curto Prazo</div><div class="plan-name"><svg viewBox="0 0 48 48" width="20" height="20" style="vertical-align:middle;margin-right:6px"><path fill="#4285F4" d="M44.5 20H24v8.5h11.7C34.2 33.3 29.7 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3 0 5.7 1.1 7.8 2.9l6-6C34.4 6.1 29.5 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20c11 0 19.7-8 19.7-20 0-1.3-.1-2.7-.2-4z"/><path fill="#34A853" d="M6.3 14.7l7 5.1C15.1 16 19.2 13 24 13c3 0 5.7 1.1 7.8 2.9l6-6C34.4 6.1 29.5 4 24 4 16.3 4 9.6 8.3 6.3 14.7z"/><path fill="#FBBC05" d="M24 44c5.4 0 10.3-1.9 14-5l-6.5-5.5C29.6 35.1 27 36 24 36c-5.7 0-10.5-3.8-12.1-9L4.7 32.6C8 39 15.5 44 24 44z"/><path fill="#EA4335" d="M44.5 20H24v8.5h11.7c-.8 2.4-2.4 4.4-4.5 5.8l6.5 5.5C41.6 36.4 44.5 30.7 44.5 24c0-1.3-.1-2.7-.2-4z"/></svg>Google Básico</div><div class="plan-invest-line">Parceiro Google · Investimento: <b>500 MT</b></div></div></div>
       <div class="plan-stats">
-        <div class="plan-stat"><div class="lbl">Retorno</div><div class="val green" id="s1_returns">490,09 MT</div></div>
-        <div class="plan-stat"><div class="lbl">Lucro</div><div class="val orange" id="s1_lucro">+280,05</div></div>
-        <div class="plan-stat"><div class="lbl">Período</div><div class="val blue">7 dias</div></div>
+        <div class="plan-stat"><div class="lbl">Retorno</div><div class="val green">750 MT</div></div>
+        <div class="plan-stat"><div class="lbl">Lucro</div><div class="val orange">+50</div></div>					
+        <div class="plan-stat"><div class="lbl">Período</div><div class="val blue">15 dias</div></div>
       </div>
-      <div class="plan-roi blue-bg"><div class="roi-icon"></div><div class="roi-text blue">Rendimento de <b>+133%</b> em 7 dias</div></div>
+      <div class="plan-roi blue-bg"><div class="roi-icon"></div><div class="roi-text blue">Rendimento de <b>+50%</b> em 15 dias</div></div>
       <div class="plan-btns">
         <button class="btn-activate blue" onclick="openActivate('s1')"> Activar Plano</button>
         <button class="btn-deposit" onclick="location.href='deposit.html'">Depositar</button>
@@ -200,13 +204,13 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);min-height:100vh;padd
     </div>
 
     <div class="plan-card short">
-      <div class="plan-top"><div><div class="plan-badge short">Curto Prazo</div><div class="plan-name"><svg viewBox="0 0 40 40" width="20" height="20" style="vertical-align:middle;margin-right:6px"><text y="24" x="3" font-size="20" font-family="Arial Black" font-weight="900" fill="#FF9900">a</text><path d="M3 28Q15 35 27 28" stroke="#FF9900" stroke-width="2.2" fill="none" stroke-linecap="round"/><polygon points="25,25 29,29 27,29 27,31" fill="#FF9900"/></svg>Amazon Prata</div><div class="plan-invest-line">Parceiro Amazon · Investimento: <b id="s2_invest">420,07 MT</b></div></div></div>
+      <div class="plan-top"><div><div class="plan-badge short">Curto Prazo</div><div class="plan-name"><svg viewBox="0 0 40 40" width="20" height="20" style="vertical-align:middle;margin-right:6px"><text y="24" x="3" font-size="20" font-family="Arial Black" font-weight="900" fill="#FF9900">a</text><path d="M3 28Q15 35 27 28" stroke="#FF9900" stroke-width="2.2" fill="none" stroke-linecap="round"/><polygon points="25,25 29,29 27,29 27,31" fill="#FF9900"/></svg>Amazon Prata</div><div class="plan-invest-line">Parceiro Amazon · Investimento: <b>900 MT</b></div></div></div>
       <div class="plan-stats">
-        <div class="plan-stat"><div class="lbl">Retorno</div><div class="val green" id="s2_returns">1.120,18 MT</div></div>
-        <div class="plan-stat"><div class="lbl">Lucro</div><div class="val orange" id="s2_lucro">+700,11</div></div>
-        <div class="plan-stat"><div class="lbl">Período</div><div class="val blue">14 dias</div></div>
+        <div class="plan-stat"><div class="lbl">Retorno</div><div class="val green">1.800 MT</div></div>
+        <div class="plan-stat"><div class="lbl">Lucro</div><div class="val orange">+90</div></div>
+        <div class="plan-stat"><div class="lbl">Período</div><div class="val blue">20 dias</div></div>
       </div>
-      <div class="plan-roi blue-bg"><div class="roi-icon"></div><div class="roi-text blue">Rendimento de <b>+167%</b> em 14 dias</div></div>
+      <div class="plan-roi blue-bg"><div class="roi-icon"></div><div class="roi-text blue">Rendimento de <b>+100%</b> em 20 dias</div></div>
       <div class="plan-btns">
         <button class="btn-activate blue" onclick="openActivate('s2')"> Activar Plano</button>
         <button class="btn-deposit" onclick="location.href='deposit.html'">Depositar</button>
@@ -214,13 +218,13 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);min-height:100vh;padd
     </div>
 
     <div class="plan-card short">
-      <div class="plan-top"><div><div class="plan-badge short">Curto Prazo</div><div class="plan-name"><svg viewBox="0 0 24 24" width="20" height="20" style="vertical-align:middle;margin-right:6px"><circle cx="12" cy="12" r="11" fill="#1DB954"/><path d="M7 15c3-2 7-2 10 0" stroke="white" stroke-width="1.8" fill="none" stroke-linecap="round"/><path d="M6.5 12c3.5-2.5 8.5-2.5 11 0" stroke="white" stroke-width="1.8" fill="none" stroke-linecap="round"/><path d="M6 9c4-3 10-3 12 0" stroke="white" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg>Spotify Ouro</div><div class="plan-invest-line">Parceiro Spotify · Investimento: <b id="s3_invest">700,11 MT</b></div></div></div>
+      <div class="plan-top"><div><div class="plan-badge short">Curto Prazo</div><div class="plan-name"><svg viewBox="0 0 24 24" width="20" height="20" style="vertical-align:middle;margin-right:6px"><circle cx="12" cy="12" r="11" fill="#1DB954"/><path d="M7 15c3-2 7-2 10 0" stroke="white" stroke-width="1.8" fill="none" stroke-linecap="round"/><path d="M6.5 12c3.5-2.5 8.5-2.5 11 0" stroke="white" stroke-width="1.8" fill="none" stroke-linecap="round"/><path d="M6 9c4-3 10-3 12 0" stroke="white" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg>Spotify Ouro</div><div class="plan-invest-line">Parceiro Spotify · Investimento: <b>1.500 MT</b></div></div></div>
       <div class="plan-stats">
-        <div class="plan-stat"><div class="lbl">Retorno</div><div class="val green" id="s3_returns">2.800,43 MT</div></div>
-        <div class="plan-stat"><div class="lbl">Lucro</div><div class="val orange" id="s3_lucro">+2.100,32</div></div>
-        <div class="plan-stat"><div class="lbl">Período</div><div class="val blue">30 dias</div></div>
+        <div class="plan-stat"><div class="lbl">Retorno</div><div class="val green">3.750 MT</div></div>
+        <div class="plan-stat"><div class="lbl">Lucro</div><div class="val orange">+150</div></div>
+        <div class="plan-stat"><div class="lbl">Período</div><div class="val blue">25 dias</div></div>
       </div>
-      <div class="plan-roi green-bg"><div class="roi-icon"></div><div class="roi-text green">Rendimento de <b>+300%</b> em 30 dias</div></div>
+      <div class="plan-roi green-bg"><div class="roi-icon"></div><div class="roi-text green">Rendimento de <b>+150%</b> em 25 dias</div></div>
       <div class="plan-btns">
         <button class="btn-activate blue" onclick="openActivate('s3')"> Activar Plano</button>
         <button class="btn-deposit" onclick="location.href='deposit.html'">Depositar</button>
@@ -228,13 +232,13 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);min-height:100vh;padd
     </div>
 
     <div class="plan-card short">
-      <div class="plan-top"><div><div class="plan-badge short">Curto Prazo</div><div class="plan-name"><svg viewBox="0 0 24 24" width="20" height="20" style="vertical-align:middle;margin-right:6px"><rect width="24" height="24" rx="5" fill="#FF0000"/><polygon points="10,8 17,12 10,16" fill="white"/></svg>YouTube Diamante</div><div class="plan-invest-line">Parceiro YouTube · Investimento: <b id="s4_invest">1.050,16 MT</b></div></div></div>
+      <div class="plan-top"><div><div class="plan-badge short">Curto Prazo</div><div class="plan-name"><svg viewBox="0 0 24 24" width="20" height="20" style="vertical-align:middle;margin-right:6px"><rect width="24" height="24" rx="5" fill="#FF0000"/><polygon points="10,8 17,12 10,16" fill="white"/></svg>YouTube Diamante</div><div class="plan-invest-line">Parceiro YouTube · Investimento: <b>2.000 MT</b></div></div></div>
       <div class="plan-stats">
-        <div class="plan-stat"><div class="lbl">Retorno</div><div class="val green" id="s4_returns">3.500,54 MT</div></div>
-        <div class="plan-stat"><div class="lbl">Lucro</div><div class="val orange" id="s4_lucro">+2.450,38</div></div>
+        <div class="plan-stat"><div class="lbl">Retorno</div><div class="val green">6.000 MT</div></div>
+        <div class="plan-stat"><div class="lbl">Lucro</div><div class="val orange">+200</div></div>
         <div class="plan-stat"><div class="lbl">Período</div><div class="val blue">30 dias</div></div>
       </div>
-      <div class="plan-roi green-bg"><div class="roi-icon"></div><div class="roi-text green">Rendimento de <b>+233%</b> em 30 dias</div></div>
+      <div class="plan-roi green-bg"><div class="roi-icon"></div><div class="roi-text green">Rendimento de <b>+200%</b> em 30 dias</div></div>
       <div class="plan-btns">
         <button class="btn-activate blue" onclick="openActivate('s4')"> Activar Plano</button>
         <button class="btn-deposit" onclick="location.href='deposit.html'">Depositar</button>
@@ -242,13 +246,13 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);min-height:100vh;padd
     </div>
 
     <div class="plan-card short">
-      <div class="plan-top"><div><div class="plan-badge short">Curto Prazo</div><div class="plan-name"><svg viewBox="0 0 40 40" width="20" height="20" style="vertical-align:middle;margin-right:6px"><text y="24" x="3" font-size="20" font-family="Arial Black" font-weight="900" fill="#FF9900">a</text><path d="M3 28Q15 35 27 28" stroke="#FF9900" stroke-width="2.2" fill="none" stroke-linecap="round"/><polygon points="25,25 29,29 27,29 27,31" fill="#FF9900"/></svg>Amazon Elite</div><div class="plan-invest-line">Parceiro Amazon · Investimento: <b id="s5_invest">1.400,21 MT</b></div></div></div>
+      <div class="plan-top"><div><div class="plan-badge short">Curto Prazo</div><div class="plan-name"><svg viewBox="0 0 40 40" width="20" height="20" style="vertical-align:middle;margin-right:6px"><text y="24" x="3" font-size="20" font-family="Arial Black" font-weight="900" fill="#FF9900">a</text><path d="M3 28Q15 35 27 28" stroke="#FF9900" stroke-width="2.2" fill="none" stroke-linecap="round"/><polygon points="25,25 29,29 27,29 27,31" fill="#FF9900"/></svg>Amazon Elite</div><div class="plan-invest-line">Parceiro Amazon · Investimento: <b>5.000 MT</b></div></div></div>
       <div class="plan-stats">
-        <div class="plan-stat"><div class="lbl">Retorno</div><div class="val green" id="s5_returns">4.550,72 MT</div></div>
-        <div class="plan-stat"><div class="lbl">Lucro</div><div class="val orange" id="s5_lucro">+3.150,51</div></div>
+        <div class="plan-stat"><div class="lbl">Retorno</div><div class="val green">15.000 MT</div></div>
+        <div class="plan-stat"><div class="lbl">Lucro</div><div class="val orange">500</div></div>
         <div class="plan-stat"><div class="lbl">Período</div><div class="val blue">30 dias</div></div>
       </div>
-      <div class="plan-roi green-bg"><div class="roi-icon"></div><div class="roi-text green">Rendimento de <b>+225%</b> em 30 dias</div></div>
+      <div class="plan-roi green-bg"><div class="roi-icon"></div><div class="roi-text green">Rendimento de <b>+200%</b> em 30 dias</div></div>
       <div class="plan-btns">
         <button class="btn-activate blue" onclick="openActivate('s5')"> Activar Plano</button>
         <button class="btn-deposit" onclick="location.href='deposit.html'">Depositar</button>
@@ -262,13 +266,13 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);min-height:100vh;padd
     <div id="freePlanContainer"></div>
 
     <div class="plan-card mid">
-      <div class="plan-top"><div><div class="plan-badge mid">⏱ Intermédio</div><div class="plan-name"><svg viewBox="0 0 24 24" width="20" height="20" style="vertical-align:middle;margin-right:6px"><circle cx="12" cy="12" r="11" fill="#1DB954"/><path d="M7 15c3-2 7-2 10 0" stroke="white" stroke-width="1.8" fill="none" stroke-linecap="round"/><path d="M6.5 12c3.5-2.5 8.5-2.5 11 0" stroke="white" stroke-width="1.8" fill="none" stroke-linecap="round"/><path d="M6 9c4-3 10-3 12 0" stroke="white" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg>Spotify Prata</div><div class="plan-invest-line">Parceiro Amazon · Investimento: <b id="m1_invest">420,07 MT</b></div></div></div>
+      <div class="plan-top"><div><div class="plan-badge mid">⏱ Intermédio</div><div class="plan-name"><svg viewBox="0 0 24 24" width="20" height="20" style="vertical-align:middle;margin-right:6px"><circle cx="12" cy="12" r="11" fill="#1DB954"/><path d="M7 15c3-2 7-2 10 0" stroke="white" stroke-width="1.8" fill="none" stroke-linecap="round"/><path d="M6.5 12c3.5-2.5 8.5-2.5 11 0" stroke="white" stroke-width="1.8" fill="none" stroke-linecap="round"/><path d="M6 9c4-3 10-3 12 0" stroke="white" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg>Spotify Prata</div><div class="plan-invest-line">Parceiro Amazon · Investimento: <b>3.000 MT</b></div></div></div>
       <div class="plan-stats">
-        <div class="plan-stat"><div class="lbl">Diário</div><div class="val green" id="m1_daily">21,00 MT</div></div>
-        <div class="plan-stat"><div class="lbl">Colheitas</div><div class="val orange">2×/dia</div></div>
+        <div class="plan-stat"><div class="lbl">Retorno</div><div class="val green">18.000 MT</div></div>
+        <div class="plan-stat"><div class="lbl">Lucro</div><div class="val orange">300</div></div>
         <div class="plan-stat"><div class="lbl">Validade</div><div class="val blue">60 dias</div></div>
       </div>
-      <div class="plan-roi green-bg"><div class="roi-icon"></div><div class="roi-text green">Total estimado: <b id="m1_total">1.260,21 MT</b></div></div>
+      <div class="plan-roi green-bg"><div class="roi-icon"></div><div class="roi-text green">Total estimado: <b>18.000 MT</b></div></div>
       <div class="plan-btns">
         <button class="btn-activate blue" onclick="openActivate('m1')"> Activar Plano</button>
         <button class="btn-deposit" onclick="location.href='deposit.html'">Depositar</button>
@@ -276,13 +280,13 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);min-height:100vh;padd
     </div>
 
     <div class="plan-card mid">
-      <div class="plan-top"><div><div class="plan-badge mid">⏱ Intermédio</div><div class="plan-name"><svg viewBox="0 0 40 40" width="20" height="20" style="vertical-align:middle;margin-right:6px"><text y="24" x="3" font-size="20" font-family="Arial Black" font-weight="900" fill="#FF9900">a</text><path d="M3 28Q15 35 27 28" stroke="#FF9900" stroke-width="2.2" fill="none" stroke-linecap="round"/><polygon points="25,25 29,29 27,29 27,31" fill="#FF9900"/></svg>Amazon Ouro</div><div class="plan-invest-line">Parceiro Spotify · Investimento: <b id="m2_invest">700,11 MT</b></div></div></div>
+      <div class="plan-top"><div><div class="plan-badge mid">⏱ Intermédio</div><div class="plan-name"><svg viewBox="0 0 40 40" width="20" height="20" style="vertical-align:middle;margin-right:6px"><text y="24" x="3" font-size="20" font-family="Arial Black" font-weight="900" fill="#FF9900">a</text><path d="M3 28Q15 35 27 28" stroke="#FF9900" stroke-width="2.2" fill="none" stroke-linecap="round"/><polygon points="25,25 29,29 27,29 27,31" fill="#FF9900"/></svg>Amazon Ouro</div><div class="plan-invest-line">Parceiro Spotify · Investimento: <b>5.000 MT</b></div></div></div>
       <div class="plan-stats">
-        <div class="plan-stat"><div class="lbl">Diário</div><div class="val green" id="m2_daily">35,00 MT</div></div>
-        <div class="plan-stat"><div class="lbl">Colheitas</div><div class="val orange">2×/dia</div></div>
+        <div class="plan-stat"><div class="lbl">Retorno</div><div class="val green">30.000 MT</div></div>
+        <div class="plan-stat"><div class="lbl">Lucro</div><div class="val orange">500</div></div>
         <div class="plan-stat"><div class="lbl">Validade</div><div class="val blue">60 dias</div></div>
       </div>
-      <div class="plan-roi green-bg"><div class="roi-icon"></div><div class="roi-text green">Total estimado: <b id="m2_total">2.100,32 MT</b></div></div>
+      <div class="plan-roi green-bg"><div class="roi-icon"></div><div class="roi-text green">Total estimado: <b>30.000 MT</b></div></div>
       <div class="plan-btns">
         <button class="btn-activate blue" onclick="openActivate('m2')"> Activar Plano</button>
         <button class="btn-deposit" onclick="location.href='deposit.html'">Depositar</button>
@@ -291,13 +295,13 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);min-height:100vh;padd
 
     <div class="plan-card mid">
       <div class="popular-tag"> POPULAR</div>
-      <div class="plan-top"><div><div class="plan-badge mid">⏱ Intermédio</div><div class="plan-name"><svg viewBox="0 0 24 24" width="20" height="20" style="vertical-align:middle;margin-right:6px"><rect width="24" height="24" rx="5" fill="#FF0000"/><polygon points="10,8 17,12 10,16" fill="white"/></svg>YouTube Diamante</div><div class="plan-invest-line">Parceiro YouTube · Investimento: <b id="m3_invest">1.050,16 MT</b></div></div></div>
+      <div class="plan-top"><div><div class="plan-badge mid">⏱ Intermédio</div><div class="plan-name"><svg viewBox="0 0 24 24" width="20" height="20" style="vertical-align:middle;margin-right:6px"><rect width="24" height="24" rx="5" fill="#FF0000"/><polygon points="10,8 17,12 10,16" fill="white"/></svg>YouTube Diamante</div><div class="plan-invest-line">Parceiro YouTube · Investimento: <b>10.000 MT</b></div></div></div>
       <div class="plan-stats">
-        <div class="plan-stat"><div class="lbl">Diário</div><div class="val green" id="m3_daily">52,50 MT</div></div>
-        <div class="plan-stat"><div class="lbl">Colheitas</div><div class="val orange">2×/dia</div></div>
+        <div class="plan-stat"><div class="lbl">Retorno</div><div class="val green">60.000 MT</div></div>
+        <div class="plan-stat"><div class="lbl">Lucro</div><div class="val orange">1.000</div></div>
         <div class="plan-stat"><div class="lbl">Validade</div><div class="val blue">60 dias</div></div>
       </div>
-      <div class="plan-roi green-bg"><div class="roi-icon"></div><div class="roi-text green">Total estimado: <b id="m3_total">3.150,51 MT</b></div></div>
+      <div class="plan-roi green-bg"><div class="roi-icon"></div><div class="roi-text green">Total estimado: <b>60.000 MT</b></div></div>
       <div class="plan-btns">
         <button class="btn-activate blue" onclick="openActivate('m3')"> Activar Plano</button>
         <button class="btn-deposit" onclick="location.href='deposit.html'">Depositar</button>
@@ -305,13 +309,13 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);min-height:100vh;padd
     </div>
 
     <div class="plan-card mid">
-      <div class="plan-top"><div><div class="plan-badge mid">⏱ Intermédio</div><div class="plan-name"><svg viewBox="0 0 48 48" width="20" height="20" style="vertical-align:middle;margin-right:6px"><path fill="#4285F4" d="M44.5 20H24v8.5h11.7C34.2 33.3 29.7 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3 0 5.7 1.1 7.8 2.9l6-6C34.4 6.1 29.5 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20c11 0 19.7-8 19.7-20 0-1.3-.1-2.7-.2-4z"/><path fill="#34A853" d="M6.3 14.7l7 5.1C15.1 16 19.2 13 24 13c3 0 5.7 1.1 7.8 2.9l6-6C34.4 6.1 29.5 4 24 4 16.3 4 9.6 8.3 6.3 14.7z"/><path fill="#FBBC05" d="M24 44c5.4 0 10.3-1.9 14-5l-6.5-5.5C29.6 35.1 27 36 24 36c-5.7 0-10.5-3.8-12.1-9L4.7 32.6C8 39 15.5 44 24 44z"/><path fill="#EA4335" d="M44.5 20H24v8.5h11.7c-.8 2.4-2.4 4.4-4.5 5.8l6.5 5.5C41.6 36.4 44.5 30.7 44.5 24c0-1.3-.1-2.7-.2-4z"/></svg>Google Elite</div><div class="plan-invest-line">Parceiro Amazon · Investimento: <b id="m4_invest">1.400,21 MT</b></div></div></div>
+      <div class="plan-top"><div><div class="plan-badge mid">⏱ Intermédio</div><div class="plan-name"><svg viewBox="0 0 48 48" width="20" height="20" style="vertical-align:middle;margin-right:6px"><path fill="#4285F4" d="M44.5 20H24v8.5h11.7C34.2 33.3 29.7 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3 0 5.7 1.1 7.8 2.9l6-6C34.4 6.1 29.5 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20c11 0 19.7-8 19.7-20 0-1.3-.1-2.7-.2-4z"/><path fill="#34A853" d="M6.3 14.7l7 5.1C15.1 16 19.2 13 24 13c3 0 5.7 1.1 7.8 2.9l6-6C34.4 6.1 29.5 4 24 4 16.3 4 9.6 8.3 6.3 14.7z"/><path fill="#FBBC05" d="M24 44c5.4 0 10.3-1.9 14-5l-6.5-5.5C29.6 35.1 27 36 24 36c-5.7 0-10.5-3.8-12.1-9L4.7 32.6C8 39 15.5 44 24 44z"/><path fill="#EA4335" d="M44.5 20H24v8.5h11.7c-.8 2.4-2.4 4.4-4.5 5.8l6.5 5.5C41.6 36.4 44.5 30.7 44.5 24c0-1.3-.1-2.7-.2-4z"/></svg>Google Elite</div><div class="plan-invest-line">Parceiro Amazon · Investimento: <b>20.000 MT</b></div></div></div>
       <div class="plan-stats">
-        <div class="plan-stat"><div class="lbl">Diário</div><div class="val green" id="m4_daily">87,50 MT</div></div>
-        <div class="plan-stat"><div class="lbl">Colheitas</div><div class="val orange">2×/dia</div></div>
+        <div class="plan-stat"><div class="lbl">Retorno</div><div class="val green">120.000 MT</div></div>
+        <div class="plan-stat"><div class="lbl">Lucro</div><div class="val orange">2.000</div></div>
         <div class="plan-stat"><div class="lbl">Validade</div><div class="val blue">60 dias</div></div>
       </div>
-      <div class="plan-roi green-bg"><div class="roi-icon"></div><div class="roi-text green">Total estimado: <b id="m4_total">5.250,86 MT</b></div></div>
+      <div class="plan-roi green-bg"><div class="roi-icon"></div><div class="roi-text green">Total estimado: <b>120.000 MT</b></div></div>
       <div class="plan-btns">
         <button class="btn-activate blue" onclick="openActivate('m4')"> Activar Plano</button>
         <button class="btn-deposit" onclick="location.href='deposit.html'">Depositar</button>
@@ -322,13 +326,13 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);min-height:100vh;padd
   <!-- LONG TERM -->
   <div class="plan-section" id="sec-long">
     <div class="plan-card long">
-      <div class="plan-top"><div><div class="plan-badge long"> Longo Prazo</div><div class="plan-name"><svg viewBox="0 0 40 40" width="20" height="20" style="vertical-align:middle;margin-right:6px"><text y="24" x="3" font-size="20" font-family="Arial Black" font-weight="900" fill="#FF9900">a</text><path d="M3 28Q15 35 27 28" stroke="#FF9900" stroke-width="2.2" fill="none" stroke-linecap="round"/><polygon points="25,25 29,29 27,29 27,31" fill="#FF9900"/></svg>Amazon Anual Prata</div><div class="plan-invest-line">Parceiro Spotify · Investimento: <b id="l1_invest">700,11 MT</b></div></div></div>
+      <div class="plan-top"><div><div class="plan-badge long"> Longo Prazo</div><div class="plan-name"><svg viewBox="0 0 40 40" width="20" height="20" style="vertical-align:middle;margin-right:6px"><text y="24" x="3" font-size="20" font-family="Arial Black" font-weight="900" fill="#FF9900">a</text><path d="M3 28Q15 35 27 28" stroke="#FF9900" stroke-width="2.2" fill="none" stroke-linecap="round"/><polygon points="25,25 29,29 27,29 27,31" fill="#FF9900"/></svg>Amazon Anual Prata</div><div class="plan-invest-line">Parceiro Spotify · Investimento: <b>30.000 MT</b></div></div></div>
       <div class="plan-stats">
-        <div class="plan-stat"><div class="lbl">Diário</div><div class="val green" id="l1_daily">17,50 MT</div></div>
-        <div class="plan-stat"><div class="lbl">Total Est.</div><div class="val gold" id="l1_total">6.378,77 MT</div></div>
-        <div class="plan-stat"><div class="lbl">Validade</div><div class="val blue">365 dias</div></div>
+        <div class="plan-stat"><div class="lbl">Retorno</div><div class="val green">90.000 MT</div></div>
+        <div class="plan-stat"><div class="lbl">Lucro</div><div class="val orange">3.000</div></div>
+        <div class="plan-stat"><div class="lbl">Anual</div><div class="val gold">1080000 MT</div></div>
       </div>
-      <div class="plan-roi green-bg"><div class="roi-icon"></div><div class="roi-text green">Rendimento anual estimado: <b>+812%</b></div></div>
+      <div class="plan-roi green-bg"><div class="roi-icon"></div><div class="roi-text green">Rendimento anual estimado: <b>+1080%</b></div></div>
       <div class="plan-btns">
         <button class="btn-activate green" onclick="openActivate('l1')"> Activar Anual</button>
         <button class="btn-deposit" onclick="location.href='deposit.html'">Depositar</button>
@@ -336,13 +340,13 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);min-height:100vh;padd
     </div>
 
     <div class="plan-card long">
-      <div class="plan-top"><div><div class="plan-badge long"> Longo Prazo</div><div class="plan-name"><svg viewBox="0 0 24 24" width="20" height="20" style="vertical-align:middle;margin-right:6px"><circle cx="12" cy="12" r="11" fill="#1DB954"/><path d="M7 15c3-2 7-2 10 0" stroke="white" stroke-width="1.8" fill="none" stroke-linecap="round"/><path d="M6.5 12c3.5-2.5 8.5-2.5 11 0" stroke="white" stroke-width="1.8" fill="none" stroke-linecap="round"/><path d="M6 9c4-3 10-3 12 0" stroke="white" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg>Spotify Anual Ouro</div><div class="plan-invest-line">Parceiro YouTube · Investimento: <b id="l2_invest">1.050,16 MT</b></div></div></div>
+      <div class="plan-top"><div><div class="plan-badge long"> Longo Prazo</div><div class="plan-name"><svg viewBox="0 0 24 24" width="20" height="20" style="vertical-align:middle;margin-right:6px"><circle cx="12" cy="12" r="11" fill="#1DB954"/><path d="M7 15c3-2 7-2 10 0" stroke="white" stroke-width="1.8" fill="none" stroke-linecap="round"/><path d="M6.5 12c3.5-2.5 8.5-2.5 11 0" stroke="white" stroke-width="1.8" fill="none" stroke-linecap="round"/><path d="M6 9c4-3 10-3 12 0" stroke="white" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg>Spotify Anual Ouro</div><div class="plan-invest-line">Parceiro YouTube · Investimento: <b>40.000 MT</b></div></div></div>
       <div class="plan-stats">
-        <div class="plan-stat"><div class="lbl">Diário</div><div class="val green" id="l2_daily">35,00 MT</div></div>
-        <div class="plan-stat"><div class="lbl">Total Est.</div><div class="val gold" id="l2_total">12.757,54 MT</div></div>
-        <div class="plan-stat"><div class="lbl">Validade</div><div class="val blue">365 dias</div></div>
+        <div class="plan-stat"><div class="lbl">Retorno</div><div class="val green">120.000 MT</div></div>
+        <div class="plan-stat"><div class="lbl">Lucro</div><div class="val orange">4.000</div></div>
+        <div class="plan-stat"><div class="lbl">Anual</div><div class="val gold">1440000 MT</div></div>
       </div>
-      <div class="plan-roi green-bg"><div class="roi-icon"></div><div class="roi-text green">Rendimento anual estimado: <b>+1.117%</b></div></div>
+      <div class="plan-roi green-bg"><div class="roi-icon"></div><div class="roi-text green">Rendimento anual estimado: <b>+1440%</b></div></div>
       <div class="plan-btns">
         <button class="btn-activate green" onclick="openActivate('l2')"> Activar Anual</button>
         <button class="btn-deposit" onclick="location.href='deposit.html'">Depositar</button>
@@ -351,13 +355,13 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);min-height:100vh;padd
 
     <div class="plan-card long">
       <div class="popular-tag" style="background:linear-gradient(135deg,var(--success),#059669)"> TOP</div>
-      <div class="plan-top"><div><div class="plan-badge long"> Longo Prazo</div><div class="plan-name"><svg viewBox="0 0 48 48" width="20" height="20" style="vertical-align:middle;margin-right:6px"><path fill="#4285F4" d="M44.5 20H24v8.5h11.7C34.2 33.3 29.7 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3 0 5.7 1.1 7.8 2.9l6-6C34.4 6.1 29.5 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20c11 0 19.7-8 19.7-20 0-1.3-.1-2.7-.2-4z"/><path fill="#34A853" d="M6.3 14.7l7 5.1C15.1 16 19.2 13 24 13c3 0 5.7 1.1 7.8 2.9l6-6C34.4 6.1 29.5 4 24 4 16.3 4 9.6 8.3 6.3 14.7z"/><path fill="#FBBC05" d="M24 44c5.4 0 10.3-1.9 14-5l-6.5-5.5C29.6 35.1 27 36 24 36c-5.7 0-10.5-3.8-12.1-9L4.7 32.6C8 39 15.5 44 24 44z"/><path fill="#EA4335" d="M44.5 20H24v8.5h11.7c-.8 2.4-2.4 4.4-4.5 5.8l6.5 5.5C41.6 36.4 44.5 30.7 44.5 24c0-1.3-.1-2.7-.2-4z"/></svg>Google Anual Diamante</div><div class="plan-invest-line">Investimento: <b id="l3_invest">2.100,32 MT</b></div></div></div>
+      <div class="plan-top"><div><div class="plan-badge long"> Longo Prazo</div><div class="plan-name"><svg viewBox="0 0 48 48" width="20" height="20" style="vertical-align:middle;margin-right:6px"><path fill="#4285F4" d="M44.5 20H24v8.5h11.7C34.2 33.3 29.7 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3 0 5.7 1.1 7.8 2.9l6-6C34.4 6.1 29.5 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20c11 0 19.7-8 19.7-20 0-1.3-.1-2.7-.2-4z"/><path fill="#34A853" d="M6.3 14.7l7 5.1C15.1 16 19.2 13 24 13c3 0 5.7 1.1 7.8 2.9l6-6C34.4 6.1 29.5 4 24 4 16.3 4 9.6 8.3 6.3 14.7z"/><path fill="#FBBC05" d="M24 44c5.4 0 10.3-1.9 14-5l-6.5-5.5C29.6 35.1 27 36 24 36c-5.7 0-10.5-3.8-12.1-9L4.7 32.6C8 39 15.5 44 24 44z"/><path fill="#EA4335" d="M44.5 20H24v8.5h11.7c-.8 2.4-2.4 4.4-4.5 5.8l6.5 5.5C41.6 36.4 44.5 30.7 44.5 24c0-1.3-.1-2.7-.2-4z"/></svg>Google Anual Diamante</div><div class="plan-invest-line">Investimento: <b>100.000 MT</b></div></div></div>
       <div class="plan-stats">
-        <div class="plan-stat"><div class="lbl">Diário</div><div class="val green" id="l3_daily">70,00 MT</div></div>
-        <div class="plan-stat"><div class="lbl">Total Est.</div><div class="val gold" id="l3_total">25.515,09 MT</div></div>
-        <div class="plan-stat"><div class="lbl">Validade</div><div class="val blue">365 dias</div></div>
+        <div class="plan-stat"><div class="lbl">Retorno</div><div class="val green">300.000 MT</div></div>
+        <div class="plan-stat"><div class="lbl">Lucro</div><div class="val orange">10.000</div></div>
+        <div class="plan-stat"><div class="lbl">Anual</div><div class="val gold">3600000 MT</div></div>
       </div>
-      <div class="plan-roi green-bg"><div class="roi-icon"></div><div class="roi-text green">Rendimento anual estimado: <b>+1.117%</b></div></div>
+      <div class="plan-roi green-bg"><div class="roi-icon"></div><div class="roi-text green">Rendimento anual estimado: <b>+3600%</b></div></div>
       <div class="plan-btns">
         <button class="btn-activate green" onclick="openActivate('l3')"> Activar Anual</button>
         <button class="btn-deposit" onclick="location.href='deposit.html'">Depositar</button>
@@ -365,13 +369,13 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);min-height:100vh;padd
     </div>
 
     <div class="plan-card long">
-      <div class="plan-top"><div><div class="plan-badge long"> Longo Prazo</div><div class="plan-name"><svg viewBox="0 0 24 24" width="20" height="20" style="vertical-align:middle;margin-right:6px"><rect width="24" height="24" rx="5" fill="#FF0000"/><polygon points="10,8 17,12 10,16" fill="white"/></svg>YouTube Anual Elite</div><div class="plan-invest-line">Investimento: <b id="l4_invest">3.500,54 MT</b></div></div></div>
+      <div class="plan-top"><div><div class="plan-badge long"> Longo Prazo</div><div class="plan-name"><svg viewBox="0 0 24 24" width="20" height="20" style="vertical-align:middle;margin-right:6px"><rect width="24" height="24" rx="5" fill="#FF0000"/><polygon points="10,8 17,12 10,16" fill="white"/></svg>YouTube Anual Elite</div><div class="plan-invest-line">Investimento: <b>150.000 MT</b></div></div></div>
       <div class="plan-stats">
-        <div class="plan-stat"><div class="lbl">Diário</div><div class="val green" id="l4_daily">175,00 MT</div></div>
-        <div class="plan-stat"><div class="lbl">Total Est.</div><div class="val gold" id="l4_total">63.787,73 MT</div></div>
-        <div class="plan-stat"><div class="lbl">Validade</div><div class="val blue">365 dias</div></div>
+        <div class="plan-stat"><div class="lbl">Retorno</div><div class="val green">450.000 MT</div></div>
+        <div class="plan-stat"><div class="lbl">Lucro</div><div class="val orange">15.000</div></div>
+        <div class="plan-stat"><div class="lbl">Anual</div><div class="val gold">5400000 MT</div></div>
       </div>
-      <div class="plan-roi green-bg"><div class="roi-icon"></div><div class="roi-text green">Rendimento anual estimado: <b>+1.725%</b></div></div>
+      <div class="plan-roi green-bg"><div class="roi-icon"></div><div class="roi-text green">Rendimento anual estimado: <b>+5400%</b></div></div>
       <div class="plan-btns">
         <button class="btn-activate green" onclick="openActivate('l4')"> Activar Anual</button>
         <button class="btn-deposit" onclick="location.href='deposit.html'">Depositar</button>
@@ -449,7 +453,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);min-height:100vh;padd
 
 <div class="toast" id="toast"><span id="toastMsg"></span></div>
 
-
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"></script>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
@@ -475,29 +479,21 @@ const db   = getFirestore(app);
 
 let currentUser=null, userData=null, pendingPlan=null, hasUsedFree=false;
 
-// ✅ TAXA DE CONVERSÃO EM TEMPO REAL
-const TAXA_CAMBIO_KZ_PARA_MT = 14.2887;
-
-// ✅ Função para converter Kz para MT
-function converterKzParaMt(valorKz) {
-  return Number(valorKz) / TAXA_CAMBIO_KZ_PARA_MT;
-}
-
 const PLANS={
-  s1:{id:'s1',name:'Google Básico',invest:3000,returns:7000,days:7,type:'short',icon:''},
-  s2:{id:'s2',name:'Amazon Prata',invest:6000,returns:16000,days:14,type:'short',icon:''},
-  s3:{id:'s3',name:'Spotify Ouro',invest:10000,returns:40000,days:30,type:'short',icon:''},
-  s4:{id:'s4',name:'YouTube Diamante',invest:15000,returns:50000,days:30,type:'short',icon:''},
-  s5:{id:'s5',name:'Amazon Elite',invest:20000,returns:65000,days:30,type:'short',icon:''},
-  m0:{id:'m0',name:'Google Grátis',invest:0,daily:100,days:10,type:'mid',free:true,harvests:1,totalEst:1000,icon:'🎁'},
-  m1:{id:'m1',name:'Spotify Prata',invest:6000,daily:300,days:60,type:'mid',harvests:2,totalEst:18000,icon:''},
-  m2:{id:'m2',name:'Amazon Ouro',invest:10000,daily:500,days:60,type:'mid',harvests:2,totalEst:30000,icon:''},
-  m3:{id:'m3',name:'YouTube Diamante',invest:15000,daily:750,days:60,type:'mid',harvests:2,totalEst:45000,icon:''},
-  m4:{id:'m4',name:'Google Elite',invest:20000,daily:1250,days:60,type:'mid',harvests:2,totalEst:75000,icon:''},
-  l1:{id:'l1',name:'Amazon Anual Prata',invest:10000,daily:250,days:365,type:'long',totalEst:91250,icon:''},
-  l2:{id:'l2',name:'Spotify Anual Ouro',invest:15000,daily:500,days:365,type:'long',totalEst:182500,icon:''},
-  l3:{id:'l3',name:'Google Anual Diamante',invest:30000,daily:1000,days:365,type:'long',totalEst:365000,icon:''},
-  l4:{id:'l4',name:'YouTube Anual Elite',invest:50000,daily:2500,days:365,type:'long',totalEst:912500,icon:''},
+  s1:{id:'s1',name:'Google Básico',invest:500,returns:750,days:15,type:'short',icon:''},
+  s2:{id:'s2',name:'Amazon Prata',invest:900,returns:1800,days:20,type:'short',icon:''},
+  s3:{id:'s3',name:'Spotify Ouro',invest:1500,returns:3750,days:25,type:'short',icon:''},
+  s4:{id:'s4',name:'YouTube Diamante',invest:2000,returns:6000,days:30,type:'short',icon:''},
+  s5:{id:'s5',name:'Amazon Elite',invest:5000,returns:15000,days:30,type:'short',icon:''},
+  m0:{id:'m0',name:'Google Grátis',invest:0,daily:60,days:10,type:'mid',free:true,harvests:1,totalEst:300,icon:'🎁'},
+  m1:{id:'m1',name:'Spotify Prata',invest:3000,returns:18000,days:60,type:'mid',harvests:2,totalEst:18000,icon:''},
+  m2:{id:'m2',name:'Amazon Ouro',invest:5000,returns:30000,days:60,type:'mid',harvests:2,totalEst:30000,icon:''},
+  m3:{id:'m3',name:'YouTube Diamante',invest:10000,returns:60000,days:60,type:'mid',harvests:2,totalEst:60000,icon:''},
+  m4:{id:'m4',name:'Google Elite',invest:20000,returns:120000,days:60,type:'mid',harvests:2,totalEst:120000,icon:''},
+  l1:{id:'l1',name:'Amazon Anual Prata',invest:30000,returns:90000,days:365,type:'long',totalEst:1080000,icon:''},
+  l2:{id:'l2',name:'Spotify Anual Ouro',invest:40000,returns:120000,days:365,type:'long',totalEst:1440000,icon:''},
+  l3:{id:'l3',name:'Google Anual Diamante',invest:100000,returns:300000,days:365,type:'long',totalEst:3600000,icon:''},
+  l4:{id:'l4',name:'YouTube Anual Elite',invest:150000,returns:450000,days:365,type:'long',totalEst:5400000,icon:''},
 };
 
 function fmt(n){return Number(n||0).toLocaleString('pt-AO')}
@@ -509,56 +505,14 @@ window.switchType=function(type,btn){
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
-// ✅ Actualizar valores dos planos em tempo real
-function actualizarValoresPlanos(){
-  // SHORT TERM
-  ['s1','s2','s3','s4','s5'].forEach(id=>{
-    const p=PLANS[id];
-    const investMt=fmt(converterKzParaMt(p.invest));
-    const returnsMt=fmt(converterKzParaMt(p.returns));
-    const lucroMt=fmt(converterKzParaMt(p.returns-p.invest));
-    
-    document.getElementById(id+'_invest')&&(document.getElementById(id+'_invest').textContent=investMt+' MT');
-    document.getElementById(id+'_returns')&&(document.getElementById(id+'_returns').textContent=returnsMt+' MT');
-    document.getElementById(id+'_lucro')&&(document.getElementById(id+'_lucro').textContent='+'+lucroMt);
-  });
-  
-  // MID TERM
-  ['m1','m2','m3','m4'].forEach(id=>{
-    const p=PLANS[id];
-    const investMt=fmt(converterKzParaMt(p.invest));
-    const dailyMt=fmt(converterKzParaMt(p.daily));
-    const totalMt=fmt(converterKzParaMt(p.totalEst));
-    
-    document.getElementById(id+'_invest')&&(document.getElementById(id+'_invest').textContent=investMt+' MT');
-    document.getElementById(id+'_daily')&&(document.getElementById(id+'_daily').textContent=dailyMt+' MT');
-    document.getElementById(id+'_total')&&(document.getElementById(id+'_total').textContent=totalMt+' MT');
-  });
-  
-  // LONG TERM
-  ['l1','l2','l3','l4'].forEach(id=>{
-    const p=PLANS[id];
-    const investMt=fmt(converterKzParaMt(p.invest));
-    const dailyMt=fmt(converterKzParaMt(p.daily));
-    const totalMt=fmt(converterKzParaMt(p.totalEst));
-    
-    document.getElementById(id+'_invest')&&(document.getElementById(id+'_invest').textContent=investMt+' MT');
-    document.getElementById(id+'_daily')&&(document.getElementById(id+'_daily').textContent=dailyMt+' MT');
-    document.getElementById(id+'_total')&&(document.getElementById(id+'_total').textContent=totalMt+' MT');
-  });
-}
-
 function renderFreePlan(){
   const container=document.getElementById('freePlanContainer');
-  const dailyMt=fmt(converterKzParaMt(100));
-  const totalMt=fmt(converterKzParaMt(1000));
-  
   if(hasUsedFree){
     container.innerHTML=`<div class="plan-card free-card" style="opacity:.75">
       <div class="used-tag">✓ JÁ UTILIZADO</div>
       <div class="plan-top"><div><div class="plan-badge free">🎁 Estágio Gratuito</div><div class="plan-name"><svg viewBox="0 0 48 48" width="20" height="20" style="vertical-align:middle;margin-right:6px"><path fill="#4285F4" d="M44.5 20H24v8.5h11.7C34.2 33.3 29.7 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3 0 5.7 1.1 7.8 2.9l6-6C34.4 6.1 29.5 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20c11 0 19.7-8 19.7-20 0-1.3-.1-2.7-.2-4z"/><path fill="#34A853" d="M6.3 14.7l7 5.1C15.1 16 19.2 13 24 13c3 0 5.7 1.1 7.8 2.9l6-6C34.4 6.1 29.5 4 24 4 16.3 4 9.6 8.3 6.3 14.7z"/><path fill="#FBBC05" d="M24 44c5.4 0 10.3-1.9 14-5l-6.5-5.5C29.6 35.1 27 36 24 36c-5.7 0-10.5-3.8-12.1-9L4.7 32.6C8 39 15.5 44 24 44z"/><path fill="#EA4335" d="M44.5 20H24v8.5h11.7c-.8 2.4-2.4 4.4-4.5 5.8l6.5 5.5C41.6 36.4 44.5 30.7 44.5 24c0-1.3-.1-2.7-.2-4z"/></svg>Google Grátis</div><div class="plan-invest-line">Parceiro Google · <b style="color:var(--orange)">Gratuito</b></div></div></div>
       <div class="plan-stats">
-        <div class="plan-stat"><div class="lbl">Diário</div><div class="val green">${dailyMt} MT</div></div>
+        <div class="plan-stat"><div class="lbl">Ganho Diário</div><div class="val green">60 MT</div></div>
         <div class="plan-stat"><div class="lbl">Colheitas</div><div class="val orange">1×/dia</div></div>
         <div class="plan-stat"><div class="lbl">Validade</div><div class="val blue">10 dias</div></div>
       </div>
@@ -570,11 +524,11 @@ function renderFreePlan(){
       <div class="popular-tag" style="background:linear-gradient(135deg,var(--orange),var(--orange-dark))">🎁 GRÁTIS</div>
       <div class="plan-top"><div><div class="plan-badge free">🎁 Estágio Gratuito</div><div class="plan-name"><svg viewBox="0 0 48 48" width="20" height="20" style="vertical-align:middle;margin-right:6px"><path fill="#4285F4" d="M44.5 20H24v8.5h11.7C34.2 33.3 29.7 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3 0 5.7 1.1 7.8 2.9l6-6C34.4 6.1 29.5 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20c11 0 19.7-8 19.7-20 0-1.3-.1-2.7-.2-4z"/><path fill="#34A853" d="M6.3 14.7l7 5.1C15.1 16 19.2 13 24 13c3 0 5.7 1.1 7.8 2.9l6-6C34.4 6.1 29.5 4 24 4 16.3 4 9.6 8.3 6.3 14.7z"/><path fill="#FBBC05" d="M24 44c5.4 0 10.3-1.9 14-5l-6.5-5.5C29.6 35.1 27 36 24 36c-5.7 0-10.5-3.8-12.1-9L4.7 32.6C8 39 15.5 44 24 44z"/><path fill="#EA4335" d="M44.5 20H24v8.5h11.7c-.8 2.4-2.4 4.4-4.5 5.8l6.5 5.5C41.6 36.4 44.5 30.7 44.5 24c0-1.3-.1-2.7-.2-4z"/></svg>Google Grátis</div><div class="plan-invest-line">Parceiro Google · <b style="color:var(--orange)">Completamente Gratuito</b></div></div></div>
       <div class="plan-stats">
-        <div class="plan-stat"><div class="lbl">Diário</div><div class="val green">${dailyMt} MT</div></div>
+        <div class="plan-stat"><div class="lbl">Ganho Diário</div><div class="val green">60 MT</div></div>
         <div class="plan-stat"><div class="lbl">Colheitas</div><div class="val orange">1×/dia</div></div>
         <div class="plan-stat"><div class="lbl">Validade</div><div class="val blue">10 dias</div></div>
       </div>
-      <div class="plan-roi orange-bg"><div class="roi-icon"></div><div class="roi-text orange">Total estimado: <b>${totalMt} MT</b> — Comece sem custo! Apenas uma vez.</div></div>
+      <div class="plan-roi orange-bg"><div class="roi-icon"></div><div class="roi-text orange">Total estimado: <b>300 MT</b> — Comece sem custo! Apenas uma vez.</div></div>
       <div class="plan-btns"><button class="btn-activate orange" onclick="openActivate('m0')">🎁 Activar Gratuitamente</button></div>
     </div>`;
   }
@@ -586,11 +540,13 @@ window.openActivate=async function(planId){
   const p=pendingPlan;
   const balance=userData.balance||0;
 
+  // ── VERIFICAÇÃO PLANO GRÁTIS (Firebase em tempo real) ──
   if(p.free){
     if(hasUsedFree){
       showToast('❌ O plano gratuito já foi activado uma vez nesta conta.','error');
       return;
     }
+    // Double-check no Firebase para garantir
     const freshSnap=await getDoc(doc(db,'users',currentUser.uid));
     if(freshSnap.exists()&&freshSnap.data().usedFreePlan===true){
       hasUsedFree=true;userData.usedFreePlan=true;renderFreePlan();
@@ -599,11 +555,13 @@ window.openActivate=async function(planId){
     }
   }
 
+  // ── VERIFICAÇÃO LIMITE 2 INVESTIMENTOS ACTIVOS (excluindo plano grátis) ──
   if(!p.free){
     const activeQ=query(collection(db,'investments'),where('uid','==',currentUser.uid),where('status','==','active'),where('isFree','==',false));
     const activeSnap=await getDocs(activeQ);
     const countPaid=activeSnap.size;
     if(countPaid>=2){
+      // Show limit modal
       document.getElementById('limitInfo').innerHTML=`
         <div class="row"><span>Plano pretendido</span><span>${p.name}</span></div>
         <div class="row"><span>Investimentos activos</span><span style="color:var(--error);font-weight:700">${countPaid}/2</span></div>
@@ -614,32 +572,31 @@ window.openActivate=async function(planId){
     }
   }
 
+  // ── VERIFICAÇÃO SALDO ──
   if(!p.free&&balance<p.invest){
-    const necessarioMt=fmt(converterKzParaMt(p.invest));
-    const saldoMt=fmt(converterKzParaMt(balance));
-    const emFaltaMt=fmt(converterKzParaMt(p.invest-balance));
-    
+    // Show no balance modal
     document.getElementById('nobalInfo').innerHTML=`
       <div class="row"><span>Plano</span><span>${p.name}</span></div>
-      <div class="row"><span>Valor Necessário</span><span style="color:var(--error)">${necessarioMt} MT</span></div>
-      <div class="row"><span>Saldo Actual</span><span>${saldoMt} MT</span></div>
-      <div class="row"><span>Em Falta</span><span>${emFaltaMt} MT</span></div>
+      <div class="row"><span>Valor Necessário</span><span style="color:var(--error)">${fmt(p.invest)} MT</span></div>
+      <div class="row"><span>Saldo Actual</span><span>${fmt(balance)} MT</span></div>
+      <div class="row"><span>Em Falta</span><span>${fmt(p.invest-balance)} MT</span></div>
     `;
     document.getElementById('modalNobal').classList.add('open');
     return;
   }
 
+  // Show confirm modal
   const isFree=p.free;
   document.getElementById('mIcon').textContent=p.icon;
   document.getElementById('mTitle').textContent='Activar: '+p.name;
   document.getElementById('mSub').textContent=isFree?'Plano gratuito — sem qualquer custo!':'Confirme os detalhes antes de activar';
   let rows=`<div class="confirm-row"><span class="key">Plano</span><span>${p.name}</span></div>`;
-  rows+=`<div class="confirm-row"><span class="key">Investimento</span><span class="${isFree?'v-orange':'v-blue'}">${isFree?'GRATUITO':fmt(converterKzParaMt(p.invest))+' MT'}</span></div>`;
-  if(p.returns) rows+=`<div class="confirm-row"><span class="key">Retorno Total</span><span class="v-green">${fmt(converterKzParaMt(p.returns))} MT</span></div>`;
-  if(p.daily)   rows+=`<div class="confirm-row"><span class="key">Rendimento Diário</span><span class="v-green">${fmt(converterKzParaMt(p.daily))} MT</span></div>`;
-  if(p.totalEst)rows+=`<div class="confirm-row"><span class="key">Total Estimado</span><span class="v-green">${fmt(converterKzParaMt(p.totalEst))} MT</span></div>`;
+  rows+=`<div class="confirm-row"><span class="key">Investimento</span><span class="${isFree?'v-orange':'v-blue'}">${isFree?'GRATUITO':fmt(p.invest)+' MT'}</span></div>`;
+  if(p.returns) rows+=`<div class="confirm-row"><span class="key">Retorno Total</span><span class="v-green">${fmt(p.returns)} MT</span></div>`;
+  if(p.daily)   rows+=`<div class="confirm-row"><span class="key">Rendimento Diário</span><span class="v-green">${fmt(p.daily)} MT</span></div>`;
+  if(p.totalEst)rows+=`<div class="confirm-row"><span class="key">Total Estimado</span><span class="v-green">${fmt(p.totalEst)} MT</span></div>`;
   rows+=`<div class="confirm-row"><span class="key">Duração</span><span>${p.days} dias</span></div>`;
-  if(!isFree) rows+=`<div class="confirm-row"><span class="key">Saldo Após Activação</span><span class="v-blue">${fmt(converterKzParaMt(balance-p.invest))} MT</span></div>`;
+  if(!isFree) rows+=`<div class="confirm-row"><span class="key">Saldo Após Activação</span><span class="v-blue">${fmt(balance-p.invest)} MT</span></div>`;
   document.getElementById('mBox').innerHTML=rows;
   const btn=document.getElementById('mBtn');
   btn.className=isFree?'btn-confirm orange':p.type==='long'?'btn-confirm green':'btn-confirm blue';
@@ -670,13 +627,11 @@ window.doActivate=async function(){
     });
     if(!p.free) userData.balance=Math.max(0,(userData.balance||0)-p.invest);
     if(p.free){userData.usedFreePlan=true;hasUsedFree=true;renderFreePlan()}
-    document.getElementById('headerBal').textContent=fmt(converterKzParaMt(userData.balance||0));
+    document.getElementById('headerBal').textContent=fmt(userData.balance||0);
     document.getElementById('myActive').textContent=(parseInt(document.getElementById('myActive').textContent)||0)+1;
     closeModal();
-    const amountMt=p.daily?'+'+fmt(converterKzParaMt(p.daily))+' MT/dia':'+'+fmt(converterKzParaMt(p.returns))+' MT retorno';
-    document.getElementById('sucAmount').textContent=amountMt;
-    const harvestMsg=p.daily?' Colha '+fmt(converterKzParaMt(p.daily))+' MT todos os dias!':' Retorno garantido de '+fmt(converterKzParaMt(p.returns))+' MT.';
-    document.getElementById('sucMsg').textContent=`"${p.name}" activado! Duração: ${p.days} dias.${harvestMsg}`;
+    document.getElementById('sucAmount').textContent=p.daily?'+'+fmt(p.daily)+' MT/dia':'+'+fmt(p.returns)+' MT retorno';
+    document.getElementById('sucMsg').textContent=`"${p.name}" activado! Duração: ${p.days} dias.${p.daily?' Colha '+fmt(p.daily)+' MT todos os dias!':' Retorno garantido de '+fmt(p.returns)+' MT.'}`;
     document.getElementById('successOverlay').classList.add('open');
   }catch(e){showToast('Erro ao activar. Tente novamente.','error');closeModal()}
 }
@@ -688,12 +643,11 @@ onAuthStateChanged(auth,async user=>{
   if(snap.exists()){
     userData=snap.data();
     hasUsedFree=userData.usedFreePlan===true;
-    document.getElementById('headerBal').textContent=fmt(converterKzParaMt(userData.balance||0));
+    document.getElementById('headerBal').textContent=fmt(userData.balance||0);
     document.getElementById('myActive').textContent=userData.activeInvestments||0;
-    document.getElementById('myEarned').textContent=fmt(converterKzParaMt(userData.totalEarned||0))+' MT';
+    document.getElementById('myEarned').textContent=fmt(userData.totalEarned||0)+' MT';
     renderFreePlan();
   }
-  actualizarValoresPlanos();
 });
 
 window.showToast=function(msg,type='success'){
@@ -704,8 +658,3 @@ window.showToast=function(msg,type='success'){
 </script>
 </body>
 </html>
-
-
-
-
-

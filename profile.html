@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt">
 <head>
@@ -218,15 +217,7 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db   = getFirestore(app);
 
-// ✅ TAXA DE CONVERSÃO: 1 MT = 14.2887 KZ
-const TAXA_CAMBIO_KZ_PARA_MT = 14.2887;
-
-// ✅ Converter KZ para MT
-function converterKzParaMt(valorKz) {
-  return Number(valorKz) / TAXA_CAMBIO_KZ_PARA_MT;
-}
-
-function fmt(n){return Number(n||0).toLocaleString('pt-AO')}
+function fmt(n){return (n||0).toLocaleString('pt-AO')}
 
 onAuthStateChanged(auth, user=>{
   if(!user){location.href='auth.html';return}
@@ -242,10 +233,10 @@ onAuthStateChanged(auth, user=>{
     document.getElementById('profEmail').textContent=d.email||user.email||'—';
     document.getElementById('profLevel').textContent=d.level||'Iniciante';
 
-    // ✅ Store for toggle — convertido para MT
-    _pBal=fmt(converterKzParaMt(d.balance||0));
-    _pEarn=fmt(converterKzParaMt(d.totalEarned||0));
-    _pWith=fmt(converterKzParaMt(d.totalWithdrawn||0));
+    // Store for toggle — masked by default
+    _pBal=fmt(d.balance||0);
+    _pEarn=fmt(d.totalEarned||0);
+    _pWith=fmt(d.totalWithdrawn||0);
     document.getElementById('pBalance').textContent='••••';
     document.getElementById('pEarned').textContent='••••';
     document.getElementById('pWithdrawn').textContent='••••';
@@ -257,7 +248,7 @@ onAuthStateChanged(auth, user=>{
     }
   });
 
-  // Load passivos (debt) - ✅ Convertido para MT
+  // Load passivos (debt)
   try{
     const dq=query(collection(db,'discounts'),where('uid','==',user.uid),where('active','==',true));
     getDocs(dq).then(dSnap=>{
@@ -266,12 +257,11 @@ onAuthStateChanged(auth, user=>{
         const d2=dd.data();
         totalDebt+=Math.max(0,(d2.totalAmount||0)-(d2.paid||0));
       });
-      const debtMt = converterKzParaMt(totalDebt);
-      document.getElementById('pDebt').textContent=totalDebt>0?fmt(debtMt)+' MT':'0 MT';
+      document.getElementById('pDebt').textContent=totalDebt>0?fmt(totalDebt)+' MT':'0 MT';
     });
   }catch(e){document.getElementById('pDebt').textContent='0 MT';}
 
-  // Chart - ✅ Convertido para MT
+  // Chart
   try{
     const invQ=query(collection(db,'investments'),where('uid','==',user.uid));
     getDocs(invQ).then(invSnap=>{
@@ -280,8 +270,8 @@ onAuthStateChanged(auth, user=>{
       invs.sort((a,b)=>new Date(b.startDate)-new Date(a.startDate));
       const recent=invs.slice(0,6).reverse();
       const labels=recent.map(i=>i.planName.replace('Plano ','').replace('Intermédio ','').replace('Longo Prazo ','LP ').replace('Estágio Grátis','Grátis'));
-      const dataVals=recent.map(i=>converterKzParaMt(i.invested||0));
-      const dataEarned=recent.map(i=>converterKzParaMt(i.totalHarvested||0));
+      const dataVals=recent.map(i=>i.invested||0);
+      const dataEarned=recent.map(i=>i.totalHarvested||0);
       if(recent.length>0){
         new Chart(document.getElementById('actChart'),{
           type:'bar',
@@ -329,7 +319,6 @@ function toggleProfSaldo(){
   var ei=document.getElementById('profEyeIcon');
   var el=document.getElementById('profEyeLbl');
   if(_profVisible){
-    // ✅ Mostrar em MT
     document.getElementById('pBalance').textContent=_pBal+' MT';
     document.getElementById('pEarned').textContent=_pEarn+' MT';
     document.getElementById('pWithdrawn').textContent=_pWith+' MT';

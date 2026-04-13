@@ -170,14 +170,6 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// ✅ TAXA DE CONVERSÃO: 1 MT = 14,2887 Kz
-const TAXA_CAMBIO_KZ_PARA_MT = 14.2887;
-
-// ✅ Função para converter Kz para MT
-function converterKzParaMt(valorKz) {
-  return Number(valorKz) / TAXA_CAMBIO_KZ_PARA_MT;
-}
-
 // Constantes
 const WEEKDAYS=['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
 const MONTHS=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
@@ -232,9 +224,9 @@ let userData=null;
 let activeInvestments=[];
 let dailyEarning=0;
 let totalInvested=0;
-let completedTasksToday=[];
-let pendingTaskId=null;
-let totalEarnedToday=0;
+let completedTasksToday=[]; // IDs das tarefas concluídas hoje
+let pendingTaskId=null; // ID da tarefa pendente de confirmação
+let totalEarnedToday=0; // Total ganho hoje
 
 // Tarefas (com pontos que serão atualizados dinamicamente)
 const TASKS={
@@ -304,6 +296,7 @@ async function fetchActiveInvestments(uid) {
   try {
     console.log('Buscando investimentos para uid:', uid);
     
+    // Buscar investments do usuário com status active
     const investmentsRef = collection(db, 'investments');
     const q = query(
       investmentsRef, 
@@ -324,10 +317,12 @@ async function fetchActiveInvestments(uid) {
         console.log('Dados do investimento:', investmentData);
         activeInvestments.push(investmentData);
         
+        // Somar ganhos diários (daily)
         if (investmentData.daily && investmentData.daily > 0) {
           dailyEarning += investmentData.daily;
         }
         
+        // Somar total investido
         if (investmentData.invested && investmentData.invested > 0) {
           totalInvested += investmentData.invested;
         }
@@ -336,6 +331,7 @@ async function fetchActiveInvestments(uid) {
       console.log('Total ganhos diários:', dailyEarning);
       console.log('Total investido:', totalInvested);
       
+      // Atualizar UI com informações dos investimentos
       updateInvestmentsUI();
       updateTasksPoints();
       updateTotalEarnings();
@@ -344,7 +340,7 @@ async function fetchActiveInvestments(uid) {
       dailyEarning = 0;
       totalInvested = 0;
       updateInvestmentsUI();
-      totalEarningsEl.textContent = '0 MT';
+      totalEarningsEl.textContent = '0 Kz';
     }
     
   } catch (error) {
@@ -353,22 +349,19 @@ async function fetchActiveInvestments(uid) {
   }
 }
 
-// ✅ Atualizar saldo na interface (COM CONVERSÃO)
+// Atualizar saldo na interface
 function updateBalance() {
   if (userData && userData.balance !== undefined) {
-    const balanceMt = converterKzParaMt(userData.balance);
-    balanceValueEl.textContent = formatCurrency(balanceMt) + ' MT';
+    balanceValueEl.textContent = formatCurrency(userData.balance) + ' MT';
   } else {
-    balanceValueEl.textContent = '0 MT';
+    balanceValueEl.textContent = '0 Kz';
   }
 }
 
-// ✅ Atualizar UI com informações dos investimentos (COM CONVERSÃO)
+// Atualizar UI com informações dos investimentos
 function updateInvestmentsUI() {
   if (activeInvestments.length > 0) {
-    const firstInvestment = activeInvestments[0];
-    const investedMt = converterKzParaMt(firstInvestment.invested || 0);
-    const dailyMt = converterKzParaMt(dailyEarning);
+    const firstInvestment = activeInvestments[0]; // Mostrar o primeiro investimento como exemplo
     
     investmentAreaEl.innerHTML = `
       <div class="investment-card">
@@ -380,8 +373,8 @@ function updateInvestmentsUI() {
         </div>
         <div class="investment-info">
           <div class="investment-title">${firstInvestment.planName || 'Plano de Investimento'}</div>
-          <div class="investment-detail">Investido: ${formatCurrency(investedMt)} MT</div>
-          <div class="investment-detail">Ganho diário: ${formatCurrency(dailyMt)} MT</div>
+          <div class="investment-detail">Investido: ${formatCurrency(firstInvestment.invested || 0)} Kz</div>
+          <div class="investment-detail">Ganho diário: ${formatCurrency(dailyEarning)} MT</div>
           <div class="investment-value">Total ativo: ${activeInvestments.length} investimento(s)</div>
         </div>
       </div>
@@ -396,15 +389,14 @@ function updateInvestmentsUI() {
   }
 }
 
-// ✅ Atualizar total de ganhos (COM CONVERSÃO)
+// Atualizar total de ganhos
 function updateTotalEarnings() {
   if (isWeekday && dailyEarning > 0) {
     const completedValue = calculateCompletedEarnings();
     const remaining = dailyEarning - completedValue;
-    const remainingMt = converterKzParaMt(remaining);
-    totalEarningsEl.innerHTML = `${formatCurrency(remainingMt)} MT <span style="font-size:12px;color:var(--muted);font-weight:normal">(restam)</span>`;
+    totalEarningsEl.innerHTML = `${formatCurrency(remaining)} MT <span style="font-size:12px;color:var(--muted);font-weight:normal">(restam)</span>`;
   } else {
-    totalEarningsEl.textContent = '0 MT';
+    totalEarningsEl.textContent = '0 Kz';
   }
 }
 
@@ -422,9 +414,9 @@ function calculateCompletedEarnings() {
   return completed;
 }
 
-// ✅ Formatar moeda (COM DECIMAIS)
+// Formatar moeda
 function formatCurrency(value) {
-  return value.toFixed(2).replace(/\./g, ',').replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 }
 
 // Atualizar pontos das tarefas com base nos ganhos diários
@@ -433,10 +425,12 @@ function updateTasksPoints() {
   const tasksCount = tasksToday.length;
   
   if (tasksCount > 0 && dailyEarning > 0) {
+    // Distribuir o ganho diário entre as tarefas (valores inteiros)
     const basePoints = Math.floor(dailyEarning / tasksCount);
     const remainder = dailyEarning - (basePoints * tasksCount);
     
     tasksToday.forEach((task, index) => {
+      // Adicionar o resto à primeira tarefa
       if (index === 0) {
         task.points = basePoints + remainder;
       } else {
@@ -444,6 +438,7 @@ function updateTasksPoints() {
       }
     });
   } else {
+    // Valores padrão caso não haja investimento
     tasksToday.forEach(task => {
       task.points = 0;
     });
@@ -465,9 +460,8 @@ function buildAlerts() {
       html += createAlert('danger', '<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>', 'Investimento necessário', 'Para realizar tarefas precisa de um investimento activo. Active um plano primeiro.');
     }
     
-    const dailyMt = converterKzParaMt(dailyEarning);
     if (done === tasks.length && tasks.length > 0) {
-      html += createAlert('success', '<polyline points="20 6 9 17 4 12"/>', 'Todas as tarefas do dia concluídas!', `Parabéns! Completou todas as tarefas de hoje. Ganhou ${formatCurrency(dailyMt)} MT!`);
+      html += createAlert('success', '<polyline points="20 6 9 17 4 12"/>', 'Todas as tarefas do dia concluídas!', `Parabéns! Completou todas as tarefas de hoje. Ganhou ${formatCurrency(dailyEarning)} Kz!`);
     }
   }
   
@@ -494,17 +488,17 @@ function buildTasksArea() {
     return;
   }
   
+  // Atualizar pontos antes de construir
   updateTasksPoints();
   
   tasksAreaEl.innerHTML = `<div class="sec-label">Tarefas de Hoje</div><div class="task-list">${tasks.map(buildCard).join('')}</div>`;
 }
 
-// ✅ Construir card de tarefa (COM CONVERSÃO)
+// Construir card de tarefa
 function buildCard(t) {
   const done = completedTasksToday.includes(t.id);
   const hasInv = activeInvestments.length > 0;
   const pointsValue = t.points || 0;
-  const pointsMt = converterKzParaMt(pointsValue);
   
   const checks = t.checks.map((ch, i) => 
     `<label class="tc-item ${done ? 'checked' : ''}" onclick="window.toggleTC('${t.id}',${i},this)">
@@ -518,7 +512,7 @@ function buildCard(t) {
       <div class="task-instruction">${t.instruction}</div>
       <div class="task-check-row">${checks}</div>
       <button class="btn-do" id="tbtn_${t.id}" onclick="window.openConfirm('${t.id}')" ${hasInv ? '' : 'disabled'}>
-        ${hasInv ? `✓ Receber ${formatCurrency(pointsMt)} MT` : 'Requer investimento activo'}
+        ${hasInv ? `✓ Receber ${formatCurrency(pointsValue)} Kz` : 'Requer investimento activo'}
       </button>
     </div>`;
   
@@ -529,7 +523,7 @@ function buildCard(t) {
         <div class="task-name">${t.name}</div>
         <div class="task-desc">${t.desc}</div>
       </div>
-      <div class="task-pts">${done ? '✓ Feito' : `+${formatCurrency(pointsMt)} MT`}</div>
+      <div class="task-pts">${done ? '✓ Feito' : `+${formatCurrency(pointsValue)} Kz`}</div>
     </div>${body}
   </div>`;
 }
@@ -573,9 +567,8 @@ window.openConfirm = function(taskId) {
   }
   
   pendingTaskId = taskId;
-  const pointsMt = converterKzParaMt(t.points);
   document.getElementById('mTitle').textContent = t.name;
-  document.getElementById('mMsg').textContent = `Confirma que realizou a tarefa? O bónus de ${formatCurrency(pointsMt)} MT será creditado na sua conta.`;
+  document.getElementById('mMsg').textContent = `Confirma que realizou a tarefa? O bónus de ${formatCurrency(t.points)} Kz será creditado na sua conta.`;
   document.getElementById('confirmModal').style.display = 'flex';
 };
 
@@ -593,9 +586,10 @@ window.confirmTask = async function() {
   const points = t.points || 0;
   
   try {
+    // Fechar modal
     closeModal();
     
-    // ✅ Registrar o ganho na coleção 'earnings' (EM KZ ORIGINAL)
+    // 1. Registrar o ganho na coleção 'earnings' ou 'ganhos'
     const earningData = {
       uid: currentUser.uid,
       userId: userData?.userId || '',
@@ -603,32 +597,34 @@ window.confirmTask = async function() {
       taskId: taskId,
       taskName: t.name,
       taskBrand: t.brand,
-      amountKz: points,
-      amountMt: converterKzParaMt(points),
+      amount: points,
       date: now.toISOString(),
       dateStr: todayStr,
       type: 'task_earning',
       status: 'completed'
     };
     
+    // Adicionar à coleção earnings
     await addDoc(collection(db, 'earnings'), earningData);
     console.log('Ganho registrado com sucesso');
     
-    // ✅ Atualizar o campo totalEarned no documento do usuário (EM KZ)
+    // 2. Atualizar o campo totalEarned no documento do usuário
     await updateDoc(doc(db, 'users', currentUser.uid), {
       totalEarned: increment(points),
-      balance: increment(points)
+      balance: increment(points) // Se tiver campo balance
     });
     console.log('totalEarned atualizado');
     
-    // Atualizar dados locais
+    // 3. Atualizar dados locais do usuário
     if (userData) {
       userData.totalEarned = (userData.totalEarned || 0) + points;
       userData.balance = (userData.balance || 0) + points;
     }
     
-    // Marcar tarefa como concluída
+    // Marcar tarefa como concluída localmente
     completedTasksToday.push(taskId);
+    
+    // Salvar no localStorage
     localStorage.setItem(`completedTasks_${currentUser.uid}_${todayStr}`, JSON.stringify(completedTasksToday));
     
     // Atualizar UI
@@ -646,14 +642,13 @@ window.confirmTask = async function() {
       }
     }
     
-    // Atualizar interface
+    // Atualizar saldo na interface
     updateBalance();
     updateProgress();
     updateTotalEarnings();
     buildAlerts();
     
-    const pointsMt = converterKzParaMt(points);
-    showToast(`✓ Tarefa concluída! Ganhou ${formatCurrency(pointsMt)} MT`, 'success');
+    showToast(` Tarefa concluída! Ganhou ${formatCurrency(points)} Kz`, 'success');
     
   } catch (e) {
     console.error('Erro ao confirmar tarefa:', e);
@@ -695,10 +690,16 @@ onAuthStateChanged(auth, async user => {
   currentUser = user;
   
   try {
+    // Buscar dados do usuário
     await fetchUserData(user.uid);
+    
+    // Buscar investimentos ativos
     await fetchActiveInvestments(user.uid);
+    
+    // Carregar tarefas concluídas hoje (localStorage)
     loadCompletedTasks();
     
+    // Construir interface
     buildAlerts();
     buildTasksArea();
     updateProgress();

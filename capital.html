@@ -41,30 +41,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);min-height:100vh;padd
 /* Chart */
 .chart-wrap{height:160px;position:relative}
 canvas{width:100%!important}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 </style>
 </head>
 <body>
@@ -153,19 +129,10 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db   = getFirestore(app);
 
-// ✅ TAXA DE CONVERSÃO: 1 MT = 14.2887 KZ
-const TAXA_CAMBIO_KZ_PARA_MT = 14.2887;
-
-// ✅ Converter KZ para MT
-function converterKzParaMt(valorKz) {
-  return Number(valorKz) / TAXA_CAMBIO_KZ_PARA_MT;
-}
-
 function fmt(n){return Number(n||0).toLocaleString('pt-AO')}
 
 onAuthStateChanged(auth,async user=>{
   if(!user){location.href='auth.html';return}
-  
   // Aggregate all users
   const usersSnap=await getDocs(collection(db,'users'));
   let totalDeposited=0,totalWithdrawn=0,totalBonus=0;
@@ -183,9 +150,7 @@ onAuthStateChanged(auth,async user=>{
   let invCount=0,invTotal=0,invHarvested=0;
   invSnap.forEach(d=>{
     const inv=d.data();
-    invCount++;
-    invTotal+=inv.invested||0;
-    invHarvested+=inv.totalHarvested||0;
+    invCount++;invTotal+=inv.invested||0;invHarvested+=inv.totalHarvested||0;
   });
 
   // Withdrawals
@@ -193,51 +158,27 @@ onAuthStateChanged(auth,async user=>{
   let totalFees=0;
   wSnap.forEach(d=>{totalFees+=d.data().fee||0});
 
-  // ✅ Calcular capital e converter para MT
   const capital=totalDeposited-totalWithdrawn+totalFees;
-  const capitalMt = converterKzParaMt(capital);
-  const totalWithdrawnMt = converterKzParaMt(totalWithdrawn);
-  const totalDepositedMt = converterKzParaMt(totalDeposited);
-  const invTotalMt = converterKzParaMt(invTotal);
-  const totalFeesMt = converterKzParaMt(totalFees);
-  const totalBonusMt = converterKzParaMt(totalBonus);
 
-  // ✅ Exibir valores em MT
-  document.getElementById('totalCapital').textContent=fmt(capitalMt)+' MT';
-  document.getElementById('totalPaid').textContent=fmt(totalWithdrawnMt)+' MT';
+  document.getElementById('totalCapital').textContent=fmt(capital)+' MT';
+  document.getElementById('totalPaid').textContent=fmt(totalWithdrawn)+' MT';
   document.getElementById('totalInv').textContent=invCount;
   document.getElementById('totalUsers').textContent=userCount;
-  document.getElementById('mDeposit').textContent=fmt(totalDepositedMt)+' MT';
-  document.getElementById('mWithdrawn').textContent=fmt(totalWithdrawnMt)+' MT';
-  document.getElementById('mInvested').textContent=fmt(invTotalMt)+' MT';
-  document.getElementById('mComm').textContent=fmt(totalFeesMt)+' MT';
-  document.getElementById('mBonus').textContent=fmt(totalBonusMt)+' MT';
+  document.getElementById('mDeposit').textContent=fmt(totalDeposited)+' MT';
+  document.getElementById('mWithdrawn').textContent=fmt(totalWithdrawn)+' MT';
+  document.getElementById('mInvested').textContent=fmt(invTotal)+' MT';
+  document.getElementById('mComm').textContent=fmt(totalFees)+' MT';
+  document.getElementById('mBonus').textContent=fmt(totalBonus)+' MT';
 
-  // ✅ Chart com valores em MT
+  // Chart
   new Chart(document.getElementById('pieChart'),{
     type:'doughnut',
     data:{
       labels:['Depositado','Levantado','Em Invest.','Bónus'],
-      datasets:[{
-        data:[totalDepositedMt,totalWithdrawnMt,invTotalMt,totalBonusMt],
-        backgroundColor:['#1A56DB','#E07B39','#16A34A','#9333EA'],
-        borderWidth:0,
-        hoverOffset:6
-      }]
+      datasets:[{data:[totalDeposited,totalWithdrawn,invTotal,totalBonus],
+        backgroundColor:['#1A56DB','#E07B39','#16A34A','#9333EA'],borderWidth:0,hoverOffset:6}]
     },
-    options:{
-      responsive:true,
-      maintainAspectRatio:false,
-      plugins:{
-        legend:{
-          position:'bottom',
-          labels:{
-            font:{size:11},
-            padding:12
-          }
-        }
-      }
-    }
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:11},padding:12}}}}
   });
 });
 </script>

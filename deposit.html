@@ -145,7 +145,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);min-height:100vh;padd
 
 .toast{position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(-100px);background:var(--white);border-radius:14px;padding:13px 20px;display:flex;align-items:center;gap:10px;box-shadow:0 8px 32px rgba(0,0,0,.15);border-left:4px solid var(--success);z-index:9999;font-size:14px;color:var(--text);font-weight:500;min-width:260px;transition:.4s cubic-bezier(.34,1.56,.64,1);pointer-events:none}
 .toast.show{transform:translateX(-50%) translateY(0)}.toast.error{border-left-color:var(--error)}.toast.info{border-left-color:var(--blue)}
-
 </style>
 </head>
 <body>
@@ -180,29 +179,29 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);min-height:100vh;padd
     </div>
     <div style="text-align:right">
       <div class="bal-pill-sub">Depósito mínimo</div>
-      <div style="font-family:Sora,sans-serif;font-size:16px;font-weight:700;color:white">35,00 MT</div>
+      <div style="font-family:Sora,sans-serif;font-size:16px;font-weight:700;color:white">300 MT</div>
     </div>
   </div>
 
-  <div class="min-note">
+    <div class="min-note">
     <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-    Valor mínimo de depósito: <b>35,00 MT</b> (500 Kz). Após transferência, envie o comprovativo para aprovação.
+    Valor mínimo de depósito: <b>300 MT</b> Após transferência, envie o comprovativo para aprovação.
   </div>
 
   <div class="amt-grid">
-    <button class="amt-btn" onclick="pickAmt(3000,this)">210,04 MT</button>
-    <button class="amt-btn" onclick="pickAmt(6000,this)">420,07 MT</button>
-    <button class="amt-btn" onclick="pickAmt(10000,this)">700,11 MT</button>
-    <button class="amt-btn" onclick="pickAmt(15000,this)">1.050,16 MT</button>
-    <button class="amt-btn" onclick="pickAmt(20000,this)">1.400,21 MT</button>
-    <button class="amt-btn" onclick="pickAmt(30000,this)">2.100,32 MT</button>
+    <button class="amt-btn" onclick="pickAmt(3000,this)">3000 MT</button>
+    <button class="amt-btn" onclick="pickAmt(6000,this)">6000 MT</button>
+    <button class="amt-btn" onclick="pickAmt(10000,this)">10000 MT</button>
+    <button class="amt-btn" onclick="pickAmt(15000,this)">15000 MT</button>
+    <button class="amt-btn" onclick="pickAmt(20000,this)">20000 MT</button>
+    <button class="amt-btn" onclick="pickAmt(30000,this)">30000 MT</button>
   </div>
 
   <div class="field-group">
     <label class="field-label">Ou insira o valor</label>
     <div class="field-wrap">
       <svg class="field-icon" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-      <input class="field-input" type="number" id="amtInput" placeholder="Ex: 350,00" step="0.01" oninput="onAmtInput(this.value)">
+      <input class="field-input" type="number" id="amtInput" placeholder="Ex: 300" step="0.01" oninput="onAmtInput(this.value)">
     </div>
   </div>
 
@@ -225,8 +224,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);min-height:100vh;padd
       <div class="bank-logo bai-logo">EMOLA</div>
       <div class="bank-info">
         <div class="bname">EMOLA</div>
-        <div class="biban">873.689.278</div> 
-        <div class="bholder">Carlos Valdimiro Bento</div>
+        <div class="biban">866.891.230</div> 
+        <div class="bholder">João Castigo Noé</div>
       </div>
       <div class="bank-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
     </div>
@@ -234,8 +233,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);min-height:100vh;padd
       <div class="bank-logo bfa-logo">MPESA</div>
       <div class="bank-info">
         <div class="bname">MPESA</div>
-        <div class="biban">857.100.425</div>
-        <div class="bholder">Carlos Valdimiro Bento</div>
+        <div class="biban">845.087.394</div>
+        <div class="bholder">João  Noé</div>
       </div>
       <div class="bank-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
     </div>
@@ -319,28 +318,16 @@ firebase.initializeApp({
 var auth = firebase.auth();
 var db   = firebase.firestore();
 
-// ✅ TAXA DE CONVERSÃO: 1 MT = 14,2887 Kz
-const TAXA_CAMBIO_KZ_PARA_MT = 14.2887;
 
-// ✅ Função para converter Kz para MT
-function converterKzParaMt(valorKz) {
-  return Number(valorKz) / TAXA_CAMBIO_KZ_PARA_MT;
-}
 
 var currentUser = null;
 var selAmt = 0;
-var selAmt_KZ = 0; // Guardar o valor original em Kz
 var selBankId = '';
 var selBankName = '';
 var selBankIban = '';
 var hasFile = false;
 
-// ✅ Formatar moeda (COM CONVERSÃO)
-function fmt(valorKz){
-  const valorMt = converterKzParaMt(valorKz);
-  return valorMt.toFixed(2).replace(/\./g, ',').replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-}
-
+function fmt(n){return Number(n||0).toLocaleString('pt-AO')}
 function fmtDate(d){
   var dt = new Date(d);
   return dt.toLocaleDateString('pt-AO',{day:'2-digit',month:'short',year:'numeric'})
@@ -352,8 +339,7 @@ auth.onAuthStateChanged(function(user){
   currentUser = user;
   db.collection('users').doc(user.uid).get().then(function(snap){
     if(snap.exists){
-      const balanceKz = snap.data().balance||0;
-      document.getElementById('balDisplay').textContent = fmt(balanceKz);
+      document.getElementById('balDisplay').textContent = fmt(snap.data().balance||0);
     }
   });
   loadHistory();
@@ -366,37 +352,33 @@ function goStep(n){
     var si = document.getElementById('si'+i);
     si.className = 'step-item' + (i<n?' done':i===n?' active':'');
   }
+  // Hide history when on a step, show only on step 1 or after success
   document.getElementById('histSection').style.display = n===1 ? 'block' : 'none';
   window.scrollTo(0,0);
 }
 
 function goStep2(){
-  if(!selAmt_KZ||selAmt_KZ<500){toast('Valor mínimo de depósito é 35,00 MT (500 Kz)','error');return}
-  document.getElementById('s2Amt').textContent = fmt(selAmt_KZ)+' MT';
+  if(!selAmt||selAmt<500){toast('Valor mínimo de depósito é 500 MT','error');return}
+  document.getElementById('s2Amt').textContent = fmt(selAmt)+' MT';
   goStep(2);
 }
 
 function goStep3(){
   if(!selBankId){toast('Seleccione uma conta bancária','error');return}
-  document.getElementById('s3Amt').textContent = fmt(selAmt_KZ)+' MT';
+  document.getElementById('s3Amt').textContent = fmt(selAmt)+' MT';
   document.getElementById('s3Bank').textContent = selBankName;
   goStep(3);
 }
 
 // ─── AMOUNT ───
-function pickAmt(valKz, btn){
-  selAmt_KZ = valKz;
-  selAmt = fmt(valKz);
+function pickAmt(val, btn){
+  selAmt = val;
   document.querySelectorAll('.amt-btn').forEach(function(b){b.classList.remove('sel')});
   btn.classList.add('sel');
-  document.getElementById('amtInput').value = selAmt;
+  document.getElementById('amtInput').value = val;
 }
-
 function onAmtInput(v){
-  // Converter o valor inserido de MT para Kz
-  const valMt = parseFloat(v.replace(/\,/g, '.')) || 0;
-  selAmt_KZ = valMt * TAXA_CAMBIO_KZ_PARA_MT;
-  selAmt = v;
+  selAmt = Number(v);
   document.querySelectorAll('.amt-btn').forEach(function(b){b.classList.remove('sel')});
 }
 
@@ -427,23 +409,24 @@ function submitDeposit(){
   btn.textContent = 'A enviar...';
   db.collection('deposits').add({
     uid: currentUser.uid,
-    amount: selAmt_KZ, // Guardar em Kz no Firebase
-    amountMt: converterKzParaMt(selAmt_KZ), // Guardar também em MT para referência
+    amount: selAmt,
     bank: selBankId,
     bankName: selBankName,
     bankIban: selBankIban,
     status: 'pending',
     date: new Date().toISOString()
   }).then(function(){
+    // Show success
     document.getElementById('step3').classList.remove('show');
     document.getElementById('histSection').style.display = 'none';
     var suc = document.getElementById('successScreen');
     suc.classList.add('show');
     document.getElementById('sucDetail').innerHTML =
-      '<div class="suc-row"><span style="color:var(--muted)">Valor</span><span style="font-weight:800;color:var(--orange)">'+fmt(selAmt_KZ)+' MT</span></div>'+
+      '<div class="suc-row"><span style="color:var(--muted)">Valor</span><span style="font-weight:800;color:var(--orange)">'+fmt(selAmt)+' MT</span></div>'+
       '<div class="suc-row"><span style="color:var(--muted)">Conta</span><span>'+selBankName+'</span></div>'+
       '<div class="suc-row"><span style="color:var(--muted)">Estado</span><span style="color:#F59E0B;font-weight:700"> Pendente</span></div>'+
       '<div class="suc-row"><span style="color:var(--muted)">Data</span><span>'+fmtDate(new Date())+'</span></div>';
+    // Update step bar to all done
     for(var i=1;i<=3;i++) document.getElementById('si'+i).className='step-item done';
     loadHistory();
     window.scrollTo(0,0);
