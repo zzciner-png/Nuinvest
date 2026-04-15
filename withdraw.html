@@ -86,7 +86,7 @@ input::placeholder{color:var(--muted)}
   <div class="balance-card">
     <div class="lbl">Saldo Disponível</div>
     <div class="val">MT <span id="balDisplay">0</span></div>
-    <div class="sub">Mínimo de levantamento: 500 MT</div>
+    <div class="sub">Mínimo de levantamento: 150 MT</div>
   </div>
 
   <!-- Faltas Banner (aparece se tiver faltas) -->
@@ -154,10 +154,10 @@ input::placeholder{color:var(--muted)}
     <div class="section-card">
       <div class="section-label"> Valor a Levantar</div>
       <div class="input-group">
-        <label>Valor (mín. 100 MT)</label>
+        <label>Valor (mín. 150 MT)</label>
         <div class="input-wrap">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-          <input type="number" id="wAmount" placeholder="100" min="100" oninput="calcWithdraw()">
+          <input type="number" id="wAmount" placeholder="150" min="150" oninput="calcWithdraw()">
         </div>
       </div>
       <div class="calc-box" id="calcBox" style="display:none">
@@ -372,7 +372,7 @@ window.openConfirm = function() {
   const v = Number(document.getElementById('wAmount').value) || 0;
   
   if (v < 100) {
-    showToast('Valor mínimo de 100 MT', 'error');
+    showToast('Valor mínimo de 150 MT', 'error');
     return;
   }
   
