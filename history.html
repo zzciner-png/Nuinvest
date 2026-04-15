@@ -340,7 +340,7 @@ async function fetchActiveInvestments(uid) {
       dailyEarning = 0;
       totalInvested = 0;
       updateInvestmentsUI();
-      totalEarningsEl.textContent = '0 Kz';
+      totalEarningsEl.textContent = '0 MT';
     }
     
   } catch (error) {
@@ -568,7 +568,7 @@ window.openConfirm = function(taskId) {
   
   pendingTaskId = taskId;
   document.getElementById('mTitle').textContent = t.name;
-  document.getElementById('mMsg').textContent = `Confirma que realizou a tarefa? O bónus de ${formatCurrency(t.points)} Kz será creditado na sua conta.`;
+  document.getElementById('mMsg').textContent = `Confirma que realizou a tarefa? O bónus de ${formatCurrency(t.points)} MT será creditado na sua conta.`;
   document.getElementById('confirmModal').style.display = 'flex';
 };
 
@@ -648,7 +648,7 @@ window.confirmTask = async function() {
     updateTotalEarnings();
     buildAlerts();
     
-    showToast(` Tarefa concluída! Ganhou ${formatCurrency(points)} Kz`, 'success');
+    showToast(` Tarefa concluída! Ganhou ${formatCurrency(points)} MT`, 'success');
     
   } catch (e) {
     console.error('Erro ao confirmar tarefa:', e);
