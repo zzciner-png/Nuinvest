@@ -332,7 +332,7 @@ window.calcWithdraw = function() {
   const v = Number(document.getElementById('wAmount').value) || 0;
   const box = document.getElementById('calcBox');
   
-  if (v >= 100) {
+  if (v >= 150) {
     const faltas = getFaltasCount();
     const baseFeeRate = 0.15; // 15% taxa base
     const faltaRate = faltas * 0.05; // 5% por falta
