@@ -114,7 +114,7 @@ body::after{content:'';position:fixed;bottom:-100px;left:-100px;width:320px;heig
     <div class="sec" id="sCriar">
       <div class="bonus-strip">
         <div class="bonus-strip-icon"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
-        <div class="bonus-strip-text">Bónus de boas-vindas:<br><b>100 MT grátis</b> ao criar a sua conta!</div>
+        <div class="bonus-strip-text">Bónus de boas-vindas:<br><b>10 MT grátis</b> ao criar a sua conta!</div>
       </div>
       <div class="ref-banner" id="refBanner">
         <span style="font-size:22px">🎁</span>
@@ -147,10 +147,10 @@ body::after{content:'';position:fixed;bottom:-100px;left:-100px;width:320px;heig
           <svg class="ficon" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
           <input class="finput" type="text" id="rConvite" placeholder="Ex: 12345" maxlength="10">
         </div>
-        <p class="fhint">Código de quem te convidou — bónus de <b>50 MT</b> para o convidador!</p>
+        <p class="fhint">Código de quem te convidou — bónus de <b>10 MT</b> para o convidador!</p>
       </div>
       <button class="submit-btn" id="bCriar" onclick="registo()">
-        <span class="sbtn-label">Criar Conta e Ganhar 100 MT</span>
+        <span class="sbtn-label">Criar Conta e Ganhar 10 MT</span>
         <div class="sbtn-spin"></div>
       </button>
     </div>
@@ -285,8 +285,8 @@ function registo(){
           name: nome,
           email: email,
           userId: meuId,
-          balance: 100,
-          bonus: 100,
+          balance: 10,
+          bonus: 10,
           level: 'Iniciante',
           inviteCode: meuId,
           invitedBy: convite || null,
@@ -320,8 +320,8 @@ function registo(){
             // Atualizar convidador: +50 Kz e +50 bónus
             return Promise.all([
               convDoc.ref.update({
-                balance: firebase.firestore.FieldValue.increment(50),
-                bonus: firebase.firestore.FieldValue.increment(50),
+                balance: firebase.firestore.FieldValue.increment(10),
+                bonus: firebase.firestore.FieldValue.increment(10),
                 totalInvited: firebase.firestore.FieldValue.increment(1)
               }),
               // Registrar bónus de convite
@@ -330,7 +330,7 @@ function registo(){
                 uidConvidador: convidadorUid,
                 inviteCode: convite,
                 bonus: 50,
-                bonusConvidador: 50,
+                bonusConvidador: 10,
                 date: new Date().toISOString()
               })
             ]).catch(function(err){
@@ -344,7 +344,7 @@ function registo(){
     })
     .then(function(){
       _registering = false;
-      toast('🎉 Conta criada! 100 MT de bónus adicionados!','ok');
+      toast('🎉 Conta criada! 10 MT de bónus adicionados!','ok');
       setTimeout(function(){window.location.href='index.html';}, 1600);
     })
     .catch(function(e){

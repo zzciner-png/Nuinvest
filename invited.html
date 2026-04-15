@@ -75,7 +75,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);min-height:100vh;padd
     <h2>🎁 Programa de Referência</h2>
     <p>Convide amigos e ganhe bónus automáticos quando se registam e investem!</p>
     <div class="bonus-row">
-      <div class="bonus-pill"><div class="lbl">Por Registo</div><div class="val">50 MT</div></div>
+      <div class="bonus-pill"><div class="lbl">Por Registo</div><div class="val">10 MT</div></div>
       <div class="bonus-pill"><div class="lbl">1º Invest.</div><div class="val">15%</div></div>
       <div class="bonus-pill"><div class="lbl">Convidados</div><div class="val" id="heroTotal">0</div></div>
     </div>
@@ -171,7 +171,7 @@ onAuthStateChanged(auth,async user=>{
   invSnap.forEach(d=>{
     const data=d.data();
     const isActive=(data.activeInvestments||0)>0;
-    const comm=50+(isActive?Math.round((data.totalDeposited||0)*0.15):0);
+    const comm=10+(isActive?Math.round((data.totalDeposited||0)*0.15):0);
     totalComm+=comm;
     allInvited.push({...data,isActive,comm});
   });

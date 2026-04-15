@@ -135,7 +135,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);min-height:100vh;padd
 <div class="modal-overlay" id="confirmModal">
   <div class="modal-box">
     <div class="modal-icon" id="mIcon" style="background:#EFF6FF">
-      <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="#1A56DB" stroke-width="2.5"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+      <svg viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="#1A56DB" stroke-width="2.5"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
     </div>
     <div class="modal-title" id="mTitle">Confirmar Tarefa</div>
     <div class="modal-msg" id="mMsg">Confirma que realizou esta tarefa?</div>
@@ -354,7 +354,7 @@ function updateBalance() {
   if (userData && userData.balance !== undefined) {
     balanceValueEl.textContent = formatCurrency(userData.balance) + ' MT';
   } else {
-    balanceValueEl.textContent = '0 Kz';
+    balanceValueEl.textContent = '0 MT';
   }
 }
 

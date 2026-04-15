@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel Admin - Depósitos e Saques</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--blue:#1A56DB;--blue-dark:#1240A8;--blue-light:#E8F0FE;--blue-pale:#F0F5FF;--orange:#E07B39;--white:#fff;--bg:#F5F8FF;--text:#0D1F3C;--muted:#6B7FA3;--border:#D6E4FF;--success:#16A34A;--error:#DC2626;--warning:#F59E0B;--purple:#8B5CF6}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);min-height:100vh;color:var(--text)}
+
+.hdr{background:var(--white);padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 12px rgba(26,86,219,.06);position:sticky;top:0;z-index:100}
+.hdr-title{font-family:'Sora',sans-serif;font-size:18px;font-weight:800}
+.hdr-right{display:flex;align-items:center;gap:16px}
+.hdr-user{font-size:12px;color:var(--muted)}
+
+.container{max-width:1200px;margin:0 auto;padding:20px}
+
+.search-box{background:var(--white);border-radius:12px;padding:16px;margin-bottom:20px;border:1.5px solid var(--border);display:flex;gap:12px}
+.search-input{flex:1;border:none;background:var(--bg);border-radius:8px;padding:10px 14px;font-size:14px;outline:none}
+.search-input:focus{background:white;border:1.5px solid var(--blue);padding:9px 13px}
+.search-btn{padding:10px 20px;background:var(--blue);color:white;border:none;border-radius:8px;font-weight:700;cursor:pointer;transition:.2s}
+.search-btn:hover{background:var(--blue-dark)}
+
+.tabs{display:flex;gap:8px;margin-bottom:20px;border-bottom:2px solid var(--border)}
+.tab-btn{padding:12px 20px;border:none;background:none;font-weight:700;cursor:pointer;color:var(--muted);border-bottom:3px solid transparent;transition:.2s;font-size:14px}
+.tab-btn.active{color:var(--blue);border-bottom-color:var(--blue)}
+
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:20px}
+.stat-card{background:var(--white);border-radius:12px;padding:16px;border:1px solid var(--border);text-align:center}
+.stat-val{font-family:'Sora',sans-serif;font-size:28px;font-weight:800;margin-bottom:6px}
+.stat-lbl{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase}
+
+.content{display:none}
+.content.show{display:block}
+
+.request-card{background:var(--white);border-radius:14px;border:1.5px solid var(--border);padding:18px;margin-bottom:16px;overflow:hidden}
+.request-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px}
+.request-user{flex:1}
+.request-user-name{font-family:'Sora',sans-serif;font-size:16px;font-weight:800;margin-bottom:2px}
+.request-user-email{font-size:12px;color:var(--muted);margin-bottom:4px}
+.request-user-id{font-size:11px;color:var(--blue);font-weight:600;font-family:monospace}
+.request-badge{background:var(--blue-light);color:var(--blue);padding:6px 12px;border-radius:20px;font-size:12px;font-weight:700;white-space:nowrap}
+
+.request-details{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:14px;padding:12px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.detail-item{font-size:13px}
+.detail-label{color:var(--muted);margin-bottom:2px;font-size:11px;font-weight:600;text-transform:uppercase}
+.detail-value{font-family:'Sora',sans-serif;font-size:16px;font-weight:800;color:var(--text)}
+
+.request-status{display:flex;align-items:center;gap:8px;margin-bottom:14px;padding:10px;border-radius:8px}
+.status-pending{background:#FEF3C7;color:#92400E}
+.status-approved{background:#DCFCE7;color:var(--success)}
+.status-rejected{background:#FEE2E2;color:var(--error)}
+
+.action-buttons{display:flex;gap:8px}
+.btn-approve{flex:1;padding:10px;background:var(--success);color:white;border:none;border-radius:8px;font-weight:700;font-size:13px;cursor:pointer;transition:.2s}
+.btn-approve:hover{opacity:.9;transform:translateY(-1px)}
+.btn-reject{flex:1;padding:10px;background:var(--error);color:white;border:none;border-radius:8px;font-weight:700;font-size:13px;cursor:pointer;transition:.2s}
+.btn-reject:hover{opacity:.9;transform:translateY(-1px)}
+.btn-approve:disabled,.btn-reject:disabled{opacity:.5;cursor:not-allowed}
+
+.empty{text-align:center;padding:40px 20px;color:var(--muted)}
+.empty svg{width:48px;height:48px;stroke:var(--muted);fill:none;stroke-width:1.5;margin:0 auto 12px;display:block}
+
+.toast{position:fixed;top:20px;right:20px;background:var(--white);border-radius:12px;padding:14px 18px;box-shadow:0 8px 32px rgba(0,0,0,.15);border-left:4px solid var(--success);z-index:9999;font-size:13px;font-weight:600;animation:slideIn .3s;min-width:280px}
+.toast.error{border-left-color:var(--error)}
+.toast.info{border-left-color:var(--blue)}
+@keyframes slideIn{from{transform:translateX(400px);opacity:0}to{transform:translateX(0);opacity:1}}
+
+.loading{text-align:center;padding:40px;color:var(--muted)}
+.spinner{width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--blue);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 12px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.bank-info{background:var(--blue-pale);border-radius:8px;padding:10px;font-size:12px;margin-bottom:10px}
+.bank-info div{margin-bottom:3px}
+.bank-info .label{color:var(--muted);font-weight:600}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-title">📊 Painel Admin</div>
+  <div class="hdr-right">
+    <div class="hdr-user" id="userDisplay">Carregando...</div>
+    <button onclick="logout()" style="padding:8px 14px;background:var(--error);color:white;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-size:12px">Sair</button>
+  </div>
+</div>
+
+<div class="container">
+  
+  <div class="search-box">
+    <input type="text" class="search-input" id="searchInput" placeholder="Buscar por nome, email ou UID...">
+    <button class="search-btn" onclick="performSearch()">🔍 Buscar</button>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('deposits')">💰 Depósitos</button>
+    <button class="tab-btn" onclick="switchTab('withdrawals')">🏦 Saques</button>
+  </div>
+
+  <div class="stats" id="stats"></div>
+
+  <!-- DEPOSITS TAB -->
+  <div class="content show" id="deposits">
+    <div id="depositsContent">
+      <div class="loading"><div class="spinner"></div><p>Carregando depósitos...</p></div>
+    </div>
+  </div>
+
+  <!-- WITHDRAWALS TAB -->
+  <div class="content" id="withdrawals">
+    <div id="withdrawalsContent">
+      <div class="loading"><div class="spinner"></div><p>Carregando saques...</p></div>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast" style="display:none"></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script>
+firebase.initializeApp({
+  apiKey: "AIzaSyBJIlD1EdStGXn2_T6J-BwfB9JzveqcDfk",
+  authDomain: "nuinvest2-b01f6.firebaseapp.com",
+  projectId: "nuinvest2-b01f6",
+  storageBucket: "nuinvest2-b01f6.firebasestorage.app",
+  messagingSenderId: "150015584232",
+  appId: "1:150015584232:web:4e33b875d849faaf6fe65d"
+});
+
+var auth = firebase.auth();
+var db = firebase.firestore();
+var currentUser = null;
+var allDeposits = [];
+var allWithdrawals = [];
+var allUsers = {};
+var searchQuery = '';
+
+function fmt(n){return Number(n||0).toLocaleString('pt-AO')}
+function fmtDate(d){
+  var dt = new Date(d);
+  return dt.toLocaleDateString('pt-AO',{day:'2-digit',month:'short',year:'numeric'}) + ' ' + dt.toLocaleTimeString('pt-AO',{hour:'2-digit',minute:'2-digit'});
+}
+
+auth.onAuthStateChanged(function(user){
+  if(!user){location.href='auth.html';return}
+  currentUser = user;
+  document.getElementById('userDisplay').textContent = '👤 ' + (user.email || user.uid);
+  loadAllData();
+});
+
+function loadAllData(){
+  // Carregar usuários
+  db.collection('users').get().then(function(snap){
+    allUsers = {};
+    snap.forEach(function(doc){
+      allUsers[doc.id] = {id: doc.id, ...doc.data()};
+    });
+    // Carregar depósitos
+    loadDeposits();
+    // Carregar saques
+    loadWithdrawals();
+  });
+}
+
+function loadDeposits(){
+  db.collection('deposits').orderBy('date','desc').get().then(function(snap){
+    allDeposits = [];
+    snap.forEach(function(doc){
+      allDeposits.push({id:doc.id, ...doc.data()});
+    });
+    renderDeposits();
+    updateStats();
+  });
+}
+
+function loadWithdrawals(){
+  db.collection('withdrawals').orderBy('date','desc').get().then(function(snap){
+    allWithdrawals = [];
+    snap.forEach(function(doc){
+      allWithdrawals.push({id:doc.id, ...doc.data()});
+    });
+    renderWithdrawals();
+    updateStats();
+  });
+}
+
+function performSearch(){
+  searchQuery = document.getElementById('searchInput').value.toLowerCase().trim();
+  renderDeposits();
+  renderWithdrawals();
+}
+
+function matchesSearch(userId, bankName){
+  if(!searchQuery) return true;
+  
+  var user = allUsers[userId] || {};
+  var userName = (user.name || user.email || userId || '').toLowerCase();
+  var bankLower = (bankName || '').toLowerCase();
+  
+  return userName.includes(searchQuery) || bankLower.includes(searchQuery) || userId.toLowerCase().includes(searchQuery);
+}
+
+function renderDeposits(){
+  var filtered = allDeposits.filter(d => matchesSearch(d.uid, d.bankName));
+  
+  if(filtered.length === 0){
+    document.getElementById('depositsContent').innerHTML = '<div class="empty"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/></svg>Nenhum depósito encontrado</div>';
+    return;
+  }
+  
+  var html = '';
+  filtered.forEach(function(d){
+    var user = allUsers[d.uid] || {};
+    var statusClass = 'status-' + d.status;
+    var statusText = d.status === 'pending' ? '⏳ Pendente' : d.status === 'approved' ? '✅ Aprovado' : '❌ Rejeitado';
+    
+    html += '<div class="request-card">';
+    html += '<div class="request-header">';
+    html += '<div class="request-user">';
+    html += '<div class="request-user-name">' + (user.name || 'Sem nome') + '</div>';
+    html += '<div class="request-user-email">' + (user.email || '—') + '</div>';
+    html += '<div class="request-user-id">' + d.uid + '</div>';
+    html += '</div>';
+    html += '<div class="request-badge">' + d.bankName + '</div>';
+    html += '</div>';
+    
+    html += '<div class="request-details">';
+    html += '<div class="detail-item"><div class="detail-label">Valor</div><div class="detail-value" style="color:var(--orange)">+' + fmt(d.amount) + ' MT</div></div>';
+    html += '<div class="detail-item"><div class="detail-label">Data</div><div class="detail-value" style="font-size:13px">' + fmtDate(d.date) + '</div></div>';
+    html += '<div class="detail-item"><div class="detail-label">Estado</div><div class="detail-value" style="font-size:13px">' + statusText + '</div></div>';
+    html += '</div>';
+    
+    if(d.status === 'pending'){
+      html += '<div class="action-buttons">';
+      html += '<button class="btn-approve" onclick="approveDeposit(\'' + d.id + '\')">✅ Aprovar</button>';
+      html += '<button class="btn-reject" onclick="rejectDeposit(\'' + d.id + '\')">❌ Rejeitar</button>';
+      html += '</div>';
+    }
+    
+    html += '</div>';
+  });
+  
+  document.getElementById('depositsContent').innerHTML = html;
+}
+
+function renderWithdrawals(){
+  var filtered = allWithdrawals.filter(d => matchesSearch(d.uid, d.bank?.bank || 'Saque'));
+  
+  if(filtered.length === 0){
+    document.getElementById('withdrawalsContent').innerHTML = '<div class="empty"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/></svg>Nenhum saque encontrado</div>';
+    return;
+  }
+  
+  var html = '';
+  filtered.forEach(function(w){
+    var user = allUsers[w.uid] || {};
+    var statusClass = 'status-' + w.status;
+    var statusText = w.status === 'pending' ? '⏳ Pendente' : w.status === 'approved' ? '✅ Aprovado' : '❌ Rejeitado';
+    
+    html += '<div class="request-card">';
+    html += '<div class="request-header">';
+    html += '<div class="request-user">';
+    html += '<div class="request-user-name">' + (user.name || w.userName || 'Sem nome') + '</div>';
+    html += '<div class="request-user-email">' + (user.email || '—') + '</div>';
+    html += '<div class="request-user-id">' + w.uid + '</div>';
+    html += '</div>';
+    html += '<div class="request-badge" style="background:var(--orange);color:white;border-radius:20px">' + (w.bank?.bank || 'Saque') + '</div>';
+    html += '</div>';
+    
+    if(w.bank){
+      html += '<div class="bank-info">';
+      html += '<div><span class="label">Titular:</span> ' + (w.bank.name || '—') + '</div>';
+      html += '<div><span class="label">IBAN:</span> ' + (w.bank.iban || '—') + '</div>';
+      html += '</div>';
+    }
+    
+    html += '<div class="request-details">';
+    html += '<div class="detail-item"><div class="detail-label">Valor Bruto</div><div class="detail-value" style="color:var(--orange)">+' + fmt(w.gross) + ' MT</div></div>';
+    html += '<div class="detail-item"><div class="detail-label">Taxa (15%)</div><div class="detail-value" style="color:var(--error);font-size:13px">-' + fmt(w.baseFee) + ' MT</div></div>';
+    if(w.faltaDiscount > 0){
+      html += '<div class="detail-item"><div class="detail-label">Desc. Faltas</div><div class="detail-value" style="color:var(--error);font-size:13px">-' + fmt(w.faltaDiscount) + ' MT</div></div>';
+    }
+    html += '<div class="detail-item"><div class="detail-label">Valor Líquido</div><div class="detail-value" style="color:var(--success);font-size:15px">+' + fmt(w.net) + ' MT</div></div>';
+    html += '<div class="detail-item"><div class="detail-label">Data</div><div class="detail-value" style="font-size:13px">' + fmtDate(w.date) + '</div></div>';
+    html += '</div>';
+    
+    if(w.status === 'pending'){
+      html += '<div class="action-buttons">';
+      html += '<button class="btn-approve" onclick="approveWithdrawal(\'' + w.id + '\')">✅ Aprovar</button>';
+      html += '<button class="btn-reject" onclick="rejectWithdrawal(\'' + w.id + '\')">❌ Rejeitar</button>';
+      html += '</div>';
+    }
+    
+    html += '</div>';
+  });
+  
+  document.getElementById('withdrawalsContent').innerHTML = html;
+}
+
+function updateStats(){
+  var depStats = {
+    pending: allDeposits.filter(d => d.status === 'pending').reduce((s,d)=>s+d.amount,0),
+    approved: allDeposits.filter(d => d.status === 'approved').reduce((s,d)=>s+d.amount,0)
+  };
+  
+  var wdStats = {
+    pending: allWithdrawals.filter(d => d.status === 'pending').reduce((s,d)=>s+d.net,0),
+    approved: allWithdrawals.filter(d => d.status === 'approved').reduce((s,d)=>s+d.net,0)
+  };
+  
+  document.getElementById('stats').innerHTML = `
+    <div class="stat-card">
+      <div class="stat-val" style="color:var(--warning)">${fmt(depStats.pending)}</div>
+      <div class="stat-lbl">Depósitos Pendentes</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val" style="color:var(--success)">${fmt(depStats.approved)}</div>
+      <div class="stat-lbl">Depósitos Aprovados</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val" style="color:var(--warning)">${fmt(wdStats.pending)}</div>
+      <div class="stat-lbl">Saques Pendentes</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val" style="color:var(--success)">${fmt(wdStats.approved)}</div>
+      <div class="stat-lbl">Saques Aprovados</div>
+    </div>
+  `;
+}
+
+function switchTab(tab){
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  document.querySelectorAll('.content').forEach(c => c.classList.remove('show'));
+  document.getElementById(tab).classList.add('show');
+}
+
+function approveDeposit(depositId){
+  if(!confirm('Aprovar este depósito?')) return;
+  
+  var deposit = allDeposits.find(d => d.id === depositId);
+  
+  db.collection('deposits').doc(depositId).update({status:'approved'})
+    .then(function(){
+      return db.collection('users').doc(deposit.uid).update({
+        balance: firebase.firestore.FieldValue.increment(deposit.amount)
+      });
+    })
+    .then(function(){
+      toast('✅ Depósito aprovado!','success');
+      loadDeposits();
+    })
+    .catch(function(err){
+      toast('Erro: '+err.message,'error');
+    });
+}
+
+function rejectDeposit(depositId){
+  var reason = prompt('Motivo da rejeição:');
+  if(!reason) return;
+  
+  db.collection('deposits').doc(depositId).update({
+    status:'rejected',
+    rejectionReason: reason
+  })
+  .then(function(){
+    toast('❌ Depósito rejeitado','info');
+    loadDeposits();
+  })
+  .catch(function(err){
+    toast('Erro: '+err.message,'error');
+  });
+}
+
+function approveWithdrawal(withdrawalId){
+  if(!confirm('Aprovar este saque?')) return;
+  
+  var withdrawal = allWithdrawals.find(w => w.id === withdrawalId);
+  
+  db.collection('withdrawals').doc(withdrawalId).update({status:'approved'})
+    .then(function(){
+      return db.collection('users').doc(withdrawal.uid).update({
+        missedPresence: 0 // Zerar faltas após aprovar saque
+      });
+    })
+    .then(function(){
+      toast('✅ Saque aprovado! Faltas foram zeradas.','success');
+      loadWithdrawals();
+      loadAllData();
+    })
+    .catch(function(err){
+      toast('Erro: '+err.message,'error');
+    });
+}
+
+function rejectWithdrawal(withdrawalId){
+  var reason = prompt('Motivo da rejeição:');
+  if(!reason) return;
+  
+  var withdrawal = allWithdrawals.find(w => w.id === withdrawalId);
+  
+  db.collection('withdrawals').doc(withdrawalId).update({
+    status:'rejected',
+    rejectionReason: reason
+  })
+  .then(function(){
+    // Devolver o dinheiro
+    return db.collection('users').doc(withdrawal.uid).update({
+      balance: firebase.firestore.FieldValue.increment(withdrawal.gross)
+    });
+  })
+  .then(function(){
+    toast('❌ Saque rejeitado. Valor devolvido ao usuário.','info');
+    loadWithdrawals();
+    loadAllData();
+  })
+  .catch(function(err){
+    toast('Erro: '+err.message,'error');
+  });
+}
+
+function logout(){
+  auth.signOut().then(function(){
+    location.href = 'auth.html';
+  });
+}
+
+function toast(msg,type){
+  var t = document.getElementById('toast');
+  t.className = 'toast ' + type;
+  t.textContent = msg;
+  t.style.display = 'block';
+  setTimeout(function(){t.style.display = 'none'},3500);
+}
+</script>
+
+</body>
+</html>

@@ -154,19 +154,19 @@ input::placeholder{color:var(--muted)}
     <div class="section-card">
       <div class="section-label"> Valor a Levantar</div>
       <div class="input-group">
-        <label>Valor (mín. 500 Kz)</label>
+        <label>Valor (mín. 100 MT)</label>
         <div class="input-wrap">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-          <input type="number" id="wAmount" placeholder="500" min="500" oninput="calcWithdraw()">
+          <input type="number" id="wAmount" placeholder="100" min="100" oninput="calcWithdraw()">
         </div>
       </div>
       <div class="calc-box" id="calcBox" style="display:none">
-        <div class="calc-row"><span class="calc-label">Valor solicitado</span><span id="cGross">0 Kz</span></div>
+        <div class="calc-row"><span class="calc-label">Valor solicitado</span><span id="cGross">0 MT</span></div>
         <div class="calc-row"><span class="calc-label">Taxa base (15%)</span><span id="cFee" style="color:var(--error)">-0 MT</span></div>
         <div class="calc-row discount" id="faltasDiscountRow" style="display:none"><span class="calc-label">Desconto por faltas (<span id="faltasPct">0</span>%)</span><span id="cFaltasDiscount">-0 MT</span></div>
         <div class="calc-row total"><span>Valor Líquido a Receber</span><span id="cNet">0 MT</span></div>
       </div>
-      <div class="hint-box"><b>Nota:</b> Aplica-se uma taxa base de <b>15%</b> sobre o valor solicitado. Se tiver faltas não justificadas, será aplicado um desconto adicional de 5% por falta. O restante será creditado na sua conta bancária em 24–72 horas.</div>
+      <div class="hint-box"><b>Nota:</b> Aplica-se uma taxa base de <b>15%</b> sobre o valor solicitado. Se tiver faltas não justificadas, será aplicado um desconto adicional de 5% por falta. O restante será creditado na sua conta bancária em 24–72 horas. ATENDIMENTO  10h e 21h segunda a sexta</div>
       <button class="btn-primary" onclick="openConfirm()">Enviar Pedido de Levantamento</button>
       <button class="btn-secondary" onclick="location.href='withdraw-history.html'"> Ver Histórico de Saques</button>
     </div>
@@ -332,7 +332,7 @@ window.calcWithdraw = function() {
   const v = Number(document.getElementById('wAmount').value) || 0;
   const box = document.getElementById('calcBox');
   
-  if (v >= 500) {
+  if (v >= 100) {
     const faltas = getFaltasCount();
     const baseFeeRate = 0.15; // 15% taxa base
     const faltaRate = faltas * 0.05; // 5% por falta
@@ -342,16 +342,16 @@ window.calcWithdraw = function() {
     const totalDiscount = baseFee + faltaDiscount;
     const net = v - totalDiscount;
     
-    document.getElementById('cGross').textContent = fmt(v) + ' Kz';
-    document.getElementById('cFee').textContent = '-' + fmt(baseFee) + ' Kz';
-    document.getElementById('cNet').textContent = fmt(net) + ' Kz';
+    document.getElementById('cGross').textContent = fmt(v) + ' MT';
+    document.getElementById('cFee').textContent = '-' + fmt(baseFee) + ' MT';
+    document.getElementById('cNet').textContent = fmt(net) + ' MT';
     
     // Mostrar ou esconder linha de desconto por faltas
     const faltasRow = document.getElementById('faltasDiscountRow');
     if (faltas > 0) {
       faltasRow.style.display = 'flex';
       document.getElementById('faltasPct').textContent = faltas * 5;
-      document.getElementById('cFaltasDiscount').textContent = '-' + fmt(faltaDiscount) + ' Kz';
+      document.getElementById('cFaltasDiscount').textContent = '-' + fmt(faltaDiscount) + ' MT';
     } else {
       faltasRow.style.display = 'none';
     }
@@ -371,8 +371,8 @@ window.openConfirm = function() {
   
   const v = Number(document.getElementById('wAmount').value) || 0;
   
-  if (v < 500) {
-    showToast('Valor mínimo de 500 MT', 'error');
+  if (v < 100) {
+    showToast('Valor mínimo de 100 MT', 'error');
     return;
   }
   
