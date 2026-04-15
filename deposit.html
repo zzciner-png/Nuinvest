@@ -220,7 +220,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);min-height:100vh;padd
   <div style="font-family:Sora,sans-serif;font-size:14px;font-weight:700;margin-bottom:12px;color:var(--text)">Seleccione a conta de destino</div>
 
   <div class="bank-list">
-    <div class="bank-card" id="bc-bai" onclick="pickBank('bai','BAI – Banco Angolano de Investimentos','0040.0000.5823.3661.1013.5')">
+    <div class="bank-card" id="bc-bai" onclick="pickBank('bai','EMOLA','0040.0000.5823.3661.1013.5')">
       <div class="bank-logo bai-logo">EMOLA</div>
       <div class="bank-info">
         <div class="bname">EMOLA</div>
@@ -229,7 +229,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);min-height:100vh;padd
       </div>
       <div class="bank-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
     </div>
-    <div class="bank-card" id="bc-bfa" onclick="pickBank('bfa','BFA – Banco de Fomento Angola','0006.0000.9095.7416.3015.7')">
+    <div class="bank-card" id="bc-bfa" onclick="pickBank('bfa','MPESA','0006.0000.9095.7416.3015.7')">
       <div class="bank-logo bfa-logo">MPESA</div>
       <div class="bank-info">
         <div class="bname">MPESA</div>
@@ -238,7 +238,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);min-height:100vh;padd
       </div>
       <div class="bank-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
     </div>
-    <div class="bank-card" id="bc-exp" onclick="pickBank('exp','Express – Multicaixa Express','937 359 561')">
+    <div class="bank-card" id="bc-exp" onclick="pickBank('exp','Criptomoedas','937 359 561')">
       <div class="bank-logo exp-logo">USDT</div>
       <div class="bank-info">
         <div class="bname">Pagamento com USDT</div>
@@ -261,7 +261,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);min-height:100vh;padd
   <div class="summary-box">
     <div class="sum-row"><span class="sum-key">Valor</span><span class="sum-val orange" id="s3Amt">— MT</span></div>
     <div class="sum-row"><span class="sum-key">Conta destino</span><span class="sum-val" id="s3Bank">—</span></div>
-    <div class="sum-row"><span class="sum-key">Titular</span><span class="sum-val" style="font-size:11px">JONATA TCHIGICA DOMINGOS DUMBA</span></div>
+    <div class="sum-row"><span class="sum-key">Titular</span><span class="sum-val" style="font-size:11px">João Castigo Noé</span></div>
   </div>
 
   <div class="proof-info">
@@ -358,7 +358,7 @@ function goStep(n){
 }
 
 function goStep2(){
-  if(!selAmt||selAmt<500){toast('Valor mínimo de depósito é 500 MT','error');return}
+  if(!selAmt||selAmt<300){toast('Valor mínimo de depósito é 300 MT','error');return}
   document.getElementById('s2Amt').textContent = fmt(selAmt)+' MT';
   goStep(2);
 }

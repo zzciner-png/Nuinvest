@@ -373,7 +373,7 @@ function updateInvestmentsUI() {
         </div>
         <div class="investment-info">
           <div class="investment-title">${firstInvestment.planName || 'Plano de Investimento'}</div>
-          <div class="investment-detail">Investido: ${formatCurrency(firstInvestment.invested || 0)} Kz</div>
+          <div class="investment-detail">Investido: ${formatCurrency(firstInvestment.invested || 0)} MT</div>
           <div class="investment-detail">Ganho diário: ${formatCurrency(dailyEarning)} MT</div>
           <div class="investment-value">Total ativo: ${activeInvestments.length} investimento(s)</div>
         </div>
@@ -396,7 +396,7 @@ function updateTotalEarnings() {
     const remaining = dailyEarning - completedValue;
     totalEarningsEl.innerHTML = `${formatCurrency(remaining)} MT <span style="font-size:12px;color:var(--muted);font-weight:normal">(restam)</span>`;
   } else {
-    totalEarningsEl.textContent = '0 Kz';
+    totalEarningsEl.textContent = '0 MT';
   }
 }
 
@@ -461,7 +461,7 @@ function buildAlerts() {
     }
     
     if (done === tasks.length && tasks.length > 0) {
-      html += createAlert('success', '<polyline points="20 6 9 17 4 12"/>', 'Todas as tarefas do dia concluídas!', `Parabéns! Completou todas as tarefas de hoje. Ganhou ${formatCurrency(dailyEarning)} Kz!`);
+      html += createAlert('success', '<polyline points="20 6 9 17 4 12"/>', 'Todas as tarefas do dia concluídas!', `Parabéns! Completou todas as tarefas de hoje. Ganhou ${formatCurrency(dailyEarning)} MT!`);
     }
   }
   
@@ -512,7 +512,7 @@ function buildCard(t) {
       <div class="task-instruction">${t.instruction}</div>
       <div class="task-check-row">${checks}</div>
       <button class="btn-do" id="tbtn_${t.id}" onclick="window.openConfirm('${t.id}')" ${hasInv ? '' : 'disabled'}>
-        ${hasInv ? `✓ Receber ${formatCurrency(pointsValue)} Kz` : 'Requer investimento activo'}
+        ${hasInv ? `✓ Receber ${formatCurrency(pointsValue)} MT` : 'Requer investimento activo'}
       </button>
     </div>`;
   
@@ -523,7 +523,7 @@ function buildCard(t) {
         <div class="task-name">${t.name}</div>
         <div class="task-desc">${t.desc}</div>
       </div>
-      <div class="task-pts">${done ? '✓ Feito' : `+${formatCurrency(pointsValue)} Kz`}</div>
+      <div class="task-pts">${done ? '✓ Feito' : `+${formatCurrency(pointsValue)} MT`}</div>
     </div>${body}
   </div>`;
 }
