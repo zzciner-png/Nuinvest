@@ -170,21 +170,14 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// ✅ TAXA DE CONVERSÃO: 1 MT = 14,2887 Kz
-const TAXA_CAMBIO_KZ_PARA_MT = 14.2887;
-
-// ✅ Função para converter Kz para MT
-function converterKzParaMt(valorKz) {
-  return Number(valorKz) / TAXA_CAMBIO_KZ_PARA_MT;
+// ✅ Formatar moeda (SEM CONVERSÃO)
+function formatMoney(valor) {
+  return Number(valor).toFixed(2).replace(/\./g, ',').replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 }
 
 let allW = [];
 
-// ✅ Formatar moeda (COM CONVERSÃO)
-function formatMoney(valorKz) {
-  const valorMt = converterKzParaMt(valorKz);
-  return valorMt.toFixed(2).replace(/\./g, ',').replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-}
+
 
 function getBankName(bankField) {
   if (!bankField) return '—';
