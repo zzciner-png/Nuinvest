@@ -480,23 +480,25 @@ const db   = getFirestore(app);
 let currentUser=null, userData=null, pendingPlan=null, hasUsedFree=false;
 
 const PLANS={
-  s1:{id:'s1',name:'Google Básico',invest:500,returns:750,days:15,type:'short',icon:''},
-  s2:{id:'s2',name:'Amazon Prata',invest:900,returns:1800,days:20,type:'short',icon:''},
-  s3:{id:'s3',name:'Spotify Ouro',invest:1500,returns:3750,days:25,type:'short',icon:''},
-  s4:{id:'s4',name:'YouTube Diamante',invest:2000,returns:6000,days:30,type:'short',icon:''},
-  s5:{id:'s5',name:'Amazon Elite',invest:5000,returns:15000,days:30,type:'short',icon:''},
+  // CURTO PRAZO
+  s1:{id:'s1',name:'Google Básico',invest:500,returns:750,daily:50,days:15,type:'short',free:false},
+  s2:{id:'s2',name:'Amazon Prata',invest:900,returns:1800,daily:90,days:20,type:'short',free:false},
+  s3:{id:'s3',name:'Spotify Ouro',invest:1500,returns:3750,daily:150,days:25,type:'short',free:false},
+  s4:{id:'s4',name:'YouTube Diamante',invest:2000,returns:6000,daily:200,days:30,type:'short',free:false},
+  s5:{id:'s5',name:'Amazon Elite',invest:5000,returns:15000,daily:500,days:30,type:'short',free:false},
 
+  // INTERMÉDIO
+  
+  m1:{id:'m1',name:'Spotify Prata',invest:3000,returns:18000,daily:300,days:60,type:'mid',harvests:2,free:false},
+  m2:{id:'m2',name:'Amazon Ouro',invest:5000,returns:30000,daily:500,days:60,type:'mid',harvests:2,free:false},
+  m3:{id:'m3',name:'YouTube Diamante',invest:10000,returns:60000,daily:1000,days:60,type:'mid',harvests:2,free:false},
+  m4:{id:'m4',name:'Google Elite',invest:20000,returns:120000,daily:2000,days:60,type:'mid',harvests:2,free:false},
 
-
-
-  m1:{id:'m1',name:'Spotify Prata',invest:3000,returns:18000,days:60,type:'mid',harvests:2,totalEst:18000,icon:''},
-  m2:{id:'m2',name:'Amazon Ouro',invest:5000,returns:30000,days:60,type:'mid',harvests:2,totalEst:30000,icon:''},
-  m3:{id:'m3',name:'YouTube Diamante',invest:10000,returns:60000,days:60,type:'mid',harvests:2,totalEst:60000,icon:''},
-  m4:{id:'m4',name:'Google Elite',invest:20000,returns:120000,days:60,type:'mid',harvests:2,totalEst:120000,icon:''},
-  l1:{id:'l1',name:'Amazon Anual Prata',invest:30000,returns:90000,days:365,type:'long',totalEst:1080000,icon:''},
-  l2:{id:'l2',name:'Spotify Anual Ouro',invest:40000,returns:120000,days:365,type:'long',totalEst:1440000,icon:''},
-  l3:{id:'l3',name:'Google Anual Diamante',invest:100000,returns:300000,days:365,type:'long',totalEst:3600000,icon:''},
-  l4:{id:'l4',name:'YouTube Anual Elite',invest:150000,returns:450000,days:365,type:'long',totalEst:5400000,icon:''},
+  // LONGO PRAZO
+  l1:{id:'l1',name:'Amazon Anual Prata',invest:30000,returns:90000,daily:246,days:365,type:'long',free:false},
+  l2:{id:'l2',name:'Spotify Anual Ouro',invest:40000,returns:120000,daily:329,days:365,type:'long',free:false},
+  l3:{id:'l3',name:'Google Anual Diamante',invest:100000,returns:300000,daily:822,days:365,type:'long',free:false},
+  l4:{id:'l4',name:'YouTube Anual Elite',invest:150000,returns:450000,daily:1233,days:365,type:'long',free:false},
 };
 
 function fmt(n){return Number(n||0).toLocaleString('pt-AO')}
@@ -622,12 +624,22 @@ window.doActivate=async function(){
     if(p.free) updates.usedFreePlan=true;
     await updateDoc(doc(db,'users',uid),updates);
     await addDoc(collection(db,'investments'),{
-      uid,planId:p.id,planName:p.name,
-      invested:p.invest||0,returns:p.returns||null,
-      daily:p.daily||null,harvests:p.harvests||1,
-      startDate:new Date().toISOString(),endDate:end.toISOString(),
-      status:'active',type:p.type,totalHarvested:0,harvestCount:0,isFree:p.free||false
-    });
+  uid,
+  planId:p.id,
+  planName:p.name,
+  invested:p.invest||0,
+  returns:p.returns||null,
+  daily:p.daily||0,                    // ← MUDE ISTO!
+  harvests:p.harvests||1,
+  startDate:new Date().toISOString(),
+  endDate:end.toISOString(),
+  status:'active',
+  type:p.type,
+  totalHarvested:0,
+  harvestCount:0,
+  isFree:p.free||false
+});
+
     if(!p.free) userData.balance=Math.max(0,(userData.balance||0)-p.invest);
     if(p.free){userData.usedFreePlan=true;hasUsedFree=true;renderFreePlan()}
     document.getElementById('headerBal').textContent=fmt(userData.balance||0);
