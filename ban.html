@@ -1,0 +1,1338 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel Admin - Gestão de Membros</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --blue: #1A56DB;
+      --blue-dark: #1240A8;
+      --blue-light: #E8F0FE;
+      --blue-pale: #F0F5FF;
+      --orange: #E07B39;
+      --white: #fff;
+      --bg: #F5F8FF;
+      --text: #0D1F3C;
+      --muted: #6B7FA3;
+      --border: #D6E4FF;
+      --success: #16A34A;
+      --error: #DC2626;
+      --warning: #F59E0B;
+      --purple: #8B5CF6;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      min-height: 100vh;
+      color: var(--text);
+    }
+
+    /* Header */
+    .hdr {
+      background: var(--white);
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 12px rgba(26, 86, 219, 0.06);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .hdr-title {
+      font-family: 'Sora', sans-serif;
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    .hdr-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .hdr-user {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    /* Sidebar Navigation */
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 250px;
+      height: 100vh;
+      background: var(--white);
+      border-right: 1px solid var(--border);
+      padding: 20px;
+      overflow-y: auto;
+      z-index: 99;
+      margin-top: 70px;
+    }
+
+    .sidebar-menu {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .sidebar-item {
+      padding: 12px 16px;
+      background: none;
+      border: none;
+      border-left: 3px solid transparent;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--muted);
+      text-align: left;
+      transition: 0.2s;
+      border-radius: 8px;
+    }
+
+    .sidebar-item:hover {
+      background: var(--blue-pale);
+      color: var(--blue);
+    }
+
+    .sidebar-item.active {
+      background: var(--blue-pale);
+      color: var(--blue);
+      border-left-color: var(--blue);
+    }
+
+    .main-content {
+      margin-left: 250px;
+      padding: 20px;
+      margin-top: 70px;
+    }
+
+    /* Responsive Layout */
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 100%;
+        height: auto;
+        position: static;
+        margin-top: 0;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        padding: 10px;
+      }
+
+      .sidebar-menu {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 4px;
+      }
+
+      .sidebar-item {
+        flex: 1;
+        min-width: 100px;
+        padding: 10px 12px;
+        font-size: 12px;
+      }
+
+      .main-content {
+        margin-left: 0;
+        padding: 15px;
+        margin-top: 0;
+      }
+
+      .hdr {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .hdr-right {
+        width: 100%;
+        justify-content: space-between;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hdr {
+        padding: 12px 15px;
+      }
+
+      .hdr-title {
+        font-size: 16px;
+      }
+
+      .sidebar-item {
+        padding: 8px 10px;
+        font-size: 11px;
+      }
+
+      .main-content {
+        padding: 10px;
+      }
+    }
+
+    /* Container */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+      border-bottom: 2px solid var(--border);
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      padding: 12px 20px;
+      border: none;
+      background: none;
+      font-weight: 700;
+      cursor: pointer;
+      color: var(--muted);
+      border-bottom: 3px solid transparent;
+      transition: 0.2s;
+      font-size: 14px;
+    }
+
+    .tab-btn.active {
+      color: var(--blue);
+      border-bottom-color: var(--blue);
+    }
+
+    @media (max-width: 768px) {
+      .tab-btn {
+        padding: 10px 15px;
+        font-size: 12px;
+      }
+    }
+
+    /* Search Box */
+    .search-box {
+      background: var(--white);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 20px;
+      border: 1.5px solid var(--border);
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .search-input {
+      flex: 1;
+      min-width: 200px;
+      border: none;
+      background: var(--bg);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 14px;
+      outline: none;
+    }
+
+    .search-input:focus {
+      background: white;
+      border: 1.5px solid var(--blue);
+      padding: 9px 13px;
+    }
+
+    .search-btn {
+      padding: 10px 20px;
+      background: var(--blue);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s;
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    .search-btn:hover {
+      background: var(--blue-dark);
+    }
+
+    @media (max-width: 768px) {
+      .search-box {
+        flex-direction: column;
+      }
+
+      .search-input {
+        min-width: 100%;
+      }
+
+      .search-btn {
+        width: 100%;
+      }
+    }
+
+    /* Content */
+    .content {
+      display: none;
+    }
+
+    .content.show {
+      display: block;
+    }
+
+    /* Stats Grid */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .stat-card {
+      background: var(--white);
+      border-radius: 12px;
+      padding: 16px;
+      border: 1px solid var(--border);
+      text-align: center;
+    }
+
+    .stat-val {
+      font-family: 'Sora', sans-serif;
+      font-size: 28px;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    .stat-lbl {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    @media (max-width: 480px) {
+      .stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .stat-val {
+        font-size: 20px;
+      }
+
+      .stat-lbl {
+        font-size: 10px;
+      }
+    }
+
+    /* Member Cards */
+    .member-section {
+      background: var(--white);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+      border: 1.5px solid var(--border);
+    }
+
+    .member-section-title {
+      font-family: 'Sora', sans-serif;
+      font-size: 16px;
+      font-weight: 800;
+      margin-bottom: 16px;
+      color: var(--text);
+    }
+
+    .member-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .member-card {
+      background: var(--bg);
+      border-radius: 10px;
+      padding: 14px;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .member-info {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .member-name {
+      font-weight: 700;
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+
+    .member-details {
+      font-size: 12px;
+      color: var(--muted);
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      gap: 8px;
+    }
+
+    .member-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn-pin {
+      padding: 8px 12px;
+      background: var(--purple);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .btn-pin:hover {
+      background: #7C3AED;
+    }
+
+    .btn-pin.pinned {
+      background: var(--warning);
+    }
+
+    .btn-remove {
+      padding: 8px 12px;
+      background: var(--error);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .btn-remove:hover {
+      background: #B91C1C;
+    }
+
+    .btn-ban {
+      padding: 8px 12px;
+      background: var(--error);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .btn-ban:hover {
+      background: #B91C1C;
+    }
+
+    .btn-unban {
+      padding: 8px 12px;
+      background: var(--success);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .btn-unban:hover {
+      background: #15803D;
+    }
+
+    @media (max-width: 768px) {
+      .member-card {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .member-actions {
+        width: 100%;
+      }
+
+      .btn-pin,
+      .btn-remove,
+      .btn-ban,
+      .btn-unban {
+        flex: 1;
+        min-width: 100px;
+      }
+    }
+
+    /* User Search Results */
+    .user-result {
+      background: var(--white);
+      border-radius: 12px;
+      padding: 18px;
+      margin-bottom: 16px;
+      border: 1.5px solid var(--border);
+    }
+
+    .user-result-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .user-result-info {
+      flex: 1;
+    }
+
+    .user-result-name {
+      font-family: 'Sora', sans-serif;
+      font-size: 16px;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+
+    .user-result-email {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .user-result-id {
+      font-size: 11px;
+      color: var(--blue);
+      font-weight: 600;
+      font-family: monospace;
+    }
+
+    .user-result-details {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 12px;
+      margin-bottom: 14px;
+      padding: 12px 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .detail-item {
+      font-size: 13px;
+    }
+
+    .detail-label {
+      color: var(--muted);
+      margin-bottom: 2px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .detail-value {
+      font-family: 'Sora', sans-serif;
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .user-result-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 768px) {
+      .user-result-header {
+        flex-direction: column;
+      }
+
+      .user-result-details {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .user-result-actions {
+        width: 100%;
+      }
+
+      .user-result-actions button {
+        flex: 1;
+        min-width: 100px;
+      }
+    }
+
+    /* Table */
+    .table-wrapper {
+      background: var(--white);
+      border-radius: 12px;
+      padding: 16px;
+      border: 1.5px solid var(--border);
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    thead {
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+    }
+
+    th {
+      padding: 12px;
+      text-align: left;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    td {
+      padding: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    tbody tr:hover {
+      background: var(--blue-pale);
+    }
+
+    @media (max-width: 768px) {
+      table {
+        font-size: 11px;
+      }
+
+      th,
+      td {
+        padding: 10px;
+      }
+    }
+
+    /* Empty State */
+    .empty {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--muted);
+    }
+
+    .empty svg {
+      width: 48px;
+      height: 48px;
+      stroke: var(--muted);
+      fill: none;
+      stroke-width: 1.5;
+      margin: 0 auto 12px;
+      display: block;
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: var(--muted);
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid var(--border);
+      border-top-color: var(--blue);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 12px;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: var(--white);
+      border-radius: 12px;
+      padding: 14px 18px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+      border-left: 4px solid var(--success);
+      z-index: 9999;
+      font-size: 13px;
+      font-weight: 600;
+      animation: slideIn 0.3s;
+      min-width: 280px;
+    }
+
+    .toast.error {
+      border-left-color: var(--error);
+    }
+
+    .toast.info {
+      border-left-color: var(--blue);
+    }
+
+    .toast.warning {
+      border-left-color: var(--warning);
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateX(400px);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .toast {
+        min-width: 250px;
+        font-size: 12px;
+        top: 10px;
+        right: 10px;
+      }
+    }
+
+    /* Badge */
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .badge-success {
+      background: #DCFCE7;
+      color: var(--success);
+    }
+
+    .badge-error {
+      background: #FEE2E2;
+      color: var(--error);
+    }
+
+    .badge-warning {
+      background: #FEF3C7;
+      color: #92400E;
+    }
+
+    .badge-info {
+      background: var(--blue-light);
+      color: var(--blue);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="hdr">
+    <div class="hdr-title">📊 Painel Admin</div>
+    <div class="hdr-right">
+      <div class="hdr-user" id="userDisplay">Carregando...</div>
+      <button onclick="logout()" style="padding: 8px 14px; background: var(--error); color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 12px;">
+        🚪 Sair
+      </button>
+    </div>
+  </div>
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-menu">
+      <button class="sidebar-item active" onclick="switchTab('pinned')">📌 Membros Fixos</button>
+      <button class="sidebar-item" onclick="switchTab('access')">🔍 Últimos Acessos</button>
+      <button class="sidebar-item" onclick="switchTab('search')">🔎 Buscar Usuário</button>
+      <button class="sidebar-item" onclick="switchTab('deposits')">💰 Depósitos</button>
+      <button class="sidebar-item" onclick="switchTab('withdrawals')">🏦 Saques</button>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <div class="container">
+
+      <!-- PINNED MEMBERS TAB -->
+      <div class="content show" id="pinned">
+        <div class="stats" id="pinnedStats"></div>
+
+        <!-- Membros com Depósito -->
+        <div class="member-section">
+          <div class="member-section-title">📌 Membros Fixados com Depósito</div>
+          <div id="pinnedWithDeposit" class="member-list"></div>
+        </div>
+
+        <!-- Membros sem Depósito -->
+        <div class="member-section">
+          <div class="member-section-title">📌 Membros Fixados sem Depósito</div>
+          <div id="pinnedWithoutDeposit" class="member-list"></div>
+        </div>
+
+        <!-- Membros Disponíveis para Fixar -->
+        <div class="member-section">
+          <div class="member-section-title">👥 Membros Disponíveis</div>
+          <div class="search-box" style="margin-bottom: 16px;">
+            <input type="text" id="memberSearchInput" class="search-input" placeholder="Buscar membro para fixar...">
+            <button class="search-btn" onclick="searchMembers()">🔍 Buscar</button>
+          </div>
+          <div id="availableMembers" class="member-list"></div>
+        </div>
+      </div>
+
+      <!-- LAST ACCESS TAB -->
+      <div class="content" id="access">
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>ID</th>
+                <th>Último Acesso</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="accessTable">
+              <tr>
+                <td colspan="4" style="text-align: center; padding: 40px;">
+                  <div class="loading"><div class="spinner"></div><p>Carregando dados...</p></div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- USER SEARCH TAB -->
+      <div class="content" id="search">
+        <div class="search-box">
+          <input type="text" id="userSearchInput" class="search-input" placeholder="Buscar por nome, email ou ID...">
+          <button class="search-btn" onclick="performUserSearch()">🔍 Buscar</button>
+        </div>
+        <div id="searchResults"></div>
+      </div>
+
+      <!-- DEPOSITS TAB -->
+      <div class="content" id="deposits">
+        <div class="stats" id="depositsStats"></div>
+        <div id="depositsContent">
+          <div class="loading"><div class="spinner"></div><p>Carregando depósitos...</p></div>
+        </div>
+      </div>
+
+      <!-- WITHDRAWALS TAB -->
+      <div class="content" id="withdrawals">
+        <div class="stats" id="withdrawalsStats"></div>
+        <div id="withdrawalsContent">
+          <div class="loading"><div class="spinner"></div><p>Carregando saques...</p></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="toast" id="toast" style="display: none;"></div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+
+  <script>
+    firebase.initializeApp({
+      apiKey: "AIzaSyBJIlD1EdStGXn2_T6J-BwfB9JzveqcDfk",
+      authDomain: "nuinvest2-b01f6.firebaseapp.com",
+      projectId: "nuinvest2-b01f6",
+      storageBucket: "nuinvest2-b01f6.firebasestorage.app",
+      messagingSenderId: "150015584232",
+      appId: "1:150015584232:web:4e33b875d849faaf6fe65d"
+    });
+
+    var auth = firebase.auth();
+    var db = firebase.firestore();
+    var currentUser = null;
+    var allUsers = [];
+    var allDeposits = [];
+    var allWithdrawals = [];
+    var pinnedMembers = [];
+    var accessLogs = {};
+
+    function fmt(n) {
+      return Number(n || 0).toLocaleString('pt-AO');
+    }
+
+    function fmtDate(d) {
+      if (!d) return '—';
+      var dt = new Date(d.toDate ? d.toDate() : d);
+      return dt.toLocaleDateString('pt-AO', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric'
+      }) + ' ' + dt.toLocaleTimeString('pt-AO', {
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    }
+
+    function toast(msg, type = 'success') {
+      var t = document.getElementById('toast');
+      t.className = 'toast ' + type;
+      t.textContent = msg;
+      t.style.display = 'block';
+      setTimeout(function() {
+        t.style.display = 'none';
+      }, 3500);
+    }
+
+    function switchTab(tab) {
+      document.querySelectorAll('.content').forEach(c => c.classList.remove('show'));
+      document.getElementById(tab).classList.add('show');
+
+      document.querySelectorAll('.sidebar-item').forEach(b => b.classList.remove('active'));
+      event.target.classList.add('active');
+
+      if (tab === 'access') loadAccessLogs();
+      if (tab === 'deposits') loadDeposits();
+      if (tab === 'withdrawals') loadWithdrawals();
+    }
+
+    // Authentication
+    auth.onAuthStateChanged(function(user) {
+      if (!user) {
+        location.href = 'auth.html';
+        return;
+      }
+      currentUser = user;
+      document.getElementById('userDisplay').textContent = '👤 ' + (user.email || user.uid);
+      loadAllData();
+    });
+
+    function loadAllData() {
+      loadUsers();
+      loadPinnedMembers();
+    }
+
+    function loadUsers() {
+      db.collection('users').get().then(function(snap) {
+        allUsers = [];
+        snap.forEach(function(doc) {
+          allUsers.push({
+            id: doc.id,
+            ...doc.data()
+          });
+        });
+        renderPinnedMembers();
+      });
+    }
+
+    function loadPinnedMembers() {
+      db.collection('pinnedMembers').get().then(function(snap) {
+        pinnedMembers = [];
+        snap.forEach(function(doc) {
+          pinnedMembers.push({
+            id: doc.id,
+            ...doc.data()
+          });
+        });
+        renderPinnedMembers();
+      }).catch(function(err) {
+        console.log('No pinned members yet');
+        renderPinnedMembers();
+      });
+    }
+
+    function renderPinnedMembers() {
+      var withDeposit = [];
+      var withoutDeposit = [];
+
+      pinnedMembers.forEach(function(pm) {
+        var user = allUsers.find(u => u.id === pm.userId);
+        if (!user) return;
+
+        if ((user.totalDeposited || 0) > 0) {
+          withDeposit.push(user);
+        } else {
+          withoutDeposit.push(user);
+        }
+      });
+
+      renderMemberList('pinnedWithDeposit', withDeposit, true);
+      renderMemberList('pinnedWithoutDeposit', withoutDeposit, true);
+      renderAvailableMembers();
+
+      // Update stats
+      document.getElementById('pinnedStats').innerHTML = `
+        <div class="stat-card">
+          <div class="stat-val">${withDeposit.length}</div>
+          <div class="stat-lbl">Com Depósito</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val">${withoutDeposit.length}</div>
+          <div class="stat-lbl">Sem Depósito</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val">${pinnedMembers.length}</div>
+          <div class="stat-lbl">Total Fixado</div>
+        </div>
+      `;
+    }
+
+    function renderAvailableMembers() {
+      var search = document.getElementById('memberSearchInput')?.value.toLowerCase() || '';
+      var pinnedIds = pinnedMembers.map(p => p.userId);
+      var available = allUsers.filter(u => !pinnedIds.includes(u.id) && (!search || u.name?.toLowerCase().includes(search) || u.email?.toLowerCase().includes(search)));
+
+      if (available.length === 0) {
+        document.getElementById('availableMembers').innerHTML = '<div class="empty">Nenhum membro disponível</div>';
+        return;
+      }
+
+      var html = '';
+      available.forEach(function(user) {
+        html += `
+          <div class="member-card">
+            <div class="member-info">
+              <div class="member-name">${user.name || 'Sem nome'}</div>
+              <div class="member-details">
+                <div><strong>ID:</strong> ${user.id}</div>
+                <div><strong>Email:</strong> ${user.email || '—'}</div>
+                <div><strong>Saldo:</strong> ${fmt(user.balance || 0)} MT</div>
+                <div><strong>Depósito:</strong> ${fmt(user.totalDeposited || 0)} MT</div>
+              </div>
+            </div>
+            <div class="member-actions">
+              <button class="btn-pin" onclick="pinMember('${user.id}')">📌 Fixar</button>
+            </div>
+          </div>
+        `;
+      });
+
+      document.getElementById('availableMembers').innerHTML = html;
+    }
+
+    function searchMembers() {
+      renderAvailableMembers();
+    }
+
+    function pinMember(userId) {
+      db.collection('pinnedMembers').add({
+        userId: userId,
+        pinnedAt: new Date(),
+        pinnedBy: currentUser.uid
+      }).then(function() {
+        toast('✅ Membro fixado com sucesso!', 'success');
+        loadPinnedMembers();
+      }).catch(function(err) {
+        toast('❌ Erro: ' + err.message, 'error');
+      });
+    }
+
+    function removePinnedMember(pinnedMemberId) {
+      if (!confirm('Remover membro fixado?')) return;
+
+      db.collection('pinnedMembers').doc(pinnedMemberId).delete().then(function() {
+        toast('✅ Membro removido!', 'success');
+        loadPinnedMembers();
+      }).catch(function(err) {
+        toast('❌ Erro: ' + err.message, 'error');
+      });
+    }
+
+    function renderMemberList(elementId, members, isPinned = false) {
+      if (members.length === 0) {
+        document.getElementById(elementId).innerHTML = '<div class="empty">Nenhum membro</div>';
+        return;
+      }
+
+      var html = '';
+      members.forEach(function(user) {
+        var pinnedRec = pinnedMembers.find(p => p.userId === user.id);
+        html += `
+          <div class="member-card">
+            <div class="member-info">
+              <div class="member-name">${user.name || 'Sem nome'}</div>
+              <div class="member-details">
+                <div><strong>ID:</strong> ${user.id}</div>
+                <div><strong>Email:</strong> ${user.email || '—'}</div>
+                <div><strong>Saldo:</strong> ${fmt(user.balance || 0)} MT</div>
+                <div><strong>Membros:</strong> ${user.referredCount || 0}</div>
+              </div>
+            </div>
+            <div class="member-actions">
+              ${isPinned ? `<button class="btn-remove" onclick="removePinnedMember('${pinnedRec.id}')">❌ Remover</button>` : ''}
+              <button class="btn-ban" onclick="banUser('${user.id}')">🚫 Banir</button>
+            </div>
+          </div>
+        `;
+      });
+
+      document.getElementById(elementId).innerHTML = html;
+    }
+
+    function banUser(userId) {
+      var reason = prompt('Motivo do banimento:');
+      if (!reason) return;
+
+      db.collection('users').doc(userId).update({
+        banned: true,
+        banReason: reason,
+        bannedAt: new Date(),
+        bannedBy: currentUser.uid
+      }).then(function() {
+        toast('🚫 Usuário banido!', 'warning');
+        loadUsers();
+      }).catch(function(err) {
+        toast('❌ Erro: ' + err.message, 'error');
+      });
+    }
+
+    function unbanUser(userId) {
+      db.collection('users').doc(userId).update({
+        banned: false,
+        banReason: null,
+        bannedAt: null
+      }).then(function() {
+        toast('✅ Usuário desbanido!', 'success');
+        loadUsers();
+      }).catch(function(err) {
+        toast('❌ Erro: ' + err.message, 'error');
+      });
+    }
+
+    // Access Logs
+    function logAccess() {
+      db.collection('accessLogs').add({
+        userId: currentUser.uid,
+        timestamp: new Date(),
+        userEmail: currentUser.email
+      }).catch(function(err) {
+        console.log('Error logging access:', err);
+      });
+    }
+
+    function loadAccessLogs() {
+      db.collection('accessLogs').orderBy('timestamp', 'desc').limit(50).get().then(function(snap) {
+        var logs = {};
+        snap.forEach(function(doc) {
+          var data = doc.data();
+          if (!logs[data.userId]) {
+            logs[data.userId] = data;
+          }
+        });
+
+        var html = '';
+        Object.values(logs).forEach(function(log) {
+          var user = allUsers.find(u => u.id === log.userId);
+          if (!user) return;
+
+          html += `
+            <tr>
+              <td>${user.name || '—'}</td>
+              <td><code>${log.userId}</code></td>
+              <td>${fmtDate(log.timestamp)}</td>
+              <td><span class="badge badge-success">Ativo</span></td>
+            </tr>
+          `;
+        });
+
+        if (html === '') html = '<tr><td colspan="4" style="text-align: center; padding: 40px;">Nenhum acesso registrado</td></tr>';
+
+        document.getElementById('accessTable').innerHTML = html;
+      });
+    }
+
+    // User Search
+    function performUserSearch() {
+      var query = document.getElementById('userSearchInput').value.toLowerCase().trim();
+      if (!query) {
+        document.getElementById('searchResults').innerHTML = '<div class="empty">Digite algo para buscar</div>';
+        return;
+      }
+
+      var results = allUsers.filter(u =>
+        u.name?.toLowerCase().includes(query) ||
+        u.email?.toLowerCase().includes(query) ||
+        u.id.toLowerCase().includes(query)
+      );
+
+      if (results.length === 0) {
+        document.getElementById('searchResults').innerHTML = '<div class="empty">Nenhum usuário encontrado</div>';
+        return;
+      }
+
+      var html = '';
+      results.forEach(function(user) {
+        var banStatus = user.banned ? '<span class="badge badge-error">Banido</span>' : '<span class="badge badge-success">Ativo</span>';
+
+        html += `
+          <div class="user-result">
+            <div class="user-result-header">
+              <div class="user-result-info">
+                <div class="user-result-name">${user.name || 'Sem nome'}</div>
+                <div class="user-result-email">${user.email || '—'}</div>
+                <div class="user-result-id">${user.id}</div>
+              </div>
+              <div>${banStatus}</div>
+            </div>
+
+            <div class="user-result-details">
+              <div class="detail-item">
+                <div class="detail-label">Saldo Aprovado</div>
+                <div class="detail-value" style="color: var(--orange);">${fmt(user.balance || 0)} MT</div>
+              </div>
+              <div class="detail-item">
+                <div class="detail-label">Plano Ativo</div>
+                <div class="detail-value">${user.activePlan || '—'}</div>
+              </div>
+              <div class="detail-item">
+                <div class="detail-label">Membros Convidados</div>
+                <div class="detail-value">${user.referredCount || 0}</div>
+              </div>
+              <div class="detail-item">
+                <div class="detail-label">Telefone</div>
+                <div class="detail-value">${user.phone || '—'}</div>
+              </div>
+              <div class="detail-item">
+                <div class="detail-label">Total Depositado</div>
+                <div class="detail-value">${fmt(user.totalDeposited || 0)} MT</div>
+              </div>
+              <div class="detail-item">
+                <div class="detail-label">Último Acesso</div>
+                <div class="detail-value" style="font-size: 12px;">${fmtDate(user.lastLogin) || '—'}</div>
+              </div>
+            </div>
+
+            <div class="user-result-actions">
+              ${user.banned ? `
+                <button class="btn-unban" onclick="unbanUser('${user.id}')">✅ Desbanir</button>
+              ` : `
+                <button class="btn-ban" onclick="banUser('${user.id}')">🚫 Banir</button>
+              `}
+              <button class="btn-pin" onclick="pinMember('${user.id}')">📌 Fixar</button>
+            </div>
+          </div>
+        `;
+      });
+
+      document.getElementById('searchResults').innerHTML = html;
+    }
+
+    // Deposits & Withdrawals (basic implementation)
+    function loadDeposits() {
+      db.collection('deposits').orderBy('date', 'desc').get().then(function(snap) {
+        allDeposits = [];
+        snap.forEach(function(doc) {
+          allDeposits.push({
+            id: doc.id,
+            ...doc.data()
+          });
+        });
+        renderDeposits();
+      });
+    }
+
+    function renderDeposits() {
+      var pending = allDeposits.filter(d => d.status === 'pending').reduce((s, d) => s + (d.amount || 0), 0);
+      var approved = allDeposits.filter(d => d.status === 'approved').reduce((s, d) => s + (d.amount || 0), 0);
+
+      document.getElementById('depositsStats').innerHTML = `
+        <div class="stat-card">
+          <div class="stat-val" style="color: var(--warning);">${fmt(pending)}</div>
+          <div class="stat-lbl">Pendentes</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val" style="color: var(--success);">${fmt(approved)}</div>
+          <div class="stat-lbl">Aprovados</div>
+        </div>
+      `;
+
+      var html = '<div class="table-wrapper"><table><thead><tr><th>Usuário</th><th>Valor</th><th>Banco</th><th>Data</th><th>Status</th></tr></thead><tbody>';
+
+      if (allDeposits.length === 0) {
+        html += '<tr><td colspan="5" style="text-align: center;">Nenhum depósito</td></tr>';
+      } else {
+        allDeposits.forEach(function(d) {
+          var user = allUsers.find(u => u.id === d.uid);
+          var status = d.status === 'pending' ? '<span class="badge badge-warning">Pendente</span>' : '<span class="badge badge-success">Aprovado</span>';
+          html += `<tr><td>${user?.name || '—'}</td><td>${fmt(d.amount)} MT</td><td>${d.bankName || '—'}</td><td>${fmtDate(d.date)}</td><td>${status}</td></tr>`;
+        });
+      }
+
+      html += '</tbody></table></div>';
+      document.getElementById('depositsContent').innerHTML = html;
+    }
+
+    function loadWithdrawals() {
+      db.collection('withdrawals').orderBy('date', 'desc').get().then(function(snap) {
+        allWithdrawals = [];
+        snap.forEach(function(doc) {
+          allWithdrawals.push({
+            id: doc.id,
+            ...doc.data()
+          });
+        });
+        renderWithdrawals();
+      });
+    }
+
+    function renderWithdrawals() {
+      var pending = allWithdrawals.filter(w => w.status === 'pending').reduce((s, w) => s + (w.net || 0), 0);
+      var approved = allWithdrawals.filter(w => w.status === 'approved').reduce((s, w) => s + (w.net || 0), 0);
+
+      document.getElementById('withdrawalsStats').innerHTML = `
+        <div class="stat-card">
+          <div class="stat-val" style="color: var(--warning);">${fmt(pending)}</div>
+          <div class="stat-lbl">Pendentes</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val" style="color: var(--success);">${fmt(approved)}</div>
+          <div class="stat-lbl">Aprovados</div>
+        </div>
+      `;
+
+      var html = '<div class="table-wrapper"><table><thead><tr><th>Usuário</th><th>Valor Líquido</th><th>Banco</th><th>Data</th><th>Status</th></tr></thead><tbody>';
+
+      if (allWithdrawals.length === 0) {
+        html += '<tr><td colspan="5" style="text-align: center;">Nenhum saque</td></tr>';
+      } else {
+        allWithdrawals.forEach(function(w) {
+          var user = allUsers.find(u => u.id === w.uid);
+          var status = w.status === 'pending' ? '<span class="badge badge-warning">Pendente</span>' : '<span class="badge badge-success">Aprovado</span>';
+          html += `<tr><td>${user?.name || '—'}</td><td>${fmt(w.net)} MT</td><td>${w.bank?.bank || '—'}</td><td>${fmtDate(w.date)}</td><td>${status}</td></tr>`;
+        });
+      }
+
+      html += '</tbody></table></div>';
+      document.getElementById('withdrawalsContent').innerHTML = html;
+    }
+
+    function logout() {
+      auth.signOut().then(function() {
+        location.href = 'auth.html';
+      });
+    }
+
+    // Log access when page loads
+    logAccess();
+  </script>
+
+</body>
+</html>

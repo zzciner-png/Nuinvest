@@ -4,6 +4,23 @@
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NuInvest – Levantar</title>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<!-- Favicon -->
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="/android-chrome-512x512.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+<!-- Manifest (PWA) -->
+<link rel="manifest" href="/manifest.json">
+
+<!-- Apple iOS -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="NuInvest">
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--blue:#1A56DB;--blue-dark:#1240A8;--blue-light:#E8F0FE;--blue-pale:#F0F5FF;--orange:#E07B39;--orange-dark:#C4612A;--orange-light:#FFF4EC;--white:#FFFFFF;--bg:#F5F8FF;--text:#0D1F3C;--muted:#6B7FA3;--border:#D6E4FF;--success:#16A34A;--error:#DC2626}
@@ -166,7 +183,7 @@ input::placeholder{color:var(--muted)}
         <div class="calc-row discount" id="faltasDiscountRow" style="display:none"><span class="calc-label">Desconto por faltas (<span id="faltasPct">0</span>%)</span><span id="cFaltasDiscount">-0 MT</span></div>
         <div class="calc-row total"><span>Valor Líquido a Receber</span><span id="cNet">0 MT</span></div>
       </div>
-      <div class="hint-box"><b>Nota:</b> Aplica-se uma taxa base de <b>15%</b> sobre o valor solicitado. Se tiver faltas não justificadas, será aplicado um desconto adicional de 5% por falta. O restante será creditado na sua conta bancária em 24–72 horas. ATENDIMENTO  10h e 21h segunda a sexta</div>
+      <div class="hint-box"><b>Nota:</b> Aplica-se uma taxa base de <b>15%</b> sobre o valor solicitado. Se tiver faltas não justificadas, será aplicado um desconto adicional de 5% por falta. O restante será creditado na sua conta bancária em – de 24 horas. ATENDIMENTO  10h e 21h segunda a Domingo</div>
       <button class="btn-primary" onclick="openConfirm()">Enviar Pedido de Levantamento</button>
       <button class="btn-secondary" onclick="location.href='withdraw-history.html'"> Ver Histórico de Saques</button>
     </div>
@@ -332,7 +349,7 @@ window.calcWithdraw = function() {
   const v = Number(document.getElementById('wAmount').value) || 0;
   const box = document.getElementById('calcBox');
   
-  if (v >= 150) {
+  if (v >= 200) {
     const faltas = getFaltasCount();
     const baseFeeRate = 0.15; // 15% taxa base
     const faltaRate = faltas * 0.05; // 5% por falta
@@ -371,8 +388,8 @@ window.openConfirm = function() {
   
   const v = Number(document.getElementById('wAmount').value) || 0;
   
-  if (v < 100) {
-    showToast('Valor mínimo de 150 MT', 'error');
+  if (v < 200) {
+    showToast('Valor mínimo de 200 MT', 'error');
     return;
   }
   
@@ -458,7 +475,7 @@ window.submitWithdraw = async function() {
     document.getElementById('balDisplay').textContent = fmt(userData.balance);
     
     closeModal();
-    showToast('Pedido enviado com sucesso! Processamento em 24–72h.', 'success');
+    showToast('Pedido enviado com sucesso! Processamento em - de 24h.', 'success');
     
     // Limpar o campo de valor
     document.getElementById('wAmount').value = '';

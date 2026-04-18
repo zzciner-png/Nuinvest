@@ -1,0 +1,159 @@
+{
+  "name": "NuInvest - Plataforma de Investimentos",
+  "short_name": "NuInvest",
+  "description": "Invista e ganhe com a NuInvest - Programa de referência, tarefas diárias e investimentos lucrativos",
+  "start_url": "/index.html",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "dir": "ltr",
+  "lang": "pt-PT",
+  "theme_color": "#1A56DB",
+  "background_color": "#F5F8FF",
+  "categories": ["finance", "productivity", "business"],
+  "prefer_related_applications": false,
+  "screenshots": [
+    {
+      "src": "/screenshot-narrow.png",
+      "sizes": "540x720",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Tela principal da NuInvest"
+    },
+    {
+      "src": "/screenshot-wide.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Dashboard de investimentos"
+    }
+  ],
+  "icons": [
+    {
+      "src": "/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Investir Agora",
+      "short_name": "Investir",
+      "description": "Aceda diretamente aos planos de investimento",
+      "url": "/invest.html?utm_source=pwa-shortcut",
+      "icons": [
+        {
+          "src": "/android-chrome-192x192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Meus Convidados",
+      "short_name": "Convidados",
+      "description": "Veja seus convidados e ganhos de referência",
+      "url": "/referrals.html?utm_source=pwa-shortcut",
+      "icons": [
+        {
+          "src": "/android-chrome-192x192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Meu Perfil",
+      "short_name": "Perfil",
+      "description": "Gerencie seu perfil e configurações",
+      "url": "/profile.html?utm_source=pwa-shortcut",
+      "icons": [
+        {
+          "src": "/android-chrome-192x192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Histórico de Investimentos",
+      "short_name": "Histórico",
+      "description": "Veja seu histórico de investimentos",
+      "url": "/history.html?utm_source=pwa-shortcut",
+      "icons": [
+        {
+          "src": "/android-chrome-192x192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshot-narrow-1.png",
+      "sizes": "540x720",
+      "type": "image/png",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "/screenshot-narrow-2.png",
+      "sizes": "540x720",
+      "type": "image/png",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "/screenshot-wide-1.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide"
+    }
+  ],
+  "share_target": {
+    "action": "/share",
+    "method": "POST",
+    "enctype": "multipart/form-data",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url",
+      "files": [
+        {
+          "name": "media",
+          "accept": ["image/*"]
+        }
+      ]
+    }
+  },
+  "protocol_handlers": [
+    {
+      "protocol": "web+nuinvest",
+      "url": "/handle?url=%s"
+    }
+  ]
+}

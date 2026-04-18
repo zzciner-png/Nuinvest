@@ -3,8 +3,29 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NuInvest – Perfil</title>
+<meta name="theme-color" content="#1A56DB">
+<meta name="description" content="NuInvest - Plataforma de investimentos com programa de referência, tarefas diárias e ganhos garantidos.">
+
+<!-- Favicon -->
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="/android-chrome-512x512.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+<!-- Manifest (PWA) -->
+<link rel="manifest" href="/manifest.json">
+
+<!-- Apple iOS -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="NuInvest">
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+
+<title>NuInvest – Perfil</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--blue:#1A56DB;--blue-dark:#1240A8;--blue-light:#E8F0FE;--blue-pale:#F0F5FF;--orange:#E07B39;--orange-light:#FFF4EC;--white:#FFFFFF;--bg:#F5F8FF;--text:#0D1F3C;--muted:#6B7FA3;--border:#D6E4FF;--success:#16A34A;--error:#DC2626}
@@ -45,7 +66,7 @@ canvas{width:100%!important}
 .menu-section{padding:0 20px;margin-bottom:8px}
 .menu-title{font-size:11px;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);font-weight:600;margin-bottom:10px}
 .menu-card{background:var(--white);border-radius:16px;border:1.5px solid var(--border);overflow:hidden}
-.menu-item{display:flex;align-items:center;gap:14px;padding:15px 16px;cursor:pointer;transition:.15s;text-decoration:none}
+.menu-item{display:flex;align-items:center;gap:14px;padding:15px 16px;cursor:pointer;transition:.15s;text-decoration:none;background:none;border:none;font-family:inherit;width:100%;text-align:left}
 .menu-item:not(:last-child){border-bottom:1px solid var(--border)}
 .menu-item:hover{background:var(--blue-pale)}
 .menu-item-icon{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
@@ -103,7 +124,7 @@ canvas{width:100%!important}
     <div class="val blue" id="pWithdrawn">••••</div>
   </div>
 </div>
-<!-- Passivos card + eye toggle below bal-grid -->
+
 <div style="display:flex;align-items:center;justify-content:space-between;margin:-12px 20px 20px;gap:10px">
   <div style="flex:1;background:#FEF2F2;border:1.5px solid #FECACA;border-radius:14px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between">
     <div>
@@ -168,11 +189,11 @@ canvas{width:100%!important}
       <div class="menu-item-text"><div class="name">Apoio ao Cliente</div><div class="desc">WhatsApp e contactos</div></div>
       <div class="menu-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
     </a>
-    <a class="menu-item" href="capital.html">
+    <button class="menu-item" onclick="installNuInvest()">
       <div class="menu-item-icon green"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
-      <div class="menu-item-text"><div class="name">Capital Empresarial</div><div class="desc">Totais da plataforma</div></div>
+      <div class="menu-item-text"><div class="name" id="installBtnName">Baixar o APP</div><div class="desc" id="installBtnDesc">Aplicativo Nuinvest</div></div>
       <div class="menu-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
-    </a>
+    </button>
   </div>
 </div>
 
@@ -198,7 +219,6 @@ canvas{width:100%!important}
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
-
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
@@ -222,7 +242,6 @@ function fmt(n){return (n||0).toLocaleString('pt-AO')}
 onAuthStateChanged(auth, user=>{
   if(!user){location.href='auth.html';return}
 
-  // 👇 Agora usando onSnapshot para ouvir mudanças em tempo real
   onSnapshot(doc(db,'users',user.uid), snap => {
     if(!snap.exists()) return;
     const d = snap.data();
@@ -233,7 +252,6 @@ onAuthStateChanged(auth, user=>{
     document.getElementById('profEmail').textContent=d.email||user.email||'—';
     document.getElementById('profLevel').textContent=d.level||'Iniciante';
 
-    // Store for toggle — masked by default
     _pBal=fmt(d.balance||0);
     _pEarn=fmt(d.totalEarned||0);
     _pWith=fmt(d.totalWithdrawn||0);
@@ -248,7 +266,6 @@ onAuthStateChanged(auth, user=>{
     }
   });
 
-  // Load passivos (debt)
   try{
     const dq=query(collection(db,'discounts'),where('uid','==',user.uid),where('active','==',true));
     getDocs(dq).then(dSnap=>{
@@ -261,7 +278,6 @@ onAuthStateChanged(auth, user=>{
     });
   }catch(e){document.getElementById('pDebt').textContent='0 MT';}
 
-  // Chart
   try{
     const invQ=query(collection(db,'investments'),where('uid','==',user.uid));
     getDocs(invQ).then(invSnap=>{
@@ -332,6 +348,53 @@ function toggleProfSaldo(){
     el.textContent='Ver saldos';
   }
 }
+
+// ✅ PWA INSTALL
+let deferredPrompt = null;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  console.log('📱 App pronta para instalar');
+  document.getElementById('installBtnName').textContent = '⬇️ Instalar APP';
+  document.getElementById('installBtnDesc').textContent = 'Clique para instalar';
+});
+
+window.addEventListener('appinstalled', () => {
+  console.log('🎉 NuInvest instalada com sucesso!');
+  document.getElementById('installBtnName').textContent = '✅ APP Instalada';
+  document.getElementById('installBtnDesc').textContent = 'Encontre no seu telefone';
+  deferredPrompt = null;
+});
+
+window.installNuInvest = async function() {
+  if (!deferredPrompt) {
+    showToast('❌ App não disponível para instalação neste dispositivo', 'info');
+    return;
+  }
+
+  deferredPrompt.prompt();
+  const result = await deferredPrompt.userChoice;
+  
+  if (result.outcome === 'accepted') {
+    console.log('✅ Utilizador aceitou instalação');
+    showToast('🎉 NuInvest será instalada em breve!', 'success');
+  } else {
+    console.log('❌ Utilizador rejeitou instalação');
+  }
+  
+  deferredPrompt = null;
+}
+
+// Registar Service Worker
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js').then(reg => {
+    console.log('✅ Service Worker registado');
+  }).catch(err => {
+    console.error('❌ Erro:', err);
+  });
+}
 </script>
+
 </body>
 </html>

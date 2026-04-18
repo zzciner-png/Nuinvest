@@ -1,9 +1,27 @@
+
 <!DOCTYPE html>
 <html lang="pt">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NuInvest – Tarefas Diárias</title>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<!-- Favicon -->
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="/android-chrome-512x512.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+<!-- Manifest (PWA) -->
+<link rel="manifest" href="/manifest.json">
+
+<!-- Apple iOS -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="NuInvest">
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--blue:#1A56DB;--blue-dark:#1240A8;--blue-light:#E8F0FE;--blue-pale:#F0F5FF;--orange:#E07B39;--orange-light:#FFF4EC;--white:#FFFFFF;--bg:#F5F8FF;--text:#0D1F3C;--muted:#6B7FA3;--border:#D6E4FF;--success:#16A34A;--error:#DC2626}
@@ -147,6 +165,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);min-height:100vh;padd
 </div>
 <div class="toast" id="toast"><span id="toastMsg"></span></div>
 
+
+
+
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
@@ -177,7 +199,7 @@ const MONTHS=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Ago
 // Data atual
 const now=new Date();
 const dow=now.getDay();
-const isWeekday=dow>=1&&dow<=5;
+const isWeekday=true; // ✅ TAREFAS TODOS OS DIAS
 const todayStr=now.toISOString().split('T')[0];
 
 // Elementos DOM
@@ -200,15 +222,7 @@ const dpFillEl=document.getElementById('dpFill');
 dayNameEl.textContent=WEEKDAYS[dow];
 dayDateEl.textContent=`${now.getDate()} de ${MONTHS[now.getMonth()]} de ${now.getFullYear()}`;
 
-// Ajustes para fim de semana
-if(!isWeekday){
-  dayBannerEl.className='day-banner weekend';
-  liveDotEl.style.background='#94A3B8';
-  dayPillTxtEl.textContent='Fim de semana';
-  headerBadgeEl.textContent='Descanso';
-  headerBadgeEl.style.background='#64748B';
-  earningsSummaryEl.style.display='none';
-}
+// ✅ SEM AJUSTES PARA FIM DE SEMANA - TAREFAS APARECEM TODOS OS DIAS
 
 // Ícones das marcas
 const ICONS={
@@ -224,13 +238,21 @@ let userData=null;
 let activeInvestments=[];
 let dailyEarning=0;
 let totalInvested=0;
-let completedTasksToday=[]; // IDs das tarefas concluídas hoje
-let pendingTaskId=null; // ID da tarefa pendente de confirmação
-let totalEarnedToday=0; // Total ganho hoje
+let completedTasksToday=[];
+let pendingTaskId=null;
+let totalEarnedToday=0;
 
-// Tarefas (com pontos que serão atualizados dinamicamente)
+// ✅ TAREFAS PARA TODOS OS DIAS (0=Domingo até 6=Sábado)
 const TASKS={
-  1:[
+  0:[ // DOMINGO
+    {id:'sun_amazon',brand:'amazon',bgColor:'#FFF7E6',name:'Amazon — Avaliar Produto',desc:'Pesquise e avalie um produto na Amazon.',
+     instruction:'1. Aceda à Amazon (amazon.com)\n2. Pesquise qualquer produto do seu interesse\n3. Clique em "Escrever avaliação"\n4. Dê a sua opinião honesta\n5. Confirme abaixo após concluir',
+     checks:['Acedi ao site da Amazon','Pesquisei e encontrei um produto','Deixei uma avaliação']},
+    {id:'sun_spotify',brand:'spotify',bgColor:'#F0FDF4',name:'Spotify — Ouvir Playlist',desc:'Ouça 10 minutos de música no Spotify.',
+     instruction:'1. Abra o Spotify\n2. Pesquise qualquer playlist\n3. Ouça pelo menos 10 minutos\n4. Confirme abaixo',
+     checks:['Abri o Spotify','Ouvi pelo menos 10 minutos de música']}
+  ],
+  1:[ // SEGUNDA-FEIRA
     {id:'mon_amazon',brand:'amazon',bgColor:'#FFF7E6',name:'Amazon — Avaliar Produto',desc:'Pesquise e avalie um produto na Amazon.',
      instruction:'1. Aceda à Amazon (amazon.com)\n2. Pesquise qualquer produto do seu interesse\n3. Clique em "Escrever avaliação"\n4. Dê a sua opinião honesta\n5. Confirme abaixo após concluir',
      checks:['Acedi ao site da Amazon','Pesquisei e encontrei um produto','Deixei uma avaliação']},
@@ -238,7 +260,7 @@ const TASKS={
      instruction:'1. Abra o Spotify\n2. Pesquise qualquer playlist\n3. Ouça pelo menos 10 minutos\n4. Confirme abaixo',
      checks:['Abri o Spotify','Ouvi pelo menos 10 minutos de música']}
   ],
-  2:[
+  2:[ // TERÇA-FEIRA
     {id:'tue_google',brand:'google',bgColor:'#EFF6FF',name:'Google — Pesquisa de Investimentos',desc:'Faça pesquisas sobre investimentos no Google.',
      instruction:'1. Abra o Google\n2. Pesquise "como investir em Angola"\n3. Leia pelo menos 2 artigos dos resultados\n4. Confirme abaixo',
      checks:['Fiz a pesquisa no Google','Li pelo menos 2 resultados']},
@@ -246,7 +268,7 @@ const TASKS={
      instruction:'1. Aceda à Amazon\n2. Clique em "Ofertas do Dia"\n3. Explore as promoções disponíveis\n4. Guarde 1 produto nos favoritos\n5. Confirme abaixo',
      checks:['Acedi às Ofertas do Dia da Amazon','Guardei 1 produto nos favoritos']}
   ],
-  3:[
+  3:[ // QUARTA-FEIRA
     {id:'wed_spotify',brand:'spotify',bgColor:'#F0FDF4',name:'Spotify — Partilhar Música',desc:'Partilhe uma música com um amigo.',
      instruction:'1. Abra o Spotify\n2. Escolha uma música que goste\n3. Toque no botão Partilhar\n4. Envie para pelo menos 1 contacto\n5. Confirme abaixo',
      checks:['Abri o Spotify','Escolhi uma música','Partilhei com um contacto']},
@@ -254,7 +276,7 @@ const TASKS={
      instruction:'1. Abra o Google Maps\n2. Pesquise um restaurante ou loja próxima\n3. Clique em "Escrever avaliação"\n4. Dê a sua classificação com estrelas\n5. Confirme abaixo',
      checks:['Abri o Google Maps','Pesquisei um local','Deixei uma avaliação com estrelas']}
   ],
-  4:[
+  4:[ // QUINTA-FEIRA
     {id:'thu_amazon',brand:'amazon',bgColor:'#FFF7E6',name:'Amazon — Lista de Desejos',desc:'Crie uma lista com 3 produtos na Amazon.',
      instruction:'1. Aceda à Amazon\n2. Pesquise 3 produtos diferentes\n3. Adicione cada um à sua lista de desejos\n4. Confirme abaixo',
      checks:['Acedi à Amazon','Adicionei 3 produtos à lista de desejos']},
@@ -262,13 +284,21 @@ const TASKS={
      instruction:'1. Aceda ao Google News (news.google.com)\n2. Pesquise "economia Angola" ou "finanças"\n3. Leia 2 artigos completos\n4. Confirme abaixo',
      checks:['Acedi ao Google News','Li 2 artigos sobre economia']}
   ],
-  5:[
+  5:[ // SEXTA-FEIRA
     {id:'fri_spotify',brand:'spotify',bgColor:'#F0FDF4',name:'Spotify — Podcast Financeiro',desc:'Ouça 15 min de um podcast de finanças.',
      instruction:'1. Abra o Spotify\n2. Pesquise "finanças pessoais" nos podcasts\n3. Ouça pelo menos 15 minutos de um episódio\n4. Confirme abaixo',
      checks:['Pesquisei podcasts de finanças no Spotify','Ouvi pelo menos 15 minutos']},
     {id:'fri_youtube',brand:'youtube',bgColor:'#FEF2F2',name:'YouTube — Vídeo de Investimento',desc:'Assista a um vídeo sobre investimentos.',
      instruction:'1. Abra o YouTube\n2. Pesquise "investir em Angola 2024"\n3. Escolha um vídeo educativo\n4. Assista pelo menos 5 minutos\n5. Confirme abaixo',
      checks:['Pesquisei no YouTube','Assisti pelo menos 5 minutos do vídeo']}
+  ],
+  6:[ // SÁBADO
+    {id:'sat_amazon',brand:'amazon',bgColor:'#FFF7E6',name:'Amazon — Avaliar Produto',desc:'Pesquise e avalie um produto na Amazon.',
+     instruction:'1. Aceda à Amazon (amazon.com)\n2. Pesquise qualquer produto do seu interesse\n3. Clique em "Escrever avaliação"\n4. Dê a sua opinião honesta\n5. Confirme abaixo após concluir',
+     checks:['Acedi ao site da Amazon','Pesquisei e encontrei um produto','Deixei uma avaliação']},
+    {id:'sat_spotify',brand:'spotify',bgColor:'#F0FDF4',name:'Spotify — Ouvir Playlist',desc:'Ouça 10 minutos de música no Spotify.',
+     instruction:'1. Abra o Spotify\n2. Pesquise qualquer playlist\n3. Ouça pelo menos 10 minutos\n4. Confirme abaixo',
+     checks:['Abri o Spotify','Ouvi pelo menos 10 minutos de música']}
   ]
 };
 
@@ -279,10 +309,7 @@ async function fetchUserData(uid) {
     if (userSnap.exists()) {
       userData = userSnap.data();
       console.log('Dados do usuário:', userData);
-      
-      // Atualizar saldo na interface
       updateBalance();
-      
       return userData;
     }
   } catch (error) {
@@ -296,7 +323,6 @@ async function fetchActiveInvestments(uid) {
   try {
     console.log('Buscando investimentos para uid:', uid);
     
-    // Buscar investments do usuário com status active
     const investmentsRef = collection(db, 'investments');
     const q = query(
       investmentsRef, 
@@ -317,12 +343,10 @@ async function fetchActiveInvestments(uid) {
         console.log('Dados do investimento:', investmentData);
         activeInvestments.push(investmentData);
         
-        // Somar ganhos diários (daily)
         if (investmentData.daily && investmentData.daily > 0) {
           dailyEarning += investmentData.daily;
         }
         
-        // Somar total investido
         if (investmentData.invested && investmentData.invested > 0) {
           totalInvested += investmentData.invested;
         }
@@ -331,7 +355,6 @@ async function fetchActiveInvestments(uid) {
       console.log('Total ganhos diários:', dailyEarning);
       console.log('Total investido:', totalInvested);
       
-      // Atualizar UI com informações dos investimentos
       updateInvestmentsUI();
       updateTasksPoints();
       updateTotalEarnings();
@@ -361,7 +384,7 @@ function updateBalance() {
 // Atualizar UI com informações dos investimentos
 function updateInvestmentsUI() {
   if (activeInvestments.length > 0) {
-    const firstInvestment = activeInvestments[0]; // Mostrar o primeiro investimento como exemplo
+    const firstInvestment = activeInvestments[0];
     
     investmentAreaEl.innerHTML = `
       <div class="investment-card">
@@ -391,7 +414,7 @@ function updateInvestmentsUI() {
 
 // Atualizar total de ganhos
 function updateTotalEarnings() {
-  if (isWeekday && dailyEarning > 0) {
+  if (dailyEarning > 0) {
     const completedValue = calculateCompletedEarnings();
     const remaining = dailyEarning - completedValue;
     totalEarningsEl.innerHTML = `${formatCurrency(remaining)} MT <span style="font-size:12px;color:var(--muted);font-weight:normal">(restam)</span>`;
@@ -425,12 +448,10 @@ function updateTasksPoints() {
   const tasksCount = tasksToday.length;
   
   if (tasksCount > 0 && dailyEarning > 0) {
-    // Distribuir o ganho diário entre as tarefas (valores inteiros)
     const basePoints = Math.floor(dailyEarning / tasksCount);
     const remainder = dailyEarning - (basePoints * tasksCount);
     
     tasksToday.forEach((task, index) => {
-      // Adicionar o resto à primeira tarefa
       if (index === 0) {
         task.points = basePoints + remainder;
       } else {
@@ -438,7 +459,6 @@ function updateTasksPoints() {
       }
     });
   } else {
-    // Valores padrão caso não haja investimento
     tasksToday.forEach(task => {
       task.points = 0;
     });
@@ -453,16 +473,12 @@ function buildAlerts() {
   
   let html = '';
   
-  if (!isWeekday) {
-    html += createAlert('info', '<rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>', 'Tarefas indisponíveis ao fim de semana', 'As tarefas estão disponíveis apenas de Segunda a Sexta-feira. Volte na Segunda!');
-  } else {
-    if (!hasInv) {
-      html += createAlert('danger', '<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>', 'Investimento necessário', 'Para realizar tarefas precisa de um investimento activo. Active um plano primeiro.');
-    }
-    
-    if (done === tasks.length && tasks.length > 0) {
-      html += createAlert('success', '<polyline points="20 6 9 17 4 12"/>', 'Todas as tarefas do dia concluídas!', `Parabéns! Completou todas as tarefas de hoje. Ganhou ${formatCurrency(dailyEarning)} MT!`);
-    }
+  if (!hasInv) {
+    html += createAlert('danger', '<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>', 'Investimento necessário', 'Para realizar tarefas precisa de um investimento activo. Active um plano primeiro.');
+  }
+  
+  if (done === tasks.length && tasks.length > 0) {
+    html += createAlert('success', '<polyline points="20 6 9 17 4 12"/>', 'Todas as tarefas do dia concluídas!', `Parabéns! Completou todas as tarefas de hoje. Ganhou ${formatCurrency(dailyEarning)} MT!`);
   }
   
   alertAreaEl.innerHTML = html;
@@ -475,20 +491,12 @@ function createAlert(type, icon, title, msg) {
 
 // Construir tarefas
 function buildTasksArea() {
-  if (!isWeekday) {
-    const nextMon = new Date(now);
-    nextMon.setDate(now.getDate() + ((8 - dow) % 7 || 7));
-    tasksAreaEl.innerHTML = `<div class="weekend-card"><div class="weekend-icon">🌴</div><div class="weekend-title">Fim de semana de descanso!</div><div class="weekend-msg">As tarefas estão disponíveis de<br><b>Segunda a Sexta-feira</b>.<br>Aproveite para relaxar e repor energias.</div><div class="next-task"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span>Próximas tarefas na Segunda, ${nextMon.getDate()} de ${MONTHS[nextMon.getMonth()]}</span></div></div>`;
-    return;
-  }
-  
   const tasks = TASKS[dow] || [];
   if (!tasks.length) {
     tasksAreaEl.innerHTML = '';
     return;
   }
   
-  // Atualizar pontos antes de construir
   updateTasksPoints();
   
   tasksAreaEl.innerHTML = `<div class="sec-label">Tarefas de Hoje</div><div class="task-list">${tasks.map(buildCard).join('')}</div>`;
@@ -531,8 +539,8 @@ function buildCard(t) {
 // Atualizar progresso
 function updateProgress() {
   const tasks = TASKS[dow] || [];
-  if (!tasks.length || !isWeekday) {
-    dpPctEl.textContent = 'Fim de semana';
+  if (!tasks.length) {
+    dpPctEl.textContent = '0/0 tarefas';
     dpFillEl.style.width = '0%';
     return;
   }
@@ -586,10 +594,8 @@ window.confirmTask = async function() {
   const points = t.points || 0;
   
   try {
-    // Fechar modal
     closeModal();
     
-    // 1. Registrar o ganho na coleção 'earnings' ou 'ganhos'
     const earningData = {
       uid: currentUser.uid,
       userId: userData?.userId || '',
@@ -604,30 +610,24 @@ window.confirmTask = async function() {
       status: 'completed'
     };
     
-    // Adicionar à coleção earnings
     await addDoc(collection(db, 'earnings'), earningData);
     console.log('Ganho registrado com sucesso');
     
-    // 2. Atualizar o campo totalEarned no documento do usuário
     await updateDoc(doc(db, 'users', currentUser.uid), {
       totalEarned: increment(points),
-      balance: increment(points) // Se tiver campo balance
+      balance: increment(points)
     });
     console.log('totalEarned atualizado');
     
-    // 3. Atualizar dados locais do usuário
     if (userData) {
       userData.totalEarned = (userData.totalEarned || 0) + points;
       userData.balance = (userData.balance || 0) + points;
     }
     
-    // Marcar tarefa como concluída localmente
     completedTasksToday.push(taskId);
     
-    // Salvar no localStorage
     localStorage.setItem(`completedTasks_${currentUser.uid}_${todayStr}`, JSON.stringify(completedTasksToday));
     
-    // Atualizar UI
     const card = document.getElementById(`tcard_${taskId}`);
     if (card) {
       card.className = 'task-card completed';
@@ -642,7 +642,6 @@ window.confirmTask = async function() {
       }
     }
     
-    // Atualizar saldo na interface
     updateBalance();
     updateProgress();
     updateTotalEarnings();
@@ -690,16 +689,10 @@ onAuthStateChanged(auth, async user => {
   currentUser = user;
   
   try {
-    // Buscar dados do usuário
     await fetchUserData(user.uid);
-    
-    // Buscar investimentos ativos
     await fetchActiveInvestments(user.uid);
-    
-    // Carregar tarefas concluídas hoje (localStorage)
     loadCompletedTasks();
     
-    // Construir interface
     buildAlerts();
     buildTasksArea();
     updateProgress();
@@ -712,5 +705,3 @@ onAuthStateChanged(auth, async user => {
   }
 });
 </script>
-</body>
-</html>
