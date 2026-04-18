@@ -197,13 +197,13 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);min-height:100vh;padd
     </div>
     <div style="text-align:right">
       <div class="bal-pill-sub">Depósito mínimo</div>
-      <div style="font-family:Sora,sans-serif;font-size:16px;font-weight:700;color:white">300 MT</div>
+      <div style="font-family:Sora,sans-serif;font-size:16px;font-weight:700;color:white">500 MT</div>
     </div>
   </div>
 
     <div class="min-note">
     <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-    Valor mínimo de depósito: <b>300 MT</b> Após transferência, envie o comprovativo para aprovação.
+    Valor mínimo de depósito: <b>500 MT</b> Após transferência, envie o comprovativo para aprovação.
   </div>
 
   <div class="amt-grid">
@@ -219,7 +219,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);min-height:100vh;padd
     <label class="field-label">Ou insira o valor</label>
     <div class="field-wrap">
       <svg class="field-icon" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-      <input class="field-input" type="number" id="amtInput" placeholder="Ex: 300" step="0.01" oninput="onAmtInput(this.value)">
+      <input class="field-input" type="number" id="amtInput" placeholder="Ex: 500" step="0.01" oninput="onAmtInput(this.value)">
     </div>
   </div>
 
@@ -376,7 +376,7 @@ function goStep(n){
 }
 
 function goStep2(){
-  if(!selAmt||selAmt<300){toast('Valor mínimo de depósito é 300 MT','error');return}
+  if(!selAmt||selAmt<500){toast('Valor mínimo de depósito é 500 MT','error');return}
   document.getElementById('s2Amt').textContent = fmt(selAmt)+' MT';
   goStep(2);
 }
