@@ -382,8 +382,8 @@ function registo(){
             // Atualizar convidador: +10 MT e +10 bónus
             return Promise.all([
               convDoc.ref.update({
-                balance: firebase.firestore.FieldValue.increment(10),
-                bonus: firebase.firestore.FieldValue.increment(10),
+                balance: firebase.firestore.FieldValue.increment(5),
+                bonus: firebase.firestore.FieldValue.increment(5),
                 totalInvited: firebase.firestore.FieldValue.increment(1)
               }),
               // Registrar bónus de convite
