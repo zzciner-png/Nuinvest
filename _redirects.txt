@@ -1,0 +1,11 @@
+/auth              /auth.html              200
+/profile           /profile.html           200
+/offline           /offline.html           200
+/withdraw-history  /withdraw-history.html  200
+/history           /history.html           200
+/invest            /invest.html            200
+/invited           /invited.html           200
+/presence          /presence.html          200
+/deposito          /deposito.html          200
+/suporte           /suporte.html           200
+/withdraw          /withdraw.html          200
