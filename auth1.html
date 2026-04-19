@@ -380,7 +380,7 @@ function registo(){
             var convDoc = snap.docs[0];
             var convidadorUid = convDoc.id;
             
-            // Atualizar convidador: +10 MT e +10 bónus
+            // Atualizar convidador: +5 MT
             return Promise.all([
               convDoc.ref.update({
                 balance: firebase.firestore.FieldValue.increment(5),
@@ -397,7 +397,7 @@ function registo(){
                 date: new Date().toISOString()
               })
             ]).catch(function(err){
-              console.warn("Erro ao processar convite (regras do Firestore):", err);
+              console.warn("Erro ao processar convite:", err);
             });
           })
           .catch(function(err){
@@ -407,7 +407,7 @@ function registo(){
     })
     .then(function(){
       _registering = false;
-      toast('🎉 Conta criada! Com sucesso!','ok');
+      toast('🎉 Conta criada com sucesso!','ok');
       setTimeout(function(){window.location.href='index.html';}, 1600);
     })
     .catch(function(e){
@@ -452,15 +452,19 @@ function logout(){
   });
 }
 </script>
-<!-- PWA Service Worker -->
- <script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/pwabuilder-sw.js');
+
+<!-- PWA Service Worker Registation -->
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').then(reg => {
+      console.log('✅ Service Worker registado');
+    }).catch(err => {
+      console.error('❌ Erro ao registar SW:', err);
     });
-  }
+  });
+}
 </script>
 
 </body>
 </html>
-

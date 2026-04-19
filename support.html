@@ -15,10 +15,12 @@
 <!-- Manifest (PWA) -->
 <link rel="manifest" href="/manifest.json">
 
-<!-- Apple iOS -->
-<meta name="apple-mobile-web-app-capable" content="yes">
+<!-- PWA metas -->
+<meta name="mobile-web-app-capable" content="yes"> <!-- Chrome/Android -->
+<meta name="apple-mobile-web-app-capable" content="yes"> <!-- Safari/iOS -->
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="NuInvest">
+
 
 <!-- Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -155,5 +157,13 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);min-height:100vh;padd
 <script>
 function toggleFaq(el){el.classList.toggle('open')}
 </script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/pwabuilder-sw.js');
+    });
+  }
+</script>
+
 </body>
 </html>

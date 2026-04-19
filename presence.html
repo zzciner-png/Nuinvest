@@ -13,10 +13,12 @@
 <!-- Manifest (PWA) -->
 <link rel="manifest" href="/manifest.json">
 
-<!-- Apple iOS -->
-<meta name="apple-mobile-web-app-capable" content="yes">
+<!-- PWA metas -->
+<meta name="mobile-web-app-capable" content="yes"> <!-- Chrome/Android -->
+<meta name="apple-mobile-web-app-capable" content="yes"> <!-- Safari/iOS -->
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="NuInvest">
+
 
 <!-- Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -640,5 +642,13 @@ window.showToast = function(msg, type) {
   setTimeout(() => t.classList.remove('show'), 3500);
 };
 </script>
+ <script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/pwabuilder-sw.js');
+    });
+  }
+</script>
+
 </body>
 </html>
