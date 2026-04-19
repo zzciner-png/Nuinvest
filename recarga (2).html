@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Depósito - BELIEVE</title>
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary-blue: #0066ff;
+            --dark-blue: #0044cc;
+            --light-blue: #3399ff;
+            --white: #ffffff;
+            --gray: #f5f5f5;
+            --dark-gray: #333333;
+            --success-green: #00a86b;
+            --error-red: #ff4d4f;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #001529 0%, #002140 100%);
+            color: white;
+            min-height: 100vh;
+            padding-bottom: 70px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .logo-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 12px;
+            object-fit: cover;
+            margin-bottom: 15px;
+            border: 2px solid var(--light-blue);
+        }
+        
+        .logo-text {
+            font-size: 24px;
+            font-weight: 800;
+            background: linear-gradient(90deg, #0066ff, #00ccff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 5px;
+        }
+        
+        .logo-subtext {
+            font-size: 14px;
+            color: #aaa;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Mineradores Grid */
+        .miners-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .miner-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .miner-card.selected {
+            border-color: var(--light-blue);
+            background: rgba(51, 153, 255, 0.1);
+        }
+        
+        .miner-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--light-blue);
+        }
+        
+        .miner-icon {
+            font-size: 24px;
+            color: var(--light-blue);
+            margin-bottom: 10px;
+        }
+        
+        .miner-name {
+            font-weight: 600;
+            font-size: 16px;
+            color: white;
+            margin-bottom: 8px;
+        }
+        
+        .miner-price {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--light-blue);
+            margin-bottom: 5px;
+        }
+        
+        .miner-income {
+            font-size: 12px;
+            color: #aaa;
+        }
+        
+        /* Payment Section */
+        .payment-section {
+            display: none;
+        }
+        
+        .currency-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .currency-option {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid transparent;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .currency-option.selected {
+            border-color: var(--light-blue);
+            background: rgba(51, 153, 255, 0.1);
+        }
+        
+        .currency-image {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+            margin-bottom: 8px;
+        }
+        
+        .currency-name {
+            font-size: 14px;
+            color: white;
+            margin-bottom: 5px;
+        }
+        
+        .payment-details {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .payment-info {
+            margin-bottom: 15px;
+        }
+        
+        .info-label {
+            font-size: 13px;
+            color: #aaa;
+            margin-bottom: 5px;
+        }
+        
+        .info-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px;
+            border-radius: 6px;
+            word-break: break-all;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .copy-btn {
+            background: var(--light-blue);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-size: 12px;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: all 0.3s;
+        }
+        
+        .copy-btn:hover {
+            background: var(--primary-blue);
+        }
+        
+        .buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 12px;
+            background: linear-gradient(to right, var(--primary-blue), var(--light-blue));
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 102, 255, 0.3);
+        }
+        
+        .btn:disabled {
+            background: #555;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .btn-back {
+            background: linear-gradient(to right, #666, #888);
+        }
+        
+        .btn-back:hover {
+            background: linear-gradient(to right, #555, #777);
+        }
+        
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 12px 20px;
+            color: white;
+            font-size: 14px;
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            text-align: center;
+        }
+        
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* Navbar */
+        .navbar {
+            background: linear-gradient(135deg, #001529 0%, #002140 100%);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.3);
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            z-index: 100;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #aaa;
+            text-decoration: none;
+            font-size: 11px;
+            transition: all 0.3s;
+            padding: 0 8px;
+            border-radius: 8px;
+        }
+
+        .nav-item i {
+            font-size: 20px;
+            margin-bottom: 3px;
+            transition: all 0.3s;
+        }
+
+        .nav-item:hover {
+            transform: translateY(-3px);
+            color: var(--light-blue);
+        }
+
+        .nav-item.active {
+            color: var(--light-blue);
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 4px 12px;
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .payment-section.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+            }
+
+            .card {
+                padding: 15px;
+            }
+
+            .miners-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="assets/bel3.png" alt="BELIEVE Logo" class="logo-image" onerror="this.src='https://via.placeholder.com/80?text=BELIEVE'">
+            <div class="logo-text">BELIEVE</div>
+            <div class="logo-subtext">Mineração em Nuvem</div>
+        </div>
+        
+        <!-- Seleção de Mineradores -->
+        <div class="card" id="miner-selection">
+            <div class="section-title">
+                <i class="bi bi-minecart-loaded"></i>
+                Selecionar Minerador
+            </div>
+            
+            <div class="miners-grid" id="miners-grid">
+                <!-- Mineradores serão carregados via JavaScript -->
+            </div>
+            
+            <button class="btn" id="next-btn" disabled>
+                Escolher Método de Pagamento
+            </button>
+        </div>
+        
+        <!-- Seleção de Método de Pagamento -->
+        <div class="card payment-section" id="payment-section">
+            <div class="section-title">
+                <i class="bi bi-credit-card"></i>
+                Método de Pagamento
+            </div>
+            
+            <div class="currency-selector">
+                <div class="currency-option" data-currency="usd">
+                    <img src="assets/dolar.png" alt="Dólar" class="currency-image" onerror="this.src='https://via.placeholder.com/40?text=USD'">
+                    <div class="currency-name">Dólar (USD)</div>
+                    <div class="currency-code">Pagamento em USD</div>
+                </div>
+                
+                <div class="currency-option" data-currency="kz">
+                    <img src="assets/kz.png" alt="Kwanza" class="currency-image" onerror="this.src='https://via.placeholder.com/40?text=KZ'">
+                    <div class="currency-name">Kwanza (KZ)</div>
+                    <div class="currency-code">Pagamento em KZ</div>
+                </div>
+            </div>
+            
+            <div class="payment-details" id="payment-details">
+                <!-- Detalhes de pagamento serão carregados via JavaScript -->
+            </div>
+            
+            <div class="buttons">
+                <button class="btn btn-back" id="back-btn">
+                    Voltar
+                </button>
+                
+                <a href="#" class="btn" id="whatsapp-btn" target="_blank">
+                    <i class="bi bi-whatsapp"></i> Enviar Comprovativo
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a class='nav-item' href='/home'>
+            <i class="bi bi-house-door-fill"></i>
+            <span>Inicio</span>
+        </a>
+        <a class='nav-item active' href='/compras'>
+            <i class="bi bi-cart-fill"></i>
+            <span>Compras</span>
+        </a>
+        <a class='nav-item' href='/equipe'>
+            <i class="bi bi-people-fill"></i>
+            <span>Equipe</span>
+        </a>
+        <a class='nav-item' href='/sorteio'>
+            <i class="bi bi-gift-fill"></i>
+            <span>Sorteio</span>
+        </a>
+    </nav>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // ================================
+            // DADOS DOS MINERADORES - VALORES ATUALIZADOS
+            // Retorno em 3 dias (KZ) / 72h (USD)
+            // ================================
+            const miners = [
+                { 
+                    id: 1, 
+                    name: "M1", 
+                    priceKZ: 15000, 
+                    priceUSDT: 15,
+                    returnKZ: 30000,
+                    returnUSDT: 30,
+                    icon: "bi-cpu"
+                },
+                { 
+                    id: 2, 
+                    name: "M2", 
+                    priceKZ: 25000, 
+                    priceUSDT: 25,
+                    returnKZ: 50000,
+                    returnUSDT: 50,
+                    icon: "bi-gem"
+                },
+                { 
+                    id: 3, 
+                    name: "M3", 
+                    priceKZ: 50000, 
+                    priceUSDT: 50,
+                    returnKZ: 100000,
+                    returnUSDT: 100,
+                    icon: "bi-award"
+                },
+                { 
+                    id: 4, 
+                    name: "M4", 
+                    priceKZ: 100000, 
+                    priceUSDT: 100,
+                    returnKZ: 200000,
+                    returnUSDT: 200,
+                    icon: "bi-trophy"
+                },
+                { 
+                    id: 5, 
+                    name: "M5", 
+                    priceKZ: 150000, 
+                    priceUSDT: 150,
+                    returnKZ: 300000,
+                    returnUSDT: 300,
+                    icon: "bi-star-fill"
+                },
+                { 
+                    id: 6, 
+                    name: "M6", 
+                    priceKZ: 200000, 
+                    priceUSDT: 200,
+                    returnKZ: 400000,
+                    returnUSDT: 400,
+                    icon: "bi-cash"
+                }
+            ];
+            
+            // Elementos
+            const minersGrid = document.getElementById('miners-grid');
+            const nextBtn = document.getElementById('next-btn');
+            const backBtn = document.getElementById('back-btn');
+            const minerSelection = document.getElementById('miner-selection');
+            const paymentSection = document.getElementById('payment-section');
+            const paymentDetails = document.getElementById('payment-details');
+            const whatsappBtn = document.getElementById('whatsapp-btn');
+            const toast = document.getElementById('toast');
+            const currencyOptions = document.querySelectorAll('.currency-option');
+            
+            let selectedMiner = null;
+            let selectedCurrency = null;
+            
+            // Mostrar mensagem toast
+            function showToast(message, duration = 3000) {
+                toast.textContent = message;
+                toast.classList.add('show');
+                
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, duration);
+            }
+            
+            // Renderizar mineradores
+            function renderMiners() {
+                minersGrid.innerHTML = '';
+                
+                miners.forEach(miner => {
+                    const minerCard = document.createElement('div');
+                    minerCard.className = 'miner-card';
+                    minerCard.innerHTML = `
+                        <div class="miner-icon">
+                            <i class="bi ${miner.icon}"></i>
+                        </div>
+                        <div class="miner-name">${miner.name}</div>
+                        <div class="miner-price">${miner.priceKZ.toLocaleString('pt-BR')} KZ</div>
+                        <div class="miner-income">Retorno: ${miner.returnKZ.toLocaleString('pt-BR')} KZ</div>
+                    `;
+                    
+                    minerCard.addEventListener('click', function() {
+                        // Remover seleção anterior
+                        document.querySelectorAll('.miner-card').forEach(card => {
+                            card.classList.remove('selected');
+                        });
+                        
+                        // Selecionar atual
+                        this.classList.add('selected');
+                        selectedMiner = miner;
+                        
+                        // Habilitar botão próximo
+                        nextBtn.disabled = false;
+                        
+                        showToast(`Minerador ${miner.name} selecionado`);
+                    });
+                    
+                    minersGrid.appendChild(minerCard);
+                });
+            }
+            
+            // Mostrar seção de pagamento
+            nextBtn.addEventListener('click', function() {
+                if (!selectedMiner) return;
+                
+                minerSelection.style.display = 'none';
+                paymentSection.classList.add('show');
+                
+                // Resetar seleção de moeda
+                selectedCurrency = null;
+                currencyOptions.forEach(opt => opt.classList.remove('selected'));
+                paymentDetails.innerHTML = '<p style="color:#aaa; text-align:center;">Selecione uma moeda para ver os detalhes</p>';
+                whatsappBtn.style.display = 'none';
+            });
+            
+            // Voltar para seleção de minerador
+            backBtn.addEventListener('click', function() {
+                paymentSection.classList.remove('show');
+                minerSelection.style.display = 'block';
+            });
+            
+            // Selecionar moeda
+            currencyOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    // Remover seleção anterior
+                    currencyOptions.forEach(opt => opt.classList.remove('selected'));
+                    
+                    // Selecionar atual
+                    this.classList.add('selected');
+                    selectedCurrency = this.getAttribute('data-currency');
+                    
+                    // Atualizar detalhes de pagamento
+                    updatePaymentDetails();
+                    
+                    // Mostrar botão do WhatsApp
+                    whatsappBtn.style.display = 'flex';
+                });
+            });
+            
+            // Atualizar detalhes de pagamento
+            function updatePaymentDetails() {
+                if (!selectedMiner || !selectedCurrency) return;
+                
+                let paymentHTML = '';
+                
+                if (selectedCurrency === 'kz') {
+                    // Pagamento em KZ
+                    paymentHTML = `
+                        <div class="payment-info">
+                            <div class="info-label">Minerador Selecionado</div>
+                            <div class="info-value">${selectedMiner.name}</div>
+                        </div>
+                        <div class="payment-info">
+                            <div class="info-label">Investimento em KZ</div>
+                            <div class="info-value">${selectedMiner.priceKZ.toLocaleString('pt-BR')} KZ</div>
+                        </div>
+                        <div class="payment-info">
+                            <div class="info-label">Retorno em 3 dias</div>
+                            <div class="info-value">${selectedMiner.returnKZ.toLocaleString('pt-BR')} KZ</div>
+                        </div>
+                        <div class="payment-info">
+                            <div class="info-label">Conta Bancária</div>
+                            <div class="info-value">PAY- 921539495</div>
+                            <button class="copy-btn" onclick="copyToClipboard('921539495')">
+                                <i class="bi bi-clipboard"></i> Copiar
+                            </button>
+                        </div>
+                        <div class="payment-info">
+                            <div class="info-label">Entidade</div>
+                            <div class="info-value">00930 / BELIEVE</div>
+                        </div>
+                    `;
+                    
+                } else if (selectedCurrency === 'usd') {
+                    // Pagamento em USD
+                    paymentHTML = `
+                        <div class="payment-info">
+                            <div class="info-label">Minerador Selecionado</div>
+                            <div class="info-value">${selectedMiner.name}</div>
+                        </div>
+                        <div class="payment-info">
+                            <div class="info-label">Investimento em USD</div>
+                            <div class="info-value">${selectedMiner.priceUSDT.toFixed(2)} USD</div>
+                        </div>
+                        <div class="payment-info">
+                            <div class="info-label">Retorno em 72h</div>
+                            <div class="info-value">${selectedMiner.returnUSDT.toFixed(2)} USD</div>
+                        </div>
+                        <div class="payment-info">
+                            <div class="info-label">Carteira USDT (TRC20)</div>
+                            <div class="info-value">TV4JWMtudWnKyffe8DLGVGA83Eo2sotNEH</div>
+                            <button class="copy-btn" onclick="copyToClipboard('TV4JWMtudWnKyffe8DLGVGA83Eo2sotNEH')">
+                                <i class="bi bi-clipboard"></i> Copiar
+                            </button>
+                        </div>
+                    `;
+                }
+                
+                paymentDetails.innerHTML = paymentHTML;
+                
+                // Atualizar link do WhatsApp
+                let message = `Olá! Quero adquirir o minerador ${selectedMiner.name}.\n\n`;
+                if (selectedCurrency === 'kz') {
+                    message += `📊 *Detalhes do Investimento:*\n`;
+                    message += `• Investimento: ${selectedMiner.priceKZ.toLocaleString('pt-BR')} KZ\n`;
+                    message += `• Retorno em 3 dias: ${selectedMiner.returnKZ.toLocaleString('pt-BR')} KZ\n`;
+                    message += `• Moeda: KZ\n\n`;
+                    message += `Estou pronto para fazer o pagamento.`;
+                } else {
+                    message += `📊 *Detalhes do Investimento:*\n`;
+                    message += `• Investimento: ${selectedMiner.priceUSDT.toFixed(2)} USD\n`;
+                    message += `• Retorno em 72h: ${selectedMiner.returnUSDT.toFixed(2)} USD\n`;
+                    message += `• Moeda: USD\n\n`;
+                    message += `Estou pronto para fazer o pagamento.`;
+                }
+                
+                const encodedMessage = encodeURIComponent(message);
+                whatsappBtn.href = `https://wa.me/244921539495?text=${encodedMessage}`;
+               
+                // Salvar no histórico quando clicar no WhatsApp
+                whatsappBtn.onclick = function(e) {
+                    // Adicionar ao histórico de transações
+                    const transaction = {
+                        type: 'deposit',
+                        miner: selectedMiner.name,
+                        amountKZ: selectedMiner.priceKZ,
+                        amountUSD: selectedMiner.priceUSDT,
+                        returnKZ: selectedMiner.returnKZ,
+                        returnUSD: selectedMiner.returnUSDT,
+                        currency: selectedCurrency,
+                        date: new Date().toISOString()
+                    };
+                    
+                    // Salvar no localStorage
+                    const history = JSON.parse(localStorage.getItem('believe_transactions') || '[]');
+                    history.push(transaction);
+                    localStorage.setItem('believe_transactions', JSON.stringify(history));
+                    
+                    showToast('Transação salva no histórico!');
+                };
+            }
+            
+            // Função para copiar texto
+            window.copyToClipboard = function(text) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showToast('Texto copiado para a área de transferência');
+                });
+            };
+            
+            // Inicializar
+            renderMiners();
+            
+            // Verificar se usuário está logado
+            const loggedUser = localStorage.getItem('believe_logged_user');
+            if (!loggedUser) {
+                showToast('Faça login para continuar', 5000);
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 3000);
+            }
+        });
+    </script>
+</body>
+</html>
