@@ -5,6 +5,7 @@ importScripts('https://storage.googleapis.com/workbox-cdn/releases/5.1.2/workbox
 const CACHE = "nuinvest-cache-v1";
 const offlineFallbackPage = "offline.html";
 
+// Mensagem para ativar imediatamente
 self.addEventListener("message", (event) => {
   if (event.data && event.data.type === "SKIP_WAITING") {
     self.skipWaiting();
@@ -16,6 +17,11 @@ self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE).then((cache) => cache.add(offlineFallbackPage))
   );
+});
+
+// Ativa e assume controle dos clientes
+self.addEventListener('activate', (event) => {
+  event.waitUntil(self.clients.claim());
 });
 
 // Habilita navigation preload se suportado
