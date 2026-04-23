@@ -32,24 +32,25 @@ if (workbox.navigationPreload.isSupported()) {
 // ─── Intercepta navegações ───
 self.addEventListener('fetch', (event) => {
   if (event.request.mode === 'navigate') {
-    // ⚠️ Não intercepta a página de login para evitar problemas no celular
-    if (event.request.url.includes('/auth.html')) {
+    const url = new URL(event.request.url);
+
+    // ⚠️ Não intercepta login nem chamadas externas do Firebase
+    if (
+      url.pathname.includes('/auth.html') ||
+      url.hostname.includes('firebaseapp.com') ||
+      url.hostname.includes('googleapis.com') ||
+      url.hostname.includes('gstatic.com')
+    ) {
       return; // deixa o navegador lidar normalmente
     }
 
     event.respondWith((async () => {
       try {
-        // Usa preloadResponse se disponível
         const preloadResp = await event.preloadResponse;
-        if (preloadResp) {
-          return preloadResp;
-        }
+        if (preloadResp) return preloadResp;
 
-        // Tenta buscar da rede
-        const networkResp = await fetch(event.request);
-        return networkResp;
+        return await fetch(event.request);
       } catch (error) {
-        // Se falhar, retorna offline.html do cache
         const cache = await caches.open(CACHE);
         const cachedResp = await cache.match(offlineFallbackPage);
         return cachedResp;
@@ -57,4 +58,3 @@ self.addEventListener('fetch', (event) => {
     })());
   }
 });
-
