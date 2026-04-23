@@ -5,36 +5,41 @@ importScripts('https://storage.googleapis.com/workbox-cdn/releases/5.1.2/workbox
 const CACHE = "nuinvest-cache-v1";
 const offlineFallbackPage = "offline.html";
 
-// Mensagem para ativar imediatamente
+// ─── Mensagem para ativar imediatamente ───
 self.addEventListener("message", (event) => {
   if (event.data && event.data.type === "SKIP_WAITING") {
     self.skipWaiting();
   }
 });
 
-// Instala e adiciona a página offline ao cache
+// ─── Instala e adiciona a página offline ao cache ───
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE).then((cache) => cache.add(offlineFallbackPage))
   );
 });
 
-// Ativa e assume controle dos clientes
+// ─── Ativa e assume controle dos clientes ───
 self.addEventListener('activate', (event) => {
   event.waitUntil(self.clients.claim());
 });
 
-// Habilita navigation preload se suportado
+// ─── Habilita navigation preload se suportado ───
 if (workbox.navigationPreload.isSupported()) {
   workbox.navigationPreload.enable();
 }
 
-// Intercepta navegações
+// ─── Intercepta navegações ───
 self.addEventListener('fetch', (event) => {
   if (event.request.mode === 'navigate') {
+    // ⚠️ Não intercepta a página de login para evitar problemas no celular
+    if (event.request.url.includes('/auth.html')) {
+      return; // deixa o navegador lidar normalmente
+    }
+
     event.respondWith((async () => {
       try {
-        // Aguarda o preloadResponse corretamente
+        // Usa preloadResponse se disponível
         const preloadResp = await event.preloadResponse;
         if (preloadResp) {
           return preloadResp;
@@ -44,7 +49,7 @@ self.addEventListener('fetch', (event) => {
         const networkResp = await fetch(event.request);
         return networkResp;
       } catch (error) {
-        // Se falhar, retorna o offline.html do cache
+        // Se falhar, retorna offline.html do cache
         const cache = await caches.open(CACHE);
         const cachedResp = await cache.match(offlineFallbackPage);
         return cachedResp;
@@ -52,3 +57,4 @@ self.addEventListener('fetch', (event) => {
     })());
   }
 });
+
